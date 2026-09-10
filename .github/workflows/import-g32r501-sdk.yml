@@ -1,0 +1,67 @@
+name: Import G32R501 SDK V1.1.0
+
+on:
+  push:
+    paths:
+      - '.github/workflows/import-g32r501-sdk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-sdk:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download official Geehy SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_URL='https://global.geehy.com/uploads/tool/G32R501_SDK_V1.1.0.zip'
+          curl --fail --location --retry 3 --retry-delay 3 \
+            --user-agent 'Mozilla/5.0' \
+            "$SDK_URL" \
+            --output /tmp/G32R501_SDK_V1.1.0.zip
+          test -s /tmp/G32R501_SDK_V1.1.0.zip
+          unzip -t /tmp/G32R501_SDK_V1.1.0.zip >/dev/null
+          ls -lh /tmp/G32R501_SDK_V1.1.0.zip
+
+      - name: Extract SDK into repository root
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/g32r501-sdk
+          mkdir -p /tmp/g32r501-sdk
+          unzip -q /tmp/G32R501_SDK_V1.1.0.zip -d /tmp/g32r501-sdk
+
+          shopt -s dotglob nullglob
+          entries=(/tmp/g32r501-sdk/*)
+          if [ "${#entries[@]}" -eq 1 ] && [ -d "${entries[0]}" ]; then
+            SDK_ROOT="${entries[0]}"
+          else
+            SDK_ROOT='/tmp/g32r501-sdk'
+          fi
+
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.github' -exec rm -rf {} +
+          cp -a "$SDK_ROOT"/. .
+
+          echo "Imported SDK top-level contents:"
+          find . -mindepth 1 -maxdepth 2 -not -path './.git*' -print | sort | head -200
+
+      - name: Commit imported SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No SDK changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Import G32R501 SDK V1.1.0 from Geehy official website'
+          git push origin HEAD:main
