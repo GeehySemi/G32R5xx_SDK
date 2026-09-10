@@ -1,0 +1,20 @@
+# pyocd.yaml
+
+# ------------------------------------------------------------------------------
+# 1) Dual-Core (default)
+# ------------------------------------------------------------------------------
+target_override: g32r501dxx
+frequency: 8000000  # SWD frequency (8 MHz)
+session:
+  enable_multicore_debug: true    # Enable dual-core debug
+  persist: true                   # Keep session open
+
+
+# ------------------------------------------------------------------------------
+# 2) Single-Core
+# ------------------------------------------------------------------------------
+# target_override: g32r501xx
+# frequency: 8000000
+# session:
+#   enable_multicore_debug: false
+#   persist: true                   # Keep session open

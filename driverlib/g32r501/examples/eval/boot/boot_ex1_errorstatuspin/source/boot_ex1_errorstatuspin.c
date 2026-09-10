@@ -1,0 +1,196 @@
+//#############################################################################
+//
+// FILE:    boot_ex1_errorstatuspin.c
+//
+// TITLE:   Boot Error Status Pin Example with DCS OTP
+//
+// VERSION: 1.0.0
+//
+// DATE:    2025-01-15
+//
+//! \addtogroup driver_example_list
+//! <h1> Boot Error Status Pin Example with DCS OTP</h1>
+//!
+//! This example demonstrates how to configure the boot modes, boot mode select
+//! pins, and error status pin.
+//!
+//! NOTE: DCS OTP (one time programmable) memory is used to configure the boot
+//! modes, boot mode select pins, and error status pin. Once the DCS OTP
+//! sections are programmed, they cannot be erased and programmed again.
+//!
+//! This example is designed to show how to configure boot control as well as
+//! the function of the error status pin. Once the error status pin is enabled,
+//! an NMI will be triggered by software and the error status pin will go high.
+//! Then the NMI ISR will clear error status and drive the error status pin
+//! low and return to the main loop where the NMI will be triggered again. More
+//! details are available in the "ROM Code and Peripheral Booting" chapter of
+//! the User Manual.
+//!
+//! \b External \b Connections \n
+//!  - Scope the error status pin used according to what is programmed into
+//!    GPREG2. The error status pin may be either GPIO 24, GPIO 28, or GPIO 29.
+//!
+//! \b Watch \b Variables \n
+//!  - None.
+//!
+//
+//###########################################################################
+// $Copyright:
+// Copyright (C) 2024 Geehy Semiconductor - http://www.geehy.com/
+// Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com/
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//
+//   Redistributions of source code must retain the above copyright
+//   notice, this list of conditions and the following disclaimer.
+//
+//   Redistributions in binary form must reproduce the above copyright
+//   notice, this list of conditions and the following disclaimer in the
+//   documentation and/or other materials provided with the
+//   distribution.
+//
+//   Neither the name of Texas Instruments Incorporated nor the names of
+//   its contributors may be used to endorse or promote products derived
+//   from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// $
+//
+// Modifications:
+// - 2024-09-13:
+// 1. Modify some comments, macros, function names, and function contents.
+//
+//###########################################################################
+
+
+//
+// Included Files
+//
+#include "driverlib.h"
+#include "device.h"
+
+//
+// Globals
+//
+volatile uint32_t counter = 0;
+
+//
+// Function Prototypes
+//
+__interrupt void NMI_Handler(void);
+
+//
+// Main
+//
+void example_main(void)
+{
+    //
+    // Initialize device clock and peripherals
+    //
+    Device_init();
+
+    //
+    // Initialize GPIO and configure the GPIO pin as a push-pull output
+    //
+    Device_initGPIO();
+
+    //
+    // Disable global interrupts.
+    //
+    DINT;
+
+    //
+    // Initialize NVIC and clear NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
+
+    //
+    // Map the ISR to the NMI interrupt.
+    //
+    Interrupt_register(INT_NMI, NMI_Handler);
+
+    //
+    // Set the priority group to indicate the PREEMPT and SUB priortiy bits.
+    //
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+
+    //
+    // Set the global and group priority to allow CPU interrupts
+    // with higher priority
+    //
+    Interrupt_setPriority(INT_NMI, 2, 0);
+
+    //
+    // Clear all NMI flags and enable the nmi interrupt.
+    //
+    SysCtl_clearAllNMIFlags();
+    Interrupt_enable(INT_NMI);
+
+    //
+    // Enable Global Interrupt (INTM) and realtime interrupt (DBGM)
+    //
+    EINT;
+    ERTM;
+
+    //
+    // Loop Forever
+    //
+    for (;;)
+    {
+        //
+        // Force the NMI by software which causes the error status
+        // pin low.
+        //
+        SysCtl_forceNMIFlags(SYSCTL_NMI_SWERR);
+
+        //
+        // Delay for a 500000 microseconds.
+        //
+        DEVICE_DELAY_US(500000);
+    }
+}
+
+//
+// nmiISR - Non-Maskable Interrupt which should have been triggered by software
+//          in the main loop.
+//
+__interrupt void NMI_Handler(void)
+{
+    //
+    // Increment the counter each time the ISR is entered.
+    //
+    counter++;
+
+    //
+    // Delay for a 50 microseconds.
+    //
+    DEVICE_DELAY_US(50);
+
+    //
+    // Clear the NMI flag and NMIINT to cause the error status
+    // pin to go high.
+    //
+    SysCtl_clearNMIStatus(SYSCTL_NMI_SWERR);
+}
+
+//
+// End of File
+//

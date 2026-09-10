@@ -1,0 +1,341 @@
+//#############################################################################
+//
+// FILE:    ipc_ex3_general_interrupt_cpu0.c
+//
+// TITLE:   IPC General Interrupt Example
+//
+// VERSION: 1.0.0
+//
+// DATE:    2025-01-15
+//
+//! \addtogroup driver_example_list
+//! <h1> IPC General Interrupt </h1>
+//!
+//! This example demonstrates how to use the general interrupt functionality of the Inter-Processor 
+//! Communication (IPC) module. CPU0 and CPU1 mutually trigger each other's general interrupts.
+//!
+//! \note Note: The IPC example includes both CPU0 and CPU1 projects. 
+//!             Please compile the CPU1 project before compiling the CPU0 project.
+//!
+//! \b Running \b the \b Application
+//!  Open a COM port with the following settings using a terminal:
+//!  -  Find correct COM port
+//!  -  Bits per second = 115200
+//!  -  Data Bits = 8
+//!  -  Parity = None
+//!  -  Stop Bits = 1
+//!  -  Hardware Control = None
+//!
+//! \b External \b Connections \n
+//!  Connect the UART-A port to a PC via a transceiver and cable.
+//!  - GPIO28 is UART_RXD (Connect to Pin3, PC-TX, of serial DB9 cable)
+//!  - GPIO29 is UART_TXD (Connect to Pin2, PC-RX, of serial DB9 cable)
+//!
+//! \b Watch \b Variables \n
+//!  - None.
+//!
+//
+//#############################################################################
+//
+//
+// $Copyright:
+// Copyright (C) 2024 Geehy Semiconductor - http://www.geehy.com/
+//
+// You may not use this file except in compliance with the
+// GEEHY COPYRIGHT NOTICE (GEEHY SOFTWARE PACKAGE LICENSE).
+//
+// The program is only for reference, which is distributed in the hope
+// that it will be useful and instructional for customers to develop
+// their software. Unless required by applicable law or agreed to in
+// writing, the program is distributed on an "AS IS" BASIS, WITHOUT
+// ANY WARRANTY OR CONDITIONS OF ANY KIND, either express or implied.
+// See the GEEHY SOFTWARE PACKAGE LICENSE for the governing permissions
+// and limitations under the License.
+// $
+//#############################################################################
+
+//
+// Included Files
+//
+#include "driverlib.h"
+#include "device.h"
+#include "board.h"
+#include <stdio.h>
+
+
+//
+// CPU1 image start address and size
+//
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+  extern uint32_t Image$$ER_ROM_CPU1$$Base;
+  extern uint32_t Image$$ER_ROM_CPU1$$Length;
+  #define CORE1_IMAGE_START Image$$ER_ROM_CPU1$$Base
+#elif defined(__ICCARM__)
+  extern unsigned char cpu1_image_start[];
+  #define CORE1_IMAGE_START cpu1_image_start
+#elif defined (__clang__) && !defined (__ARMCC_VERSION)
+  extern const char __cpu1_image_start__;
+  extern const char __cpu1_image_end__;
+#endif
+
+//
+// Function Prototypes
+//
+void INT_IPC_GP0_IRQHandler(void);
+void APP_bootCPU1(uint32_t cpu1Address);
+void UART_Init(void);
+
+//
+// This function includes the CPU1 image file
+//
+#if defined(__ARMCC_VERSION)
+__attribute__((__used__, section("cpu1_code")))
+void G32R501_incbin(void)
+{
+    __asm(".incbin \"cpu1_image.bin\"");
+}
+#elif defined (__clang__) && !defined(__ARMCC_VERSION)
+__attribute__((__used__, section("cpu1_code")))
+void G32R501_incbin(void)
+{
+    __asm(".incbin \"../cpu1_image.bin\"");
+}
+#endif
+
+//
+// Main
+//
+void example_main(void)
+{
+    uint32_t cpu1_imageSize = 0;
+    uint32_t cpu1_imageStartAddr = 0;
+
+    //
+    // Get CPU1 boot address, and the size of the CPU1 image file
+    //
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+    cpu1_imageSize = (uint32_t)&Image$$ER_ROM_CPU1$$Length;
+    cpu1_imageStartAddr = (uint32_t)&Image$$ER_ROM_CPU1$$Base;
+#elif defined(__ICCARM__)
+    #pragma section = "__cpu1_image"
+    cpu1_imageSize = (uint32_t)__section_end("__cpu1_image") - (uint32_t)&cpu1_image_start;
+    cpu1_imageStartAddr = (uint32_t)&cpu1_image_start;
+#elif defined (__clang__) && !defined (__ARMCC_VERSION)
+    cpu1_imageSize = (uint32_t)&__cpu1_image_end__ - (uint32_t)&__cpu1_image_start__;
+    cpu1_imageStartAddr = (uint32_t)&__cpu1_image_start__;
+#endif
+
+    //
+    // Initialize device clock and peripherals
+    //
+    Device_init();
+
+    //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
+
+    //
+    // Board Initialization
+    //
+    Board_init();
+
+    //
+    // Enables CPU interrupts
+    //
+    Interrupt_enableMaster();
+
+    //
+    // UART initialize
+    //
+    UART_Init();
+
+    //
+    // CPU0 Print information
+    //
+    printf("\r\nIPC general interrupt example.\r\n");
+    printf("CPU1 boot address: 0x%08x, CPU1 image file size: 0x%x byte.\r\n", cpu1_imageStartAddr, cpu1_imageSize);
+
+    //
+    // Boot CPU1
+    //
+    APP_bootCPU1(cpu1_imageStartAddr);
+
+    //
+    // Interrupts that are used in this example are re-mapped to
+    // ISR functions found within this file.
+    // This registers the interrupt handler in NVIC vector table.
+    //
+    Interrupt_register(INT_IPC_COP_GP0, &INT_IPC_GP0_IRQHandler);
+
+    //
+    // Set the priority group to indicate the PREEMPT and SUB priortiy bits.
+    //
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+
+    //
+    // Set the global and group priority to allow CPU interrupts
+    // with higher priority
+    //
+    Interrupt_setPriority(INT_IPC_COP_GP0, 2, 0);
+
+    //
+    // Enable the IPC NVIC interrupt
+    //
+    Interrupt_enable(INT_IPC_COP_GP0);
+
+    //
+    // Enable the IPC GP0 interrupt signal
+    //
+    IPC_enableInterrupt(IPC_INT_GP0);
+
+    //
+    // CPU1 requests to trigger GP interrupt on CPU0
+    //
+    IPC_request(IPC_GPFLAG_0);
+
+    //
+    // Loop.
+    //
+    for(;;)
+    {
+        GPIO_togglePin(myGPIOOutput_LED1);
+        DEVICE_DELAY_US(500000);
+    }
+}
+
+
+//
+// IPC GP0 Interrupt ISR
+//
+void INT_IPC_GP0_IRQHandler(void)
+{
+    if (IPC_getPendingStatus() == IPC_GPFLAG_0)
+    {
+        IPC_clearPendingStatus(IPC_GPFLAG_0);
+        printf("CPU0 GP0 interrupt is triggered.\r\n");
+    }
+}
+
+//
+// CPU0 APP boot CPU1
+//
+void APP_bootCPU1(uint32_t cpu1Address)
+{
+    SysCtl_setCPU1BootAddress(cpu1Address);
+    SysCtl_enableBootCPU1();
+}
+
+//
+// UART initialize
+//
+void UART_Init(void)
+{
+    //
+    // GPIO28 is the UART Rx pin.
+    //
+    GPIO_setMasterCore(DEVICE_GPIO_PIN_UARTRXDA, GPIO_CORE_CPU0);
+    GPIO_setPinConfig(DEVICE_GPIO_CFG_UARTRXDA);
+    GPIO_setDirectionMode(DEVICE_GPIO_PIN_UARTRXDA, GPIO_DIR_MODE_IN);
+    GPIO_setDrivingCapability(DEVICE_GPIO_PIN_UARTRXDA,GPIO_DRIVE_LEVEL_VERY_HIGH);
+    GPIO_setPadConfig(DEVICE_GPIO_PIN_UARTRXDA, GPIO_PIN_TYPE_STD);
+    GPIO_setQualificationMode(DEVICE_GPIO_PIN_UARTRXDA, GPIO_QUAL_ASYNC);
+
+    //
+    // GPIO29 is the UART Tx pin.
+    //
+    GPIO_setMasterCore(DEVICE_GPIO_PIN_UARTTXDA, GPIO_CORE_CPU0);
+    GPIO_setPinConfig(DEVICE_GPIO_CFG_UARTTXDA);
+    GPIO_setDirectionMode(DEVICE_GPIO_PIN_UARTTXDA, GPIO_DIR_MODE_OUT);
+    GPIO_setDrivingCapability(DEVICE_GPIO_PIN_UARTTXDA,GPIO_DRIVE_LEVEL_VERY_HIGH);
+    GPIO_setPadConfig(DEVICE_GPIO_PIN_UARTTXDA, GPIO_PIN_TYPE_STD);
+    GPIO_setQualificationMode(DEVICE_GPIO_PIN_UARTTXDA, GPIO_QUAL_ASYNC);
+
+    //
+    // Initialize UARTA and its FIFO.
+    //
+    UART_performSoftwareReset(UARTA_BASE);
+
+    //
+    // Configure UARTA for echoback.
+    //
+    UART_setConfig(UARTA_BASE, DEVICE_LSPCLK_FREQ, 115200, (UART_CONFIG_WLEN_8 |
+                                                        UART_CONFIG_STOP_ONE |
+                                                        UART_CONFIG_PAR_NONE));
+    UART_resetChannels(UARTA_BASE);
+    UART_resetRxFIFO(UARTA_BASE);
+    UART_resetTxFIFO(UARTA_BASE);
+    UART_clearInterruptStatus(UARTA_BASE, UART_INT_TXFF | UART_INT_RXFF);
+    UART_enableFIFO(UARTA_BASE);
+    UART_enableModule(UARTA_BASE);
+    UART_performSoftwareReset(UARTA_BASE);
+}
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+//
+// Redefine the fputc function to the serial port
+//
+int fputc(int ch, FILE* f)
+{
+    if (ch == '\n')
+    {
+        UART_writeCharBlockingNonFIFO(UARTA_BASE, (uint8_t)'\r');
+    }
+
+    UART_writeCharBlockingNonFIFO(UARTA_BASE, (uint8_t)ch);
+
+    return (ch);
+}
+#elif defined(__ICCARM__)
+int __io_putchar(int ch)
+{
+    if (ch == '\n')
+    {
+        UART_writeCharBlockingNonFIFO(UARTA_BASE, (uint8_t)'\r');
+    }
+
+    UART_writeCharBlockingNonFIFO(UARTA_BASE, (uint8_t)ch);
+
+    return (ch);
+}
+
+int __write(int file, char* ptr, int len)
+{
+    int i;
+    for (i = 0; i < len; i++)
+    {
+        __io_putchar(*ptr++);
+    }
+
+    return len;
+}
+#elif defined (__clang__) && !defined (__ARMCC_VERSION)
+int uart_putc(char ch, FILE *file)
+{
+    if (ch == '\n')
+    {
+        UART_writeCharBlockingNonFIFO(UARTA_BASE, (uint8_t)'\r');
+    }
+
+    UART_writeCharBlockingNonFIFO(UARTA_BASE, (uint8_t)ch);
+
+    return (ch);
+}
+
+static FILE __stdio = FDEV_SETUP_STREAM(uart_putc, NULL, NULL, _FDEV_SETUP_WRITE);
+FILE *const stdin = &__stdio;
+
+__strong_reference(stdin, stdout);
+__strong_reference(stdin, stderr);
+
+#endif
+
+//
+// End of File
+//

@@ -1,0 +1,17 @@
+Release Notes for G32R5xx SDK
+
+Update History
+
+V1.0.0 / 15-01-2025
+First Release version of G32R501 SDK.
+
+V1.1.0 / 15-04-2025
+1. Fixed certain defects in the SDK.
+2. Updated MDK and IAR project configurations to support dual-core device variants,
+   including adjustments to the corresponding dual-core linker files.
+3. Added a J-Link debug script (JLinkSettings.JLinkScript) located in device_support\g32r501\common\Jlink.
+4. Introduced pyOCD support under device_support\g32r501\common\pyOCD.
+5. Provided new example projects, such as i2c_ex6_eeprom_interrupt, and other additional demonstration routines.
+6. GCC-based linker scripts: Created a new ld folder (device_support\g32r501\common\ld) containing .ld scripts for GCC-based projects.
+
+

@@ -1,0 +1,23 @@
+This SDK contains some software subject to open source licenses. In this document, we will introduce you to the terms that
+apply to these open source software components and indicate where you can find these license.
+
+1. \kernel\FreeRTOS\Source\
+FreeRTOS is freely available under a MIT license.The source code is derived from "https://freertos.org/".
+You can find the license at this directory path.
+
+2.\device_support\g32r501\common\device\CMSIS\
+CMSIS is freely available under a Apache-2.0 license.The source code is derived from https://github.com/ARM-software/CMSIS_6
+You can find the license at this directory path.
+
+3. \device_support\g32r501
+Some .h/c files supported by the g32r501 device support are available for free under the BSD-3 license.
+Specific files can be found in the file comments.
+
+4. \driverlib\g32r501
+Some .h/c files supported by the g32r501 driverlib are available for free under the BSD-3 license.
+Specific files can be found in the file comments.
+
+You can also access the applicable open source software terms and related statements at the following URL.
+Apache License : https://opensource.org/license/apache-2-0/
+MIT License : https://opensource.org/license/mit/
+BSD License : https://opensource.org/license/bsd-3-clause/

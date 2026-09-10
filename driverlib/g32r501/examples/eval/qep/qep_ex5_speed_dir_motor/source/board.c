@@ -1,0 +1,236 @@
+//#############################################################################
+//
+// FILE:    board.c
+//
+// TITLE:   Board source file
+//
+// VERSION: 1.0.0
+//
+// DATE:    2025-01-15
+//
+//#############################################################################
+//
+//
+// $Copyright:
+// Copyright (C) 2024 Geehy Semiconductor - http://www.geehy.com/
+// Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com/
+//
+// Redistribution and use in source and binary forms, with or without 
+// modification, are permitted provided that the following conditions 
+// are met:
+// 
+//   Redistributions of source code must retain the above copyright 
+//   notice, this list of conditions and the following disclaimer.
+// 
+//   Redistributions in binary form must reproduce the above copyright
+//   notice, this list of conditions and the following disclaimer in the 
+//   documentation and/or other materials provided with the   
+//   distribution.
+// 
+//   Neither the name of Texas Instruments Incorporated nor the names of
+//   its contributors may be used to endorse or promote products derived
+//   from this software without specific prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// $
+//
+// Modifications:
+// - 2024-07-08: 
+// 1. Modified function names and macro definition names.
+//
+//###########################################################################
+
+#include "board.h"
+
+//*****************************************************************************
+//
+// Board Configurations
+// Initializes the rest of the modules.
+// Call this function in your application if you wish to do all module
+// initialization.
+// If you wish to not use some of the initializations, instead of the
+// Board_init use the individual Module_inits
+//
+//*****************************************************************************
+void Board_init()
+{
+    WRPRT_DISABLE;
+
+    PinMux_init();
+    QEP_init();
+    INTERRUPT_init();
+
+    WRPRT_ENABLE;
+}
+
+//*****************************************************************************
+//
+// PINMUX Configurations
+//
+//*****************************************************************************
+void PinMux_init()
+{
+    //
+    // PinMux for modules assigned to CPU1
+    //
+
+    //
+    // QEP1 -> myQEP0 Pinmux
+    //
+    GPIO_setPinConfig(myQEP0_QEPA_PIN_CONFIG);
+    GPIO_setDrivingCapability(myQEP0_QEPA_GPIO,GPIO_DRIVE_LEVEL_VERY_HIGH);
+    GPIO_setPadConfig(myQEP0_QEPA_GPIO, GPIO_PIN_TYPE_STD);
+    GPIO_setQualificationMode(myQEP0_QEPA_GPIO, GPIO_QUAL_SYNC);
+
+    GPIO_setPinConfig(myQEP0_QEPB_PIN_CONFIG);
+    GPIO_setDrivingCapability(myQEP0_QEPB_GPIO,GPIO_DRIVE_LEVEL_VERY_HIGH);
+    GPIO_setPadConfig(myQEP0_QEPB_GPIO, GPIO_PIN_TYPE_STD);
+    GPIO_setQualificationMode(myQEP0_QEPB_GPIO, GPIO_QUAL_SYNC);
+
+    GPIO_setPinConfig(myQEP0_QEPSTROBE_PIN_CONFIG);
+    GPIO_setDrivingCapability(myQEP0_QEPSTROBE_GPIO,GPIO_DRIVE_LEVEL_VERY_HIGH);
+    GPIO_setPadConfig(myQEP0_QEPSTROBE_GPIO, GPIO_PIN_TYPE_STD);
+    GPIO_setQualificationMode(myQEP0_QEPSTROBE_GPIO, GPIO_QUAL_SYNC);
+
+    GPIO_setPinConfig(myQEP0_QEPINDEX_PIN_CONFIG);
+    GPIO_setDrivingCapability(myQEP0_QEPINDEX_GPIO,GPIO_DRIVE_LEVEL_VERY_HIGH);
+    GPIO_setPadConfig(myQEP0_QEPINDEX_GPIO, GPIO_PIN_TYPE_STD);
+    GPIO_setQualificationMode(myQEP0_QEPINDEX_GPIO, GPIO_QUAL_SYNC);
+
+
+}
+
+//*****************************************************************************
+//
+// QEP Configurations
+//
+//*****************************************************************************
+void QEP_init(){
+    myQEP0_init();
+}
+
+void myQEP0_init(){
+    //
+    // Disable, clear all flags and interrupts
+    //
+    QEP_disableInterrupt(myQEP0_BASE,
+        (QEP_INT_GLOBAL             |
+        QEP_INT_POS_CNT_ERROR       |
+        QEP_INT_PHASE_ERROR         |
+        QEP_INT_DIR_CHANGE          |
+        QEP_INT_WATCHDOG            |
+        QEP_INT_UNDERFLOW           |
+        QEP_INT_OVERFLOW            |
+        QEP_INT_POS_COMP_READY      |
+        QEP_INT_POS_COMP_MATCH      |
+        QEP_INT_STROBE_EVNT_LATCH   |
+        QEP_INT_INDEX_EVNT_LATCH    |
+        QEP_INT_UNIT_TIME_OUT       |
+        QEP_INT_QMA_ERROR));
+    QEP_clearInterruptStatus(myQEP0_BASE,
+        (QEP_INT_GLOBAL             |
+        QEP_INT_POS_CNT_ERROR       |
+        QEP_INT_PHASE_ERROR         |
+        QEP_INT_DIR_CHANGE          |
+        QEP_INT_WATCHDOG            |
+        QEP_INT_UNDERFLOW           |
+        QEP_INT_OVERFLOW            |
+        QEP_INT_POS_COMP_READY      |
+        QEP_INT_POS_COMP_MATCH      |
+        QEP_INT_STROBE_EVNT_LATCH   |
+        QEP_INT_INDEX_EVNT_LATCH    |
+        QEP_INT_UNIT_TIME_OUT       |
+        QEP_INT_QMA_ERROR));
+    //
+    // Set the strobe input source of the QEP module.
+    //
+    QEP_setStrobeSource(myQEP0_BASE,QEP_STROBE_FROM_GPIO);
+    //
+    // Sets the polarity of the QEP module's input signals.
+    //
+    QEP_setInputPolarity(myQEP0_BASE,false,false,false,false);
+    //
+    // Configures QEP module's quadrature decoder unit.
+    //
+    QEP_setDecoderConfig(myQEP0_BASE, (QEP_CONFIG_QUADRATURE | QEP_CONFIG_1X_RESOLUTION | QEP_CONFIG_NO_SWAP | QEP_CONFIG_IGATE_DISABLE));
+    //
+    // Set the emulation mode of the QEP module.
+    //
+    QEP_setEmulationMode(myQEP0_BASE,QEP_EMULATIONMODE_RUNFREE);
+    //
+    // Configures QEP module position counter unit.
+    //
+    QEP_setPositionCounterConfig(myQEP0_BASE,QEP_POSITION_RESET_IDX,4294967295U);
+    //
+    // Sets the current encoder position.
+    //
+    QEP_setPosition(myQEP0_BASE,0U);
+    //
+    // Enables the QEP module unit timer.
+    //
+    QEP_enableUnitTimer(myQEP0_BASE,1000000U);
+    //
+    // Disables the QEP module watchdog timer.
+    //
+    QEP_disableWatchdog(myQEP0_BASE);
+    //
+    // Configures the quadrature modes in which the position count can be latched.
+    //
+    QEP_setLatchMode(myQEP0_BASE,(QEP_LATCH_UNIT_TIME_OUT|QEP_LATCH_RISING_STROBE|QEP_LATCH_RISING_INDEX));
+    //
+    // Set the quadrature mode adapter (QMA) module mode.
+    //
+    QEP_setQMAModuleMode(myQEP0_BASE,QEP_QMA_MODE_BYPASS);
+    //
+    // Enables individual QEP module interrupt sources.
+    //
+    QEP_enableInterrupt(myQEP0_BASE,(QEP_INT_UNIT_TIME_OUT));
+    //
+    // Configures the mode in which the position counter is initialized.
+    //
+    QEP_setPositionInitMode(myQEP0_BASE,(QEP_INIT_DO_NOTHING));
+    //
+    // Sets the software initialization of the encoder position counter.
+    //
+    QEP_setSWPositionInit(myQEP0_BASE,true);
+    //
+    // Sets the init value for the encoder position counter.
+    //
+    QEP_setInitialPosition(myQEP0_BASE,0U);
+    //
+    // Enables the QEP module.
+    //
+    QEP_enableModule(myQEP0_BASE);
+}
+
+//*****************************************************************************
+//
+// INTERRUPT Configurations
+//
+//*****************************************************************************
+void INTERRUPT_init(){
+
+    //
+    // Set the priority group to indicate the PREEMPT and SUB priority bits.
+    //
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+
+    //
+    // Set the global and group interrupt priority to allow CPU interrupts
+    // with higher priority
+    Interrupt_setPriority(INT_myQEP0, 0, 0);
+
+    // Interrupt Setings for INT_myQEP0
+    Interrupt_register(INT_myQEP0, &INT_myQEP0_ISR);
+    Interrupt_enable(INT_myQEP0);
+}
