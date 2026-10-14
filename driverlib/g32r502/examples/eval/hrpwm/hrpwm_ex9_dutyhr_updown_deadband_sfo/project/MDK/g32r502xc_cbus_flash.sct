@@ -1,0 +1,254 @@
+#! armclang -E --target=arm-arm-none-eabi -mcpu=cortex-m52 -xc
+;---------------------------------------------------------------------------
+; FILE:    g32r502xc_cbus_flash.sct
+; TITLE:   MDK scatter file for G32R502
+; VERSION: 1.0.0
+; DATE:    2026-08-10
+;---------------------------------------------------------------------------
+; command above MUST be in first line (no comment above!)
+
+/*
+;-------- <<< Use Configuration Wizard in Context Menu >>> -------------------
+*/
+
+/*--------------------- ITCM / DTCM RAM Configuration --------------------------
+; <h> ITCM / DTCM RAM Configuration
+;   <o0> ITCM Base Address <0x0-0xFFFFFFFF:8>
+;   <o1> ITCM Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o2> DTCM Base Address <0x0-0xFFFFFFFF:8>
+;   <o3> DTCM Size (in Bytes) <0x0-0xFFFFFFFF:8>
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __ITCM_BASE              0x00000000
+#define __ITCM_SIZE              0x00004000
+#define __DTCM_BASE              0x20000000
+#define __DTCM_SIZE              0x00006000
+
+/*--------------------- CBUS Flash Configuration -------------------------------
+; <h> CBUS Flash Configuration
+;   <o0> CBUS Flash Base Address <0x0-0xFFFFFFFF:8>
+;   <o1> CBUS Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <i> G32R502 has no ITCM Flash interface.
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __CBUS_FLASH_BASE        0x08000000
+#define __CBUS_FLASH_SIZE        0x00040000
+
+#define __ROM_BASE               __CBUS_FLASH_BASE
+#define __ROM_SIZE               __CBUS_FLASH_SIZE
+
+/*--------------------- Stack / Heap Configuration ---------------------------
+; <h> Stack / Heap Configuration
+;   <o0> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o1> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o2> Stack Top Location
+;      <0=> DTCM (Default)
+;      <1=> ITCM
+;   <i> G32R502 has no SRAM1/2/3. Heap follows the stack bank (below stack).
+;   <i> Boot Status Snapshot (if enabled) stays at DTCM physical top.
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __STACK_SIZE                  0x00000400
+#define __HEAP_SIZE                   0x00000000
+#define __STACK_TOP_LOCATION          0
+/*--------------------- Boot Status Snapshot Configuration -------------------
+; <h> Boot Status Snapshot Configuration
+;   <o> Reserve Boot Status Snapshot
+;       <0=> Disabled
+;       <1=> Reserve last 0x20 bytes of DTCM for Boot status snapshot
+;   <i> Enable this option when G32R502_DTCM_BOOT_STATUS_ENABLE is defined.
+;   <i> Snapshot at 0x20005FE0..0x20005FFF; stack moves down by 0x20.
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __BOOT_STATUS_SNAPSHOT_ENABLE       0
+
+#if __BOOT_STATUS_SNAPSHOT_ENABLE == 0
+    #define __BOOT_STATUS_SNAPSHOT_SIZE     0x00000000
+#elif __BOOT_STATUS_SNAPSHOT_ENABLE == 1
+    #define __BOOT_STATUS_SNAPSHOT_SIZE     0x00000020
+#else
+    #error "Unsupported BOOT_STATUS_SNAPSHOT_ENABLE value"
+#endif
+
+/*--------------------- Generic RW/ZI Bank Configuration ---------------------
+; <h> Generic RW/ZI Placement
+;   <o> Generic +RW/+ZI Bank
+;      <0=> DTCM only (Default)
+;      <1=> ITCM only
+;      <2=> DTCM first, spill to ITCM
+;   <i> dtcm.data/dtcm.bss always in DTCM; itcm.instruction/itcm.ramfunc in ITCM.
+;   <i> Stack/heap and .bss.ram.intvec placement are not affected.
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __RWZI_BANK  0
+
+/*--------------------- Vector Configuration ---------------------------
+; <h> Vector Execution Region Configuration
+;   <o> Vector Execution Region
+;      <0=> DTCM (Default)
+;      <1=> ITCM
+;      <2=> None (Lib / no RAM vector)
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __VECTOR_REGION  0
+
+#define __VECTOR_SIZE    0x00000400
+
+/*----------------------------------------------------------------------------
+  Vector-derived region bases (__VECTOR_REGION)
+ *----------------------------------------------------------------------------*/
+#if __VECTOR_REGION == 0
+#define __VECTOR_BASE    __DTCM_BASE
+#define __DTCM_RW_BASE   (__DTCM_BASE + __VECTOR_SIZE)
+#define __ITCM_RW_BASE   __ITCM_BASE
+#define __ITCM_RW_SIZE_RAW   __ITCM_SIZE
+#elif __VECTOR_REGION == 1
+#define __VECTOR_BASE    __ITCM_BASE
+#define __DTCM_RW_BASE   __DTCM_BASE
+#define __ITCM_RW_BASE   (__ITCM_BASE + __VECTOR_SIZE)
+#define __ITCM_RW_SIZE   (__ITCM_SIZE - __VECTOR_SIZE)
+#elif __VECTOR_REGION == 2
+#define __VECTOR_BASE    __DTCM_BASE
+#define __DTCM_RW_BASE   __DTCM_BASE
+#define __ITCM_RW_BASE   __ITCM_BASE
+#define __ITCM_RW_SIZE   __ITCM_SIZE
+#else
+    #error "Unsupported __VECTOR_REGION value"
+#endif
+
+#define __DTCM_TOP              (__DTCM_BASE + __DTCM_SIZE)
+#define __ITCM_TOP              (__ITCM_BASE + __ITCM_SIZE)
+
+#if __STACK_TOP_LOCATION == 0
+    #define __DTCM_STACK_TAX    (__STACK_SIZE + __HEAP_SIZE)
+    #define __ITCM_STACK_TAX    0
+    #define __STACK_TOP         (__DTCM_TOP - __BOOT_STATUS_SNAPSHOT_SIZE)
+#elif __STACK_TOP_LOCATION == 1
+    #define __DTCM_STACK_TAX    0
+    #define __ITCM_STACK_TAX    (__STACK_SIZE + __HEAP_SIZE)
+    #define __STACK_TOP         __ITCM_TOP
+#else
+    #error "Invalid __STACK_TOP_LOCATION (G32R502: 0=DTCM, 1=ITCM)"
+#endif
+
+#define __ITCM_RW_SIZE   (__ITCM_RW_SIZE_RAW - __ITCM_STACK_TAX)
+#define __DTCM_RW_SIZE   (__DTCM_SIZE - (__DTCM_RW_BASE - __DTCM_BASE) - __DTCM_STACK_TAX - __BOOT_STATUS_SNAPSHOT_SIZE)
+#define __HEAP_BASE             (AlignExpr((__STACK_TOP - __STACK_SIZE - __HEAP_SIZE), 8))
+
+/*--------------------- Code Execution Region Configuration ------------------
+; <h> Code Execution Region Configuration
+;   <o> Code Execution Region
+;      <0=> Flash (Default)
+;      <1=> ITCM
+;      <2=> Custom Address
+;   <i> Note: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+ *----------------------------------------------------------------------------*/
+#define __CODE_EXEC_REGION  0
+
+#if __CODE_EXEC_REGION == 0
+    #define __RO_BASE    __ROM_BASE
+    #define __RO_SIZE    __ROM_SIZE
+#elif __CODE_EXEC_REGION == 1
+    #define __RO_BASE    __ITCM_BASE
+    #define __RO_SIZE    __ITCM_SIZE
+#elif __CODE_EXEC_REGION == 2
+    /*--------------------- Custom Address Configuration ---------------------
+    ; <h> Custom Address Configuration
+    ; <i> Note1: Only edit these settings if "Code Execution Region" is set to "Custom Address (6)"
+    ; <i> Note2: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+    ;   <o0> Custom Base Address <0x0-0xFFFFFFFF:8>
+    ;   <i> Note 1: Only edit these settings if "Code Execution Region" is set to "Custom Address (6)"
+    ;   <i> Note 2: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+    ;   <o1> Custom Size (in Bytes) <0x0-0xFFFFFFFF:8>
+    ;   <i> Note 1: Only edit these settings if "Code Execution Region" is set to "Custom Address (6)"
+    ;   <i> Note 2: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+    ; </h>
+     *------------------------------------------------------------------------*/
+    #define __CUSTOM_BASE  0x08000000 // Default custom base address
+    #define __CUSTOM_SIZE  0x00040000 // Default custom size
+    #define __RO_BASE      __CUSTOM_BASE
+    #define __RO_SIZE      __CUSTOM_SIZE
+#endif
+
+LR_ROM __RO_BASE __RO_SIZE {                       ; load region (code/const)
+  ER_ROM __RO_BASE __RO_SIZE {                     ; exec = load
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+   .ANY (+XO)
+#if __CODE_EXEC_REGION == 1
+    .ANY (itcm.instruction)
+    .ANY (itcm.ramfunc)
+#endif
+  }
+
+#if __RWZI_BANK == 0
+#if __CODE_EXEC_REGION != 1
+  RW_RAM_ITCM __ITCM_RW_BASE __ITCM_RW_SIZE {
+    .ANY (itcm.instruction)
+    .ANY (itcm.ramfunc)
+  }
+#endif
+  RW_RAM_DTCM __DTCM_RW_BASE __DTCM_RW_SIZE {
+    .ANY (dtcm.data)
+    .ANY (dtcm.bss)
+    .ANY (+RW +ZI)
+  }
+#elif __RWZI_BANK == 1
+#if __CODE_EXEC_REGION != 1
+  RW_RAM_ITCM __ITCM_RW_BASE __ITCM_RW_SIZE {
+    .ANY (itcm.instruction)
+    .ANY (itcm.ramfunc)
+    .ANY (+RW +ZI)
+  }
+#else
+  RW_RAM_ITCM __ITCM_RW_BASE __ITCM_RW_SIZE {
+    .ANY (+RW +ZI)
+  }
+#endif
+  RW_RAM_DTCM __DTCM_RW_BASE __DTCM_RW_SIZE {
+    .ANY (dtcm.data)
+    .ANY (dtcm.bss)
+  }
+#elif __RWZI_BANK == 2
+  RW_RAM_DTCM __DTCM_RW_BASE __DTCM_RW_SIZE {
+    .ANY (dtcm.data)
+    .ANY (dtcm.bss)
+    .ANY (+RW +ZI)
+  }
+#if __CODE_EXEC_REGION != 1
+  RW_RAM_ITCM __ITCM_RW_BASE __ITCM_RW_SIZE {
+    .ANY (itcm.instruction)
+    .ANY (itcm.ramfunc)
+    .ANY (+RW +ZI)
+  }
+#else
+  RW_RAM_ITCM __ITCM_RW_BASE __ITCM_RW_SIZE {
+    .ANY (+RW +ZI)
+  }
+#endif
+#else
+  #error "Unsupported __RWZI_BANK value"
+#endif
+
+#if __HEAP_SIZE > 0
+  ARM_LIB_HEAP __HEAP_BASE EMPTY __HEAP_SIZE {   ; Reserve empty region for heap
+  }
+#endif
+
+  ARM_LIB_STACK __STACK_TOP EMPTY - __STACK_SIZE {   ; Reserve empty region for stack
+  }
+
+#if __BOOT_STATUS_SNAPSHOT_SIZE > 0
+  BOOT_STATUS_SNAPSHOT (__DTCM_TOP - __BOOT_STATUS_SNAPSHOT_SIZE) EMPTY __BOOT_STATUS_SNAPSHOT_SIZE {
+  }
+#endif
+}
+
+#if __VECTOR_REGION <= 1
+LR_VEC __VECTOR_BASE {                             ; RAM vector window
+  RW_VECTOR_VEC __VECTOR_BASE UNINIT {             ; .bss.ram.intvec
+    *(.bss.ram.intvec)
+  }
+}
+#endif

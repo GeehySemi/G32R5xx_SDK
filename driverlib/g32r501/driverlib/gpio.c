@@ -4,9 +4,9 @@
 //
 // TITLE:   G32R501 GPIO driver.
 //
-// VERSION: 1.0.0
+// VERSION: 1.0.1
 //
-// DATE:    2025-01-15
+// DATE:    2026-03-27
 //
 //###########################################################################
 // $Copyright:
@@ -179,7 +179,16 @@ GPIO_setInterruptPin(uint32_t pin, GPIO_ExternalIntNum extIntNum)
     }
     else
     {
-        EXTI_setTriggerSelect(pin);
+        //
+        // Check the arguments.
+        //
+        ASSERT(GPIO_isPinExtiValid(pin));
+
+        uint32_t group  = pin / 0xf;
+        uint32_t offset = pin % 0xf;
+        uint32_t select = ((group * 0x4) << 0x4) | (offset & 0xf);
+
+        EXTI_setTriggerSelect(select);
     }
 }
 

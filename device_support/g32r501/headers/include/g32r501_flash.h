@@ -219,16 +219,16 @@ union ERR_STATUS_REG {
 struct ERR_POS_BITS {                   // bits description
     Uint32 Flash0_ERR_POS_L: 6;         // 5:0 FLASH0 Error position Low
     Uint32 rsvd1: 1;                    // 6 Reserved
-    Uint32 FLASH0_ERR_TPYE_L: 1;        // 7 FLASH0 Error type Low
+    Uint32 FLASH0_ERR_TYPE_L: 1;        // 7 FLASH0 Error type Low
     Uint32 Flash0_ERR_POS_H: 6;         // 13:8 FLASH0 Error position High
     Uint32 rsvd2: 1;                    // 14 Reserved
-    Uint32 FLASH0_ERR_TPYE_H: 2;        // 15 FLASH0 Error type High
-    Uint32 Flash1_ERR_POS_L: 1;         // 21:16 FLASH1 Error position Low
+    Uint32 FLASH0_ERR_TYPE_H: 1;        // 15 FLASH0 Error type High
+    Uint32 Flash1_ERR_POS_L: 6;         // 21:16 FLASH1 Error position Low
     Uint32 rsvd3: 1;                    // 22 Reserved
-    Uint32 FLASH1_ERR_TPYE_L: 1;        // 23 FLASH1 Error type Low
-    Uint32 Flash1_ERR_POS_H: 1;         // 29:24 FLASH1 Error position High
+    Uint32 FLASH1_ERR_TYPE_L: 1;        // 23 FLASH1 Error type Low
+    Uint32 Flash1_ERR_POS_H: 6;         // 29:24 FLASH1 Error position High
     Uint32 rsvd4: 1;                    // 30 Reserved
-    Uint32 FLASH1_ERR_TPYE_H: 1;        // 31 FLASH1 Error type High
+    Uint32 FLASH1_ERR_TYPE_H: 1;        // 31 FLASH1 Error type High
 };
 
 union ERR_POS_REG {

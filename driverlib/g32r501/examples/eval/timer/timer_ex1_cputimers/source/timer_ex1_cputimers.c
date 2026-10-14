@@ -79,9 +79,9 @@ uint16_t cpuTimer2IntCount;
 //
 // Function Prototypes
 //
-void INT_TIMER0_IRQHandler(void);
-void INT_TIMER1_IRQHandler(void);
-void INT_TIMER2_IRQHandler(void);
+void INT_TMR0_IRQHandler(void);
+void INT_TMR1_IRQHandler(void);
+void INT_TMR2_IRQHandler(void);
 void initCPUTimers(void);
 void configCPUTimer(uint32_t, float, float);
 
@@ -109,9 +109,9 @@ void example_main(void)
     //
     // ISRs for each CPU Timer interrupt
     //
-    Interrupt_register(INT_TIMER0, &INT_TIMER0_IRQHandler);
-    Interrupt_register(INT_TIMER1, &INT_TIMER1_IRQHandler);
-    Interrupt_register(INT_TIMER2, &INT_TIMER2_IRQHandler);
+    Interrupt_register(INT_TMR0, &INT_TMR0_IRQHandler);
+    Interrupt_register(INT_TMR1, &INT_TMR1_IRQHandler);
+    Interrupt_register(INT_TMR2, &INT_TMR2_IRQHandler);
 
     //
     // Initializes the Device Peripheral. For this example, only initialize the
@@ -127,11 +127,11 @@ void example_main(void)
     configCPUTimer(TMR1_BASE, DEVICE_SYSCLK_FREQ, 2000000);
     configCPUTimer(TMR2_BASE, DEVICE_SYSCLK_FREQ, 4000000);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
-    Interrupt_setPriority(INT_TIMER0,0,0);
-    Interrupt_setPriority(INT_TIMER1,1,0);
-    Interrupt_setPriority(INT_TIMER2,2,0);
+    Interrupt_setPriority(INT_TMR0,0,0);
+    Interrupt_setPriority(INT_TMR1,1,0);
+    Interrupt_setPriority(INT_TMR2,2,0);
 
     //
     // To ensure precise timing, use write-only instructions to write to the
@@ -148,9 +148,9 @@ void example_main(void)
     // CPU-Timer 1, and CPU-Timer 2 respectively.
     // Enable TINT0 in the NVIC: Group 1 interrupt 7
     //
-    Interrupt_enable(INT_TIMER0);
-    Interrupt_enable(INT_TIMER1);
-    Interrupt_enable(INT_TIMER2);
+    Interrupt_enable(INT_TMR0);
+    Interrupt_enable(INT_TMR1);
+    Interrupt_enable(INT_TMR2);
 
     //
     // Starts CPU-Timer 0, CPU-Timer 1, and CPU-Timer 2.
@@ -265,7 +265,7 @@ void configCPUTimer(uint32_t cpuTimer, float freq, float period)
 //
 // cpuTimer0ISR - Counter for CpuTimer0
 //
-void INT_TIMER0_IRQHandler(void)
+void INT_TMR0_IRQHandler(void)
 {
     cpuTimer0IntCount++;
 }
@@ -273,7 +273,7 @@ void INT_TIMER0_IRQHandler(void)
 //
 // cpuTimer1ISR - Counter for CpuTimer1
 //
-void INT_TIMER1_IRQHandler(void)
+void INT_TMR1_IRQHandler(void)
 {
     //
     // The CPU acknowledges the interrupt.
@@ -284,7 +284,7 @@ void INT_TIMER1_IRQHandler(void)
 //
 // cpuTimer2ISR - Counter for CpuTimer2
 //
-void INT_TIMER2_IRQHandler(void)
+void INT_TMR2_IRQHandler(void)
 {
     //
     // The CPU acknowledges the interrupt.

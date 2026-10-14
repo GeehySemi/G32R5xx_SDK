@@ -634,25 +634,6 @@ static inline void AS_lockVMON(void)
 
 //*****************************************************************************
 //
-//! Locks the ADCIN control register.
-//!
-//! \return None.
-//
-//*****************************************************************************
-static inline void AS_lockPGAADCINMux(void)
-{
-    WRPRT_DISABLE;
-
-    //
-    // Write a 1 to the lock bit in the LOCK register.
-    //
-    HWREGH(ANALOGSUBSYS_BASE + AS_O_LOCK) |= AS_LOCK_ADCINMXSEL;
-
-    WRPRT_ENABLE;
-}
-
-//*****************************************************************************
-//
 //! Locks the CMPHPMXSEL control register.
 //!
 //! \return None.
@@ -726,26 +707,6 @@ static inline void AS_lockCMPLNMux(void)
 
     WRPRT_ENABLE;
 }
-
-//*****************************************************************************
-//
-//! Locks the VREG control register.
-//!
-//! \return None.
-//
-//*****************************************************************************
-static inline void AS_lockVREG(void)
-{
-    WRPRT_DISABLE;
-
-    //
-    // Write a 1 to the lock bit in the LOCK register.
-    //
-    HWREGH(ANALOGSUBSYS_BASE + AS_O_LOCK) |= AS_LOCK_VREGCTL;
-
-    WRPRT_ENABLE;
-}
-
 
 //*****************************************************************************
 //

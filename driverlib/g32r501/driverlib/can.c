@@ -4,9 +4,9 @@
 //
 // TITLE:   G32R501 CAN driver.
 //
-// VERSION: 1.0.0
+// VERSION: 1.0.1
 //
-// DATE:    2025-01-15
+// DATE:    2026-08-31
 //
 //###########################################################################
 // $Copyright:
@@ -46,6 +46,9 @@
 // - 2024-09-13:
 // 1. Some comments, register names, macro definitions,
 //   some function parameter types and names.
+// - 2026-08-31:
+// 2. CAN_transferMessage(): when dmaRequest is true, space IFx BUSY
+//   polls with SysCtl_delay() so DMA can perform the first IFx access.
 //
 //###########################################################################
 #include "can.h"
@@ -1009,12 +1012,17 @@ CAN_transferMessage(uint32_t base, uint16_t interface, uint32_t objID,
                                 (cmdMaskReg | (objID & CAN_IF1COM_VALMNUM_M));
 
     //
-    // Wait for busy bit to clear
+    // Wait for busy bit to clear; delay COM polls when DMA is requested.
     //
-    while((HWREGH(base + ((interface == 2U) ? CAN_O_IF2COM : CAN_O_IF1COM)) &
-          CAN_IF1COM_BUSYFLG) == CAN_IF1COM_BUSYFLG)
+    do
     {
+        if(dmaRequest)
+        {
+            SysCtl_delay(8U);
+        }
     }
+    while((HWREGH(base + ((interface == 2U) ? CAN_O_IF2COM : CAN_O_IF1COM)) &
+          CAN_IF1COM_BUSYFLG) == CAN_IF1COM_BUSYFLG);
 }
 
 

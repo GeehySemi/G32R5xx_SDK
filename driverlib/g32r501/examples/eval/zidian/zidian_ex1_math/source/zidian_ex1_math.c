@@ -51,7 +51,7 @@
 #include "driverlib.h"
 #include "device.h"
 #include "zidian_math.h"
-#include "system_g32r501_dwtmeasure.h"
+#include "system_dwtmeasure.h"
 
 //
 // Defines
@@ -81,6 +81,19 @@ volatile uint32_t dwtCycleCounts[5];
 //
 void example_main(void)
 {
+    Device_init();
+    Device_initGPIO();
+
+    //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
     volatile float x, y;
     uint16_t i;
 

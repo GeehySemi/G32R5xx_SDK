@@ -1,0 +1,12 @@
+﻿# pyocd.yaml - G32R502 common template
+#
+# Place this file (and pyocd_user.py) in the project/working directory, or pass:
+#   -j <dir>   and/or   --config pyocd.yaml
+#
+# Vector base is configured in pyocd_user.py (VECTOR_TABLE_ADDRESS), not here.
+
+target_override: g32r502xx
+user_script: pyocd_user.py
+flash.timeout.init: 30.0
+frequency: 8000000
+persist: true

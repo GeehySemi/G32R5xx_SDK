@@ -112,7 +112,7 @@ void example_main(void)
     //
     SysCtl_disablePeripheral(SYSCTL_PERIPH_CLK_TBCLKSYNC);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     Interrupt_setPriority(INT_PWM1_TZ,1,0);
     Interrupt_setPriority(INT_PWM2_TZ,2,0);

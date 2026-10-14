@@ -93,7 +93,7 @@ uint16_t receivedChar = 0x0;
 //
 // Function Prototypes
 //
-void INT_LINA_0_IRQHandler(void);
+void INT_LINA_1_IRQHandler(void);
 void configureUARTMode(void);
 
 //
@@ -129,16 +129,16 @@ void example_main(void)
     // ISR functions found within this file.
     // This registers the interrupt handler in NVIC vector table.
     //
-    Interrupt_register(INT_LINA_0, &INT_LINA_0_IRQHandler);
+    Interrupt_register(INT_LINA_1, &INT_LINA_1_IRQHandler);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
-    Interrupt_setPriority(INT_LINA_0, 0, 0);
+    Interrupt_setPriority(INT_LINA_1, 0, 0);
 
     //
     // Enable the LIN interrupt signal
     //
-    Interrupt_enable(INT_LINA_0);
+    Interrupt_enable(INT_LINA_1);
 
     //
     // Initialize the LIN module
@@ -280,7 +280,7 @@ configureUARTMode(void)
 // data is received. Once received, the data is read and interrupt status 
 // cleared.
 //
-void INT_LINA_0_IRQHandler(void)
+void INT_LINA_1_IRQHandler(void)
 {
     //
     // Increment the interrupt count

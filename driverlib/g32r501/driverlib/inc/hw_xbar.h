@@ -85,8 +85,6 @@
 #define XBAR_FLG1_COMP6_CTRIPH      0x800U        // Input Flag for COMP6.CTRIPH Signal
 #define XBAR_FLG1_COMP7_CTRIPL      0x1000U       // Input Flag for COMP7.CTRIPL Signal
 #define XBAR_FLG1_COMP7_CTRIPH      0x2000U       // Input Flag for COMP7.CTRIPH Signal
-#define XBAR_FLG1_COMP8_CTRIPL      0x4000U       // Input Flag for COMP8.CTRIPL Signal
-#define XBAR_FLG1_COMP8_CTRIPH      0x8000U       // Input Flag for COMP8.CTRIPH Signal
 #define XBAR_FLG1_COMP1_CTRIPOUTL   0x10000U      // Input Flag for COMP1.CTRIPOUTL Signal
 #define XBAR_FLG1_COMP1_CTRIPOUTH   0x20000U      // Input Flag for COMP1.CTRIPOUTH Signal
 #define XBAR_FLG1_COMP2_CTRIPOUTL   0x40000U      // Input Flag for COMP2.CTRIPOUTL Signal
@@ -101,8 +99,6 @@
 #define XBAR_FLG1_COMP6_CTRIPOUTH   0x8000000U    // Input Flag for COMP6.CTRIPOUTH Signal
 #define XBAR_FLG1_COMP7_CTRIPOUTL   0x10000000U   // Input Flag for COMP7.CTRIPOUTL Signal
 #define XBAR_FLG1_COMP7_CTRIPOUTH   0x20000000U   // Input Flag for COMP7.CTRIPOUTH Signal
-#define XBAR_FLG1_COMP8_CTRIPOUTL   0x40000000U   // Input Flag for COMP8.CTRIPOUTL Signal
-#define XBAR_FLG1_COMP8_CTRIPOUTH   0x80000000U   // Input Flag for COMP8.CTRIPOUTH Signal
 
 //*************************************************************************************************
 //
@@ -226,8 +222,6 @@
 #define XBAR_CLR1_COMP6_CTRIPH      0x800U        // Input Flag Clear for COMP6.CTRIPH Signal
 #define XBAR_CLR1_COMP7_CTRIPL      0x1000U       // Input Flag Clear for COMP7.CTRIPL Signal
 #define XBAR_CLR1_COMP7_CTRIPH      0x2000U       // Input Flag Clear for COMP7.CTRIPH Signal
-#define XBAR_CLR1_COMP8_CTRIPL      0x4000U       // Input Flag Clear for COMP8.CTRIPL Signal
-#define XBAR_CLR1_COMP8_CTRIPH      0x8000U       // Input Flag Clear for COMP8.CTRIPH Signal
 #define XBAR_CLR1_COMP1_CTRIPOUTL   0x10000U      // Input Flag Clear for COMP1.CTRIPOUTL Signal
 #define XBAR_CLR1_COMP1_CTRIPOUTH   0x20000U      // Input Flag Clear for COMP1.CTRIPOUTH Signal
 #define XBAR_CLR1_COMP2_CTRIPOUTL   0x40000U      // Input Flag Clear for COMP2.CTRIPOUTL Signal
@@ -242,8 +236,6 @@
 #define XBAR_CLR1_COMP6_CTRIPOUTH   0x8000000U    // Input Flag Clear for COMP6.CTRIPOUTH Signal
 #define XBAR_CLR1_COMP7_CTRIPOUTL   0x10000000U   // Input Flag Clear for COMP7.CTRIPOUTL Signal
 #define XBAR_CLR1_COMP7_CTRIPOUTH   0x20000000U   // Input Flag Clear for COMP7.CTRIPOUTH Signal
-#define XBAR_CLR1_COMP8_CTRIPOUTL   0x40000000U   // Input Flag Clear for COMP8.CTRIPOUTL Signal
-#define XBAR_CLR1_COMP8_CTRIPOUTH   0x80000000U   // Input Flag Clear for COMP8.CTRIPOUTH Signal
 
 //*************************************************************************************************
 //

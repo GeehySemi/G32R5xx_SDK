@@ -194,12 +194,12 @@ struct LOCK_BITS {                     // bits description
     Uint32 ANAREFCTL  : 1;             // [1..1] ANAREFCTL Register Lock
     Uint32 VMONCTL    : 1;             // [2..2] AS_VMONCTL Register Lock
     Uint32 rsvd1      : 1;
-    Uint32 ADCINMXSEL : 1;             // [4..4] AS_ADCINMXSEL Register Lock
+    Uint32 rsvd4:1;                    // 4 Reserved
     Uint32 CMPHPMXSEL : 1;             // [5..5] AS_CMPHPMXSEL Register Lock
     Uint32 CMPLPMXSEL : 1;             // [6..6] AS_CMPLPMXSEL Register Lock
     Uint32 CMPHNMXSEL : 1;             // [7..7] AS_CMPHNMXSEL Register Lock
     Uint32 CMPLNMXSEL : 1;             // [8..8] AS_CMPLNMXSEL Register Lock
-    Uint32 VREGCTL    : 1;             // [9..9] AS_VREGCTL Register Lock
+    Uint32 rsvd9:1;                    // [9..9] Reserved
     Uint32 rsvd2      : 6;
     Uint32 rsvd3      :16;
 };

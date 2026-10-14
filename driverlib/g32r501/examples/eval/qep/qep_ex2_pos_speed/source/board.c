@@ -47,6 +47,8 @@
 // Modifications:
 // - 2024-07-08: 
 // 1. Modified function names and macro definition names.
+// - 2026-08-18:
+// 1. Set QEP unit timer period to DEVICE_APBCLK_FREQ / 100.
 //
 //###########################################################################
 
@@ -143,11 +145,9 @@ void myQEP0_init(){
     QEP_setPosition(myQEP0_BASE,0U);
     //
     // Enables the QEP module unit timer.
-    // The unit timer is set to 1000000U to maintain a 10ms interval
-    // at 100MHz frequency, which corresponds to a 100Hz timer frequency.
-    // This ensures consistency with the FREQ_SCALER_FR calculation in qep_ex1_calculation.c.
+    // Period = DEVICE_APBCLK_FREQ / 100 -> 10 ms timeout (100 Hz) at 100 MHz APBCLK.
     //
-    QEP_enableUnitTimer(myQEP0_BASE, 1000000);
+    QEP_enableUnitTimer(myQEP0_BASE, (DEVICE_APBCLK_FREQ / 100U));
     //
     // Disables the QEP module watchdog timer.
     //

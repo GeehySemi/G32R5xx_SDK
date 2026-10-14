@@ -176,7 +176,7 @@ union EXTI_EMASK0_REG {
     struct  EXTI_EMASK0_BITS  bit;
 };
 
-struct EXTI_IPEND0_BITS {          // bits description
+struct EXTI_IPEND0_BITS {          // bits description (write 1 to clear, W1C)
     Uint32 IPEND0:1;                   // 0 Interrupt Pending Flag of Line 0 of CPU0
     Uint32 IPEND1:1;                   // 1 Interrupt Pending Flag of Line 1 of CPU0
     Uint32 IPEND2:1;                   // 2 Interrupt Pending Flag of Line 2 of CPU0
@@ -251,7 +251,7 @@ union EXTI_EMASK1_REG {
     struct  EXTI_EMASK1_BITS  bit;
 };
 
-struct EXTI_IPEND1_BITS {                // bits description
+struct EXTI_IPEND1_BITS {                // bits description (write 1 to clear, W1C)
     Uint32 IPEND0:1;                     // 0 Interrupt Pending Flag of Line 0 of CPU1
     Uint32 IPEND1:1;                     // 1 Interrupt Pending Flag of Line 1 of CPU1
     Uint32 IPEND2:1;                     // 2 Interrupt Pending Flag of Line 2 of CPU1

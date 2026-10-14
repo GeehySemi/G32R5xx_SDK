@@ -76,8 +76,8 @@ struct XBARFLG1_BITS {                  // bits description
     Uint32 COMP6_CTRIPH:1;             // 11 Input Flag for COMP6.CTRIPH Signal
     Uint32 COMP7_CTRIPL:1;             // 12 Input Flag for COMP7.CTRIPL Signal
     Uint32 COMP7_CTRIPH:1;             // 13 Input Flag for COMP7.CTRIPH Signal
-    Uint32 COMP8_CTRIPL:1;             // 14 Input Flag for COMP8.CTRIPL Signal
-    Uint32 COMP8_CTRIPH:1;             // 15 Input Flag for COMP8.CTRIPH Signal
+    Uint32 rsvd1:1;                    // 14 Reserved
+    Uint32 rsvd2:1;                    // 15 Reserved
     Uint32 COMP1_CTRIPOUTL:1;          // 16 Input Flag for COMP1.CTRIPOUTL Signal
     Uint32 COMP1_CTRIPOUTH:1;          // 17 Input Flag for COMP1.CTRIPOUTH Signal
     Uint32 COMP2_CTRIPOUTL:1;          // 18 Input Flag for COMP2.CTRIPOUTL Signal
@@ -92,8 +92,8 @@ struct XBARFLG1_BITS {                  // bits description
     Uint32 COMP6_CTRIPOUTH:1;          // 27 Input Flag for COMP6.CTRIPOUTH Signal
     Uint32 COMP7_CTRIPOUTL:1;          // 28 Input Flag for COMP7.CTRIPOUTL Signal
     Uint32 COMP7_CTRIPOUTH:1;          // 29 Input Flag for COMP7.CTRIPOUTH Signal
-    Uint32 COMP8_CTRIPOUTL:1;          // 30 Input Flag for COMP8.CTRIPOUTL Signal
-    Uint32 COMP8_CTRIPOUTH:1;          // 31 Input Flag for COMP8.CTRIPOUTH Signal
+    Uint32 rsvd3:1;                    // 30 Reserved
+    Uint32 rsvd4:1;                    // 31 Reserved
 };
 
 union XBARFLG1_REG {
@@ -236,8 +236,8 @@ struct XBARCLR1_BITS {                  // bits description
     Uint32 COMP6_CTRIPH:1;             // 11 Input Flag Clear for COMP6.CTRIPH Signal
     Uint32 COMP7_CTRIPL:1;             // 12 Input Flag Clear for COMP7.CTRIPL Signal
     Uint32 COMP7_CTRIPH:1;             // 13 Input Flag Clear for COMP7.CTRIPH Signal
-    Uint32 COMP8_CTRIPL:1;             // 14 Input Flag Clear for COMP8.CTRIPL Signal
-    Uint32 COMP8_CTRIPH:1;             // 15 Input Flag Clear for COMP8.CTRIPH Signal
+    Uint32 rsvd5:1;                    // 14 Reserved
+    Uint32 rsvd6:1;                    // 15 Reserved
     Uint32 COMP1_CTRIPOUTL:1;          // 16 Input Flag Clear for COMP1.CTRIPOUTL Signal
     Uint32 COMP1_CTRIPOUTH:1;          // 17 Input Flag Clear for COMP1.CTRIPOUTH Signal
     Uint32 COMP2_CTRIPOUTL:1;          // 18 Input Flag Clear for COMP2.CTRIPOUTL Signal
@@ -252,8 +252,8 @@ struct XBARCLR1_BITS {                  // bits description
     Uint32 COMP6_CTRIPOUTH:1;          // 27 Input Flag Clear for COMP6.CTRIPOUTH Signal
     Uint32 COMP7_CTRIPOUTL:1;          // 28 Input Flag Clear for COMP7.CTRIPOUTL Signal
     Uint32 COMP7_CTRIPOUTH:1;          // 29 Input Flag Clear for COMP7.CTRIPOUTH Signal
-    Uint32 COMP8_CTRIPOUTL:1;          // 30 Input Flag Clear for COMP8.CTRIPOUTL Signal
-    Uint32 COMP8_CTRIPOUTH:1;          // 31 Input Flag Clear for COMP8.CTRIPOUTH Signal
+    Uint32 rsvd7:1;                    // 30 Reserved
+    Uint32 rsvd8:1;                    // 31 Reserved
 };
 
 union XBARCLR1_REG {

@@ -158,7 +158,7 @@ void example_main(void)
     Interrupt_register(INT_PWM2, &INT_PWM2_IRQHandler);
     Interrupt_register(INT_PWM3, &INT_PWM3_IRQHandler);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     Interrupt_setPriority(INT_PWM1,0,0);
     Interrupt_setPriority(INT_PWM2,1,0);

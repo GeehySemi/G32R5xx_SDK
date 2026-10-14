@@ -1,64 +1,44 @@
 /*!
  * @file        g32r501dxy_cpu1_cbus_flash_secure.ld
+ * @brief       G32R501 linker script (Eclipse / llvm-lld) - dxy CPU1 CBUS Flash secure
+ * @version     V1.0.2
+ * @date        2026-08-11
  *
- * @brief       Linker script for G32R501 series
- *              640Kbytes FLASH, 128KByte RAM
+ * LAYOUT SUMMARY (read this if the filename is unclear)
+ * -------------------------------------------------------
+ * Template ID : CF-V0-R0-SEC
+ * Code exec   : Secure CBUS Flash 0x08060000 (256 KB)
+ * RAM vector  : DTCM 0x20000000..0x200003FF (.bss.ram.intvec)
+ * Generic RW  : bit-mask pool (default all banks)
+ * Stack/heap  : DTCM top (stack 0x00000400, heap 0x00000000)
  *
- * @version     V1.0.0
- *
- * @date        2025-01-15
- *
- * @attention
- *
- *  Copyright (C) 2025 Geehy Semiconductor
- *
- *  You may not use this file except in compliance with the
- *  GEEHY COPYRIGHT NOTICE (GEEHY SOFTWARE PACKAGE LICENSE).
- *
- *  The program is only for reference, which is distributed in the hope
- *  that it will be useful and instructional for customers to develop
- *  their software. Unless required by applicable law or agreed to in
- *  writing, the program is distributed on an "AS IS" BASIS, WITHOUT
- *  ANY WARRANTY OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the GEEHY SOFTWARE PACKAGE LICENSE for the governing permissions
- *  and limitations under the License.
- */
-
-/*
- *-------- <<< Use Configuration Wizard in Context Menu >>> -------------------
+ * Generic RW/ZI: multi-region pool (lld --enable-non-contiguous-regions);
+ * Eclipse must pass -Wl,--enable-non-contiguous-regions.
+ * MDK/IAR equivalent:
+ *   __VECTOR_REGION / __RWZI_BANK match this master defaults
  */
 
 /*---------------------- Flash Configuration ----------------------------------
   <h> Flash Configuration
-    <o0> Flash Base Address <0x0-0xFFFFFFFF:8>
-    <o1> Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
+    <o0> Flash / CBUS / ITCM Flash bases and sizes (family-specific)
   </h>
-  -----------------------------------------------------------------------------*/
-/* This area allows users to be set with encryption permissions. */
-__CPU0_CBUS_SECURE_ROM_BASE   = 0x08000000;
-__CPU0_CBUS_SECURE_ROM_SIZE   = 0x00050000;
+  ----------------------------------------------------------------------------*/
 
-/* This area does not allow users to be set with encryption permissions. */
-__CPU0_CBUS_UNSECURE_ROM_BASE = 0x08050000;
-__CPU0_CBUS_UNSECURE_ROM_SIZE = 0x00010000;
-
-__CPU1_CBUS_ROM_BASE = 0x08060000;
-__CPU1_CBUS_ROM_SIZE = 0x00040000;
+__CBUS_FLASH_BASE = 0x08060000;
+__CBUS_FLASH_SIZE = 0x00040000;
+__ITCM_FLASH_BASE = 0x00000000;
+__ITCM_FLASH_SIZE = 0x00000000;
 
 /*--------------------- Embedded RAM Configuration ----------------------------
   <h> RAM Configuration
-    <o0> RAM Base Address    <0x0-0xFFFFFFFF:8>
-    <o1> RAM Size (in Bytes) <0x0-0xFFFFFFFF:8>
+    <o0> ITCM / DTCM physical base and size (family-specific)
   </h>
- -----------------------------------------------------------------------------*/
+ ----------------------------------------------------------------------------*/
+
 __CPU0_ITCM_RAM_BASE = 0x00000000;
-__CPU0_ITCM_RAM_SIZE = 0x00000000;
-__CPU0_DTCM_RAM_BASE = 0x20000000;
-__CPU0_DTCM_RAM_SIZE = 0x00000000;
-__CPU1_ITCM_RAM_BASE = 0x00000000;
-__CPU1_ITCM_RAM_SIZE = 0x00002000;
-__CPU1_DTCM_RAM_BASE = 0x20000000;
-__CPU1_DTCM_RAM_SIZE = 0x00002000;
+__CPU0_ITCM_RAM_SIZE = 0x00002000;
+__DTCM_PHYS_BASE = 0x20000000;
+__DTCM_PHYS_SIZE = 0x00002000;
 
 __SRAM1_BASE = 0x20100000;
 __SRAM1_SIZE = 0x00002000;
@@ -67,68 +47,56 @@ __SRAM2_SIZE = 0x00002000;
 __SRAM3_BASE = 0x20300000;
 __SRAM3_SIZE = 0x00008000;
 
-
+__SRAM1_ENABLED = 1;
+__SRAM2_ENABLED = 1;
+__SRAM3_ENABLED = 1;
 /*--------------------- Stack / Heap Configuration ----------------------------
   <h> Stack / Heap Configuration
     <o0> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
     <o1> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
   </h>
   -----------------------------------------------------------------------------*/
-__STACK_SIZE = 0x0001000;
-__HEAP_SIZE  = 0x0000000;
+__STACK_SIZE = 0x00000400;
+__HEAP_SIZE  = 0x00000000;
 
-/*
- *-------------------- <<< end of configuration section >>> -------------------
- */
+__BOOT_STATUS_SNAPSHOT_ENABLE = 0;
+__BOOT_STATUS_SNAPSHOT_SIZE = __BOOT_STATUS_SNAPSHOT_ENABLE * 0x20;
 
-/* ARMv8-M stack sealing:
-   to use ARMv8-M stack sealing set __STACKSEAL_SIZE to 8 otherwise keep 0
- */
-__STACKSEAL_SIZE = 8;
+__VECTOR_REGION = 0;
+__VECTOR_SIZE = 0x00000400;
+__RESERVED_VECTOR_SIZE = __VECTOR_SIZE;
+__RWZI_BANK = 0x0000001F;
 
+ASSERT((__RWZI_BANK & 0x1F) != 0, "__RWZI_BANK must select a bank");
+ASSERT(((__RWZI_BANK & 0x04) == 0) || (__SRAM1_ENABLED != 0), "RWZI SRAM1 bit without ENABLE");
+ASSERT(((__RWZI_BANK & 0x08) == 0) || (__SRAM2_ENABLED != 0), "RWZI SRAM2 bit without ENABLE");
+ASSERT(((__RWZI_BANK & 0x10) == 0) || (__SRAM3_ENABLED != 0), "RWZI SRAM3 bit without ENABLE");
+__DTCM_PHYS_TOP = __DTCM_PHYS_BASE + __DTCM_PHYS_SIZE;
+__DTCM_RW_SIZE = __DTCM_PHYS_SIZE - __RESERVED_VECTOR_SIZE - __STACK_SIZE - __HEAP_SIZE - __BOOT_STATUS_SNAPSHOT_SIZE;
+__STACK_TOP_ADDR = __DTCM_PHYS_TOP - __BOOT_STATUS_SNAPSHOT_SIZE;
+__BOOT_STATUS_SNAPSHOT_BASE = __DTCM_PHYS_TOP - __BOOT_STATUS_SNAPSHOT_SIZE;
 
 MEMORY
 {
-  CPU0_SECURE_FLASH   (rx) : ORIGIN = __CPU0_CBUS_SECURE_ROM_BASE,   LENGTH = __CPU0_CBUS_SECURE_ROM_SIZE
-  CPU0_UNSECURE_FLASH (rx) : ORIGIN = __CPU0_CBUS_UNSECURE_ROM_BASE, LENGTH = __CPU0_CBUS_UNSECURE_ROM_SIZE
-  CPU1_FLASH    (rx)  : ORIGIN = __CPU1_CBUS_ROM_BASE, LENGTH = __CPU1_CBUS_ROM_SIZE
-  CPU1_ITCM_RAM (rwx) : ORIGIN = __CPU1_ITCM_RAM_BASE, LENGTH = __CPU1_ITCM_RAM_SIZE
-  CPU1_DTCM_RAM (rwx) : ORIGIN = __CPU1_DTCM_RAM_BASE, LENGTH = __CPU1_DTCM_RAM_SIZE
-  SRAM1         (rwx) : ORIGIN = __SRAM1_BASE, LENGTH = __SRAM1_SIZE
-  SRAM2         (rwx) : ORIGIN = __SRAM2_BASE, LENGTH = __SRAM2_SIZE
-  SRAM3         (rwx) : ORIGIN = __SRAM3_BASE, LENGTH = __SRAM3_SIZE
+  FLASH    (rx)  : ORIGIN = __CBUS_FLASH_BASE, LENGTH = __CBUS_FLASH_SIZE /* CPU0 code/const */
+  ITCM_RAM (rwx) : ORIGIN = __CPU0_ITCM_RAM_BASE, LENGTH = __CPU0_ITCM_RAM_SIZE /* custom itcm.* */
+  VECTOR_RAM (rwx) : ORIGIN = __DTCM_PHYS_BASE, LENGTH = __RESERVED_VECTOR_SIZE /* .bss.ram.intvec */
+  DTCM_RAM (rwx) : ORIGIN = __DTCM_PHYS_BASE + __RESERVED_VECTOR_SIZE, LENGTH = __DTCM_RW_SIZE /* RW/ZI after vector */
+  DTCM_STACK (rwx) : ORIGIN = __STACK_TOP_ADDR - __STACK_SIZE, LENGTH = __STACK_SIZE + __BOOT_STATUS_SNAPSHOT_SIZE /* stack at DTCM top */
+  SRAM1      (rwx) : ORIGIN = __SRAM1_BASE, LENGTH = __SRAM1_SIZE /* sram1.share_data */
+  SRAM2      (rwx) : ORIGIN = __SRAM2_BASE, LENGTH = __SRAM2_SIZE /* sram2.share_data */
+  SRAM3      (rwx) : ORIGIN = __SRAM3_BASE, LENGTH = __SRAM3_SIZE /* sram3.share_data */
 }
 
-/* Linker script to place sections and symbol values. Should be used together
- * with other linker script that defines memory regions FLASH and RAM.
- * It references following symbols, which must be defined in code:
- *   Reset_Handler : Entry of reset handler
- *
- * It defines following symbols, which code can use without definition:
- *   __exidx_start
- *   __exidx_end
- *   __copy_table_start__
- *   __copy_table_end__
- *   __zero_table_start__
- *   __zero_table_end__
- *   __etext          (deprecated)
- *   __data_start__
- *   __preinit_array_start
- *   __preinit_array_end
- *   __init_array_start
- *   __init_array_end
- *   __fini_array_start
- *   __fini_array_end
- *   __data_end__
- *   __bss_start__
- *   __bss_end__
- *   __end__
- *   end
- *   __HeapLimit
- *   __StackLimit
- *   __StackTop
- *   __stack
- *   __StackSeal      (only if ARMv8-M stack sealing is used)
+
+/*
+ * It defines following symbols (CMSIS-style), usable without definition:
+ *   __exidx_start / __exidx_end
+ *   __copy_table_start__ / __copy_table_end__
+ *   __zero_table_start__ / __zero_table_end__
+ *   __data_start__ / __data_end__ / __bss_start__ / __bss_end__
+ *   __HeapLimit / __StackLimit / __StackTop / __stack
+ *   __cpu1_image_start__ / __cpu1_image_end__ (when CPU1 stub present)
  */
 ENTRY(Reset_Handler)
 
@@ -137,220 +105,122 @@ SECTIONS
   .text :
   {
     KEEP(*(.vectors))
+    KEEP(*(RESET))
     *(.text*)
-
     KEEP(*(.init))
     KEEP(*(.fini))
-
-    /* .ctors */
     *crtbegin.o(.ctors)
     *crtbegin?.o(.ctors)
     *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
     *(SORT(.ctors.*))
     *(.ctors)
-
-    /* .dtors */
     *crtbegin.o(.dtors)
     *crtbegin?.o(.dtors)
     *(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
     *(SORT(.dtors.*))
     *(.dtors)
-
     *(.rodata*)
-
     KEEP(*(.eh_frame*))
-  } > CPU1_FLASH
+  } > FLASH
 
-  /*
-   * SG veneers:
-   * All SG veneers are placed in the special output section .gnu.sgstubs. Its start address
-   * must be set, either with the command line option '--section-start' or in a linker script,
-   * to indicate where to place these veneers in memory.
-   */
-/*
-  .gnu.sgstubs :
-  {
-    . = ALIGN(32);
-  } > CPU1_FLASH
-*/
   .ARM.extab :
   {
     *(.ARM.extab* .gnu.linkonce.armextab.*)
-  } > CPU1_FLASH
+  } > FLASH
 
   __exidx_start = .;
   .ARM.exidx :
   {
     *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-  } > CPU1_FLASH
+  } > FLASH
   __exidx_end = .;
 
   .copy.table :
   {
     . = ALIGN(4);
     __copy_table_start__ = .;
-
-    LONG (LOADADDR(.data))
-    LONG (ADDR(.data))
-    LONG (SIZEOF(.data) / 4)
-
-    LONG (LOADADDR(.itcm_custom_section))
-    LONG (ADDR(.itcm_custom_section))
-    LONG (SIZEOF(.itcm_custom_section) / 4)
-
-    LONG (LOADADDR(.dtcm.data))
-    LONG (ADDR(.dtcm.data))
-    LONG (SIZEOF(.dtcm.data) / 4)
-
-    LONG (LOADADDR(.sram1.share_data))
-    LONG (ADDR(.sram1.share_data))
-    LONG (SIZEOF(.sram1.share_data) / 4)
-
-    LONG (LOADADDR(.sram2.share_data))
-    LONG (ADDR(.sram2.share_data))
-    LONG (SIZEOF(.sram2.share_data) / 4)
-
-    LONG (LOADADDR(.sram3.share_data))
-    LONG (ADDR(.sram3.share_data))
-    LONG (SIZEOF(.sram3.share_data) / 4)
-
-    /* Add each additional data section here */
-/*
-    LONG (LOADADDR(.data2))
-    LONG (ADDR(.data2))
-    LONG (SIZEOF(.data2) / 4)
-*/
+    LONG(LOADADDR(.data))
+    LONG(ADDR(.data))
+    LONG(SIZEOF(.data) / 4)
+    LONG(LOADADDR(.data_itcm))
+    LONG(ADDR(.data_itcm))
+    LONG(SIZEOF(.data_itcm) / 4)
+    LONG(LOADADDR(.data_sram1))
+    LONG(ADDR(.data_sram1))
+    LONG(SIZEOF(.data_sram1) / 4)
+    LONG(LOADADDR(.data_sram2))
+    LONG(ADDR(.data_sram2))
+    LONG(SIZEOF(.data_sram2) / 4)
+    LONG(LOADADDR(.data_sram3))
+    LONG(ADDR(.data_sram3))
+    LONG(SIZEOF(.data_sram3) / 4)
+    LONG(LOADADDR(.itcm_custom_section))
+    LONG(ADDR(.itcm_custom_section))
+    LONG(SIZEOF(.itcm_custom_section) / 4)
+    LONG(LOADADDR(.dtcm.data))
+    LONG(ADDR(.dtcm.data))
+    LONG(SIZEOF(.dtcm.data) / 4)
+    LONG(LOADADDR(.sram1.share_data))
+    LONG(ADDR(.sram1.share_data))
+    LONG(SIZEOF(.sram1.share_data) / 4)
+    LONG(LOADADDR(.sram2.share_data))
+    LONG(ADDR(.sram2.share_data))
+    LONG(SIZEOF(.sram2.share_data) / 4)
+    LONG(LOADADDR(.sram3.share_data))
+    LONG(ADDR(.sram3.share_data))
+    LONG(SIZEOF(.sram3.share_data) / 4)
     __copy_table_end__ = .;
-  } > CPU1_FLASH
+  } > FLASH
 
   .zero.table :
   {
     . = ALIGN(4);
     __zero_table_start__ = .;
-
-    LONG (ADDR(.bss))
-    LONG (SIZEOF(.bss) / 4)
-
-    LONG (ADDR(.dtcm.bss))
-    LONG (SIZEOF(.dtcm.bss) / 4)
-
-    /* Add each additional bss section here */
-/*
-    LONG (ADDR(.bss2))
-    LONG (SIZEOF(.bss2) / 4)
-*/
+    LONG(ADDR(.bss))
+    LONG(SIZEOF(.bss) / 4)
+    LONG(ADDR(.bss_itcm))
+    LONG(SIZEOF(.bss_itcm) / 4)
+    LONG(ADDR(.bss_sram1))
+    LONG(SIZEOF(.bss_sram1) / 4)
+    LONG(ADDR(.bss_sram2))
+    LONG(SIZEOF(.bss_sram2) / 4)
+    LONG(ADDR(.bss_sram3))
+    LONG(SIZEOF(.bss_sram3) / 4)
+    LONG(ADDR(.dtcm.bss))
+    LONG(SIZEOF(.dtcm.bss) / 4)
     __zero_table_end__ = .;
-  } > CPU1_FLASH
+  } > FLASH
 
-  /*
-   * This __etext variable is kept for backward compatibility with older,
-   * ASM based startup files.
-   */
   PROVIDE(__etext = LOADADDR(.data));
 
-  .data : ALIGN(4)
+  /* RAM vector table (NOLOAD); VTOR target when REGION=0/1 */
+  .ram.intvec (NOLOAD) :
   {
-    __data_load__ = LOADADDR(.data);
-    __data_start__ = .;
-    *(vtable)
-    *(.data)
-    *(.data.*)
-
+    . = ALIGN(__VECTOR_SIZE);
+    __ram_intvec_start__ = .;
+    KEEP(*(.bss.ram.intvec))
+    KEEP(*(ram.intvec))
     . = ALIGN(4);
-    /* preinit data */
-    PROVIDE_HIDDEN (__preinit_array_start = .);
-    KEEP(*(.preinit_array))
-    PROVIDE_HIDDEN (__preinit_array_end = .);
+    __ram_intvec_end__ = .;
+  } > VECTOR_RAM
 
-    . = ALIGN(4);
-    /* init data */
-    PROVIDE_HIDDEN (__init_array_start = .);
-    KEEP(*(SORT(.init_array.*)))
-    KEEP(*(.init_array))
-    PROVIDE_HIDDEN (__init_array_end = .);
 
-    . = ALIGN(4);
-    /* finit data */
-    PROVIDE_HIDDEN (__fini_array_start = .);
-    KEEP(*(SORT(.fini_array.*)))
-    KEEP(*(.fini_array))
-    PROVIDE_HIDDEN (__fini_array_end = .);
-
-    KEEP(*(.jcr*))
-    . = ALIGN(4);
-    /* All data end */
-    __data_end__ = .;
-
-  } > CPU1_ITCM_RAM AT > CPU1_FLASH
-
-  /*
-   * Secondary data section, optional
-   *
-   * Remember to add each additional data section
-   * to the .copy.table above to assure proper
-   * initialization during startup.
-   */
-/*
-  .data2 : ALIGN(4)
+  .itcm_custom_section : ALIGN(4)
   {
-    . = ALIGN(4);
-    __data2_start__ = .;
-    *(.data2)
-    *(.data2.*)
-    . = ALIGN(4);
-    __data2_end__ = .;
-
-  } > CPU1_DTCM_RAM AT > CPU1_FLASH
-*/
-
-  .bss :
-  {
-    . = ALIGN(4);
-    __bss_start__ = .;
-    *(.bss)
-    *(.bss.*)
-    *(COMMON)
-    . = ALIGN(4);
-    __bss_end__ = .;
-  } > CPU1_ITCM_RAM AT > CPU1_ITCM_RAM
-
-  /*
-   * Secondary bss section, optional
-   *
-   * Remember to add each additional bss section
-   * to the .zero.table above to assure proper
-   * initialization during startup.
-   */
-/*
-  .bss2 :
-  {
-    . = ALIGN(4);
-    __bss2_start__ = .;
-    *(.bss2)
-    *(.bss2.*)
-    . = ALIGN(4);
-    __bss2_end__ = .;
-  } > CPU1_DTCM_RAM AT > CPU1_DTCM_RAM
-*/
-
-  .itcm_custom_section :
-  {
-    . = ALIGN(4);
     __itcm_custom_section_start__ = .;
     *(itcm.instruction)
     *(itcm.ramfunc)
     . = ALIGN(4);
     __itcm_custom_section_end__ = .;
-  } > CPU1_ITCM_RAM AT > CPU1_FLASH
+  } > ITCM_RAM AT > FLASH
 
-  .dtcm.data :
+  .dtcm.data : ALIGN(4)
   {
-    . = ALIGN(4);
     __dtcm_data_start__ = .;
     *(dtcm.data)
     . = ALIGN(4);
     __dtcm_data_end__ = .;
-  } > CPU1_DTCM_RAM AT > CPU1_FLASH
+  } > DTCM_RAM AT > FLASH
 
   .dtcm.bss (NOLOAD) :
   {
@@ -359,34 +229,148 @@ SECTIONS
     *(dtcm.bss)
     . = ALIGN(4);
     __dtcm_bss_end__ = .;
-  } > CPU1_DTCM_RAM AT > CPU1_DTCM_RAM
+  } > DTCM_RAM
 
-  .sram1.share_data :
+  .sram1.share_data : ALIGN(4)
   {
-    . = ALIGN(4);
     __sram1_share_data_start__ = .;
     *(sram1.share_data)
     . = ALIGN(4);
     __sram1_share_data_end__ = .;
-  } > SRAM1 AT > CPU1_FLASH
+  } > SRAM1 AT > FLASH
 
-  .sram2.share_data :
+  .sram2.share_data : ALIGN(4)
   {
-    . = ALIGN(4);
     __sram2_share_data_start__ = .;
     *(sram2.share_data)
     . = ALIGN(4);
     __sram2_share_data_end__ = .;
-  } > SRAM2 AT > CPU1_FLASH
+  } > SRAM2 AT > FLASH
 
-  .sram3.share_data :
+  .sram3.share_data : ALIGN(4)
   {
-    . = ALIGN(4);
     __sram3_share_data_start__ = .;
     *(sram3.share_data)
     . = ALIGN(4);
     __sram3_share_data_end__ = .;
-  } > SRAM3 AT > CPU1_FLASH
+  } > SRAM3 AT > FLASH
+  .data : ALIGN(4)
+  {
+    __data_load__ = LOADADDR(.data);
+    __data_start__ = .;
+    *(vtable)
+    *(.data)
+    *(.data.*)
+    . = ALIGN(4);
+    PROVIDE_HIDDEN(__preinit_array_start = .);
+    KEEP(*(.preinit_array))
+    PROVIDE_HIDDEN(__preinit_array_end = .);
+    . = ALIGN(4);
+    PROVIDE_HIDDEN(__init_array_start = .);
+    KEEP(*(SORT(.init_array.*)))
+    KEEP(*(.init_array))
+    PROVIDE_HIDDEN(__init_array_end = .);
+    . = ALIGN(4);
+    PROVIDE_HIDDEN(__fini_array_start = .);
+    KEEP(*(SORT(.fini_array.*)))
+    KEEP(*(.fini_array))
+    PROVIDE_HIDDEN(__fini_array_end = .);
+    KEEP(*(.jcr*))
+    . = ALIGN(4);
+    __data_end__ = .;
+  } > DTCM_RAM AT > FLASH
+
+  .bss (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __bss_start__ = .;
+    *(.bss)
+    *(.bss.*)
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_end__ = .;
+  } > DTCM_RAM
+
+  .data_itcm : ALIGN(4)
+  {
+    __data_itcm_start__ = .;
+    *(.data)
+    *(.data.*)
+    . = ALIGN(4);
+    __data_itcm_end__ = .;
+  } > ITCM_RAM AT > FLASH
+
+  .data_sram1 : ALIGN(4)
+  {
+    __data_sram1_start__ = .;
+    *(.data)
+    *(.data.*)
+    . = ALIGN(4);
+    __data_sram1_end__ = .;
+  } > SRAM1 AT > FLASH
+
+  .data_sram2 : ALIGN(4)
+  {
+    __data_sram2_start__ = .;
+    *(.data)
+    *(.data.*)
+    . = ALIGN(4);
+    __data_sram2_end__ = .;
+  } > SRAM2 AT > FLASH
+
+  .data_sram3 : ALIGN(4)
+  {
+    __data_sram3_start__ = .;
+    *(.data)
+    *(.data.*)
+    . = ALIGN(4);
+    __data_sram3_end__ = .;
+  } > SRAM3 AT > FLASH
+
+  .bss_itcm (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __bss_itcm_start__ = .;
+    *(.bss)
+    *(.bss.*)
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_itcm_end__ = .;
+  } > ITCM_RAM
+
+  .bss_sram1 (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __bss_sram1_start__ = .;
+    *(.bss)
+    *(.bss.*)
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_sram1_end__ = .;
+  } > SRAM1
+
+  .bss_sram2 (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __bss_sram2_start__ = .;
+    *(.bss)
+    *(.bss.*)
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_sram2_end__ = .;
+  } > SRAM2
+
+  .bss_sram3 (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __bss_sram3_start__ = .;
+    *(.bss)
+    *(.bss.*)
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_sram3_end__ = .;
+  } > SRAM3
+
 
   .heap (NOLOAD) :
   {
@@ -396,9 +380,9 @@ SECTIONS
     . = . + __HEAP_SIZE;
     . = ALIGN(8);
     __HeapLimit = .;
-  } > CPU1_DTCM_RAM
+  } > DTCM_RAM
 
-  .stack (ORIGIN(CPU1_DTCM_RAM) + LENGTH(CPU1_DTCM_RAM) - __STACK_SIZE - __STACKSEAL_SIZE) (NOLOAD) :
+  .stack (NOLOAD) :
   {
     . = ALIGN(8);
     __StackLimit = .;
@@ -406,23 +390,18 @@ SECTIONS
     . = . + __STACK_SIZE;
     . = ALIGN(8);
     __StackTop = .;
-  } > CPU1_DTCM_RAM
-  PROVIDE(__stack = __StackTop);
+  } > DTCM_STACK
 
-  /* ARMv8-M stack sealing:
-     to use ARMv8-M stack sealing uncomment '.stackseal' section
-   */
-/*
-  .stackseal (ORIGIN(CPU1_DTCM_RAM) + LENGTH(CPU1_DTCM_RAM) - __STACKSEAL_SIZE) (NOLOAD) :
+  .boot_status_snapshot (NOLOAD) :
   {
-    . = ALIGN(8);
-    __StackSeal = .;
-    PROVIDE(__stack_seal = .);
-    . = . + 8;
-    . = ALIGN(8);
-  } > CPU1_DTCM_RAM
-*/
+    . = . + __BOOT_STATUS_SNAPSHOT_SIZE;
+  } > DTCM_STACK
 
-  /* Check if data + heap + stack exceeds RAM limit */
-  ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")
+  PROVIDE(__stack = __StackTop);
+  PROVIDE(__INITIAL_SP = __StackTop);
+  PROVIDE(__STACK_LIMIT = __StackLimit);
+
+  ASSERT(__StackTop == __STACK_TOP_ADDR, "region DTCM stack top must match __DTCM_PHYS_TOP - snapshot")
+  ASSERT(__BOOT_STATUS_SNAPSHOT_SIZE == 0 || ADDR(.boot_status_snapshot) == __BOOT_STATUS_SNAPSHOT_BASE, "boot status snapshot must anchor at DTCM physical top")
+  ASSERT((__StackLimit - __HeapLimit) >= 0, "region DTCM_RAM overflowed with stack")
 }

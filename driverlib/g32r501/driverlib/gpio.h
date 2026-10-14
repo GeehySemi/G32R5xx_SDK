@@ -4,9 +4,9 @@
 //
 // TITLE:   G32R501 GPIO driver.
 //
-// VERSION: 1.0.1
+// VERSION: 1.0.2
 //
-// DATE:    2025-04-15
+// DATE:    2026-03-27
 //
 //###########################################################################
 // $Copyright:
@@ -114,7 +114,7 @@ extern "C"
 
 #define GPIO_GPxDAT_INDEX       (GPIO_O_GPADAT / 4U)
 #define GPIO_GPxSET_INDEX       (GPIO_O_GPASET / 4U)
-#define GPIO_GPxCLEAR_INDEX     (GPIO_O_GPACLEAR / 4U)
+#define GPIO_GPxCLR_INDEX       (GPIO_O_GPACLR / 4U)
 #define GPIO_GPxTOGGLE_INDEX    (GPIO_O_GPATOGGLE / 4U)
 
 #define GPIO_MUX_TO_GMUX        (GPIO_O_GPAGMUX1 - GPIO_O_GPAMUX1)
@@ -281,6 +281,12 @@ GPIO_isPinValid(uint32_t pin)
 {
     return((pin <= 59U) || ((pin >= 224U) && (pin <= 247U)));
 }
+
+static inline bool 
+GPIO_isPinExtiValid(uint32_t pin)
+{
+    return (pin <= 59U);
+}
 #endif
 
 //*****************************************************************************
@@ -379,7 +385,7 @@ GPIO_writePin(uint32_t pin, uint32_t outVal)
 
     if(outVal == 0U)
     {
-        gpioDataReg[GPIO_GPxCLEAR_INDEX] = pinMask;
+        gpioDataReg[GPIO_GPxCLR_INDEX] = pinMask;
     }
     else
     {
@@ -541,7 +547,7 @@ GPIO_clearPortPins(GPIO_Port port, uint32_t pinMask)
     gpioDataReg = (uint32_t *)((uintptr_t)GPIODATA_BASE) +
                   ((uint32_t)port * GPIO_DATA_REGS_STEP);
 
-    gpioDataReg[GPIO_GPxCLEAR_INDEX] = pinMask;
+    gpioDataReg[GPIO_GPxCLR_INDEX] = pinMask;
 }
 
 //*****************************************************************************

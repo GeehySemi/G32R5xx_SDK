@@ -109,6 +109,17 @@ void example_main(void)
     Device_initGPIO();
 
     //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
+
+    //
     // Initialize the LIN module
     //
     LIN_initModule(LINA_BASE);

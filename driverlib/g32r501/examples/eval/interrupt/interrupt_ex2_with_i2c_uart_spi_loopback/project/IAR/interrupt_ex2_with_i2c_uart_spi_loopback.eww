@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\interrupt_ex2_with_i2c_uart_spi_loopback.ewp</path>
+  </project>
+  <batchBuild/>
+</workspace>

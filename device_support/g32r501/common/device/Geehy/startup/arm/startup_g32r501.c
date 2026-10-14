@@ -69,8 +69,8 @@ void SysTick_Handler          (void) __attribute__ ((weak));
 // Interrupts
 //
 void DCCOMP_Handler           (void) __attribute__ ((weak, alias("Default_Handler")));
-void TIMER1_Handler           (void) __attribute__ ((weak, alias("Default_Handler")));
-void TIMER2_Handler           (void) __attribute__ ((weak, alias("Default_Handler")));
+void TMR1_Handler             (void) __attribute__ ((weak, alias("Default_Handler")));
+void TMR2_Handler             (void) __attribute__ ((weak, alias("Default_Handler")));
 void RAM_Handler              (void) __attribute__ ((weak, alias("Default_Handler")));
 void IPC_TE0_Handler          (void) __attribute__ ((weak, alias("Default_Handler")));
 void IPC_TE1_Handler          (void) __attribute__ ((weak, alias("Default_Handler")));
@@ -87,7 +87,7 @@ void IPC_GP3_Handler          (void) __attribute__ ((weak, alias("Default_Handle
 void ADCA1_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
 void ADCB1_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
 void ADCC1_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
-void TIMER0_Handler           (void) __attribute__ ((weak, alias("Default_Handler")));
+void TMR0_Handler             (void) __attribute__ ((weak, alias("Default_Handler")));
 void WAKE_Handler             (void) __attribute__ ((weak, alias("Default_Handler")));
 void PWM1_TZ_Handler          (void) __attribute__ ((weak, alias("Default_Handler")));
 void PWM2_TZ_Handler          (void) __attribute__ ((weak, alias("Default_Handler")));
@@ -198,7 +198,7 @@ void CTI_1_Handler            (void) __attribute__ ((weak, alias("Default_Handle
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
-const PINT __VECTOR_TABLE[512] __VECTOR_TABLE_ATTRIBUTE = {
+const PINT __VECTOR_TABLE[NVIC_RAM_VECTOR_SIZE] __VECTOR_TABLE_ATTRIBUTE = {
     [0]   = (PINT)(&__INITIAL_SP),      //     Initial Stack Pointer
     [1]   = Reset_Handler,              //     Reset Handler (Code Start)
     [2]   = NMI_Handler,                // -14 NMI Handler
@@ -216,8 +216,8 @@ const PINT __VECTOR_TABLE[512] __VECTOR_TABLE_ATTRIBUTE = {
     // Interrupts
     //
     [27]  = DCCOMP_Handler,             //  11 DCCOMP Handler
-    [29]  = TIMER1_Handler,             //  13 CPU Timer 1 Handler
-    [30]  = TIMER2_Handler,             //  14 CPU Timer 2 Handler
+    [29]  = TMR1_Handler,               //  13 CPU Timer 1 Handler
+    [30]  = TMR2_Handler,               //  14 CPU Timer 2 Handler
     [32]  = RAM_Handler,                //  16 RAM Handler
     [33]  = IPC_TE0_Handler,            //  17 IPC TE0 Handler
     [34]  = IPC_TE1_Handler,            //  18 IPC TE1 Handler
@@ -234,7 +234,7 @@ const PINT __VECTOR_TABLE[512] __VECTOR_TABLE_ATTRIBUTE = {
     [48]  = ADCA1_Handler,              //  32 ADCA Interrupt 1 Handler
     [49]  = ADCB1_Handler,              //  33 ADCB Interrupt 1 Handler
     [50]  = ADCC1_Handler,              //  34 ADCB Interrupt 1 Handler
-    [54]  = TIMER0_Handler,             //  38 Timer 0 Handler
+    [54]  = TMR0_Handler,               //  38 Timer 0 Handler
     [55]  = WAKE_Handler,               //  39 Halt Wakeup/Watchdog Handler
     [56]  = PWM1_TZ_Handler,            //  40 PWM1 Trip Zone Handler
     [57]  = PWM2_TZ_Handler,            //  41 PWM2 Trip Zone Handler

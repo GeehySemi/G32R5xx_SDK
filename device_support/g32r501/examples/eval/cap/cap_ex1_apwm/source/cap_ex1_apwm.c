@@ -139,16 +139,16 @@ void example_main(void)
     // Setup APWM mode on CAP1, set period and compare registers
     //
     WRPRT_DISABLE;
-    Cap1Regs.CCTL2.bit.CAP_APWM = 1;    // Enable APWM mode
+    Cap1Regs.ECCTL2.bit.CAP_APWM = 1;    // Enable APWM mode
     Cap1Regs.CAP1 = 20000000;            // Set Period value
     Cap1Regs.CAP2 = 10000000;            // Set Compare value
-    Cap1Regs.CCLR.all = 0x0FF;          // Clear pending __interrupts
-    Cap1Regs.CEINT.bit.CTR_EQ_CMP = 1;  // enable Compare Equal Int
+    Cap1Regs.ECCLR.all = 0x0FF;          // Clear pending __interrupts
+    Cap1Regs.ECEINT.bit.CTR_EQ_CMP = 1;  // enable Compare Equal Int
 
     //
     // Start counters
     //
-    Cap1Regs.CCTL2.bit.TSCTRSTOP = 1;
+    Cap1Regs.ECCTL2.bit.TSCTRSTOP = 1;
 
     WRPRT_ENABLE;
     for(;;)

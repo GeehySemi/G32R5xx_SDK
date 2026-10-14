@@ -103,6 +103,17 @@ union REVID_REG {
     struct  REVID_BITS  bit;
 };
 
+
+struct SOFTPRES0_BITS {                 // bits description
+    Uint32 CPU1:1;                      // 0 CPU1 software reset bit
+    Uint32 rsvd1:31;                    // 31:1 Reserved
+};
+
+union SOFTPRES0_REG {
+    Uint32  all;
+    struct  SOFTPRES0_BITS  bit;
+};
+
 struct SOFTPRES2_BITS {                 // bits description
     Uint32 PWM1:1;                      // 0 PWM1 software reset bit
     Uint32 PWM2:1;                      // 1 PWM2 software reset bit
@@ -351,8 +362,9 @@ struct DEV_REGS {
     union   REVID_REG                     REVID;                     // Device Revision Number
     Uint16                                rsvd2[46];                 // Reserved
     Uint16                                rsvd3[58];                 // Reserved
-    Uint16                                rsvd4[14];                 // Reserved
-    Uint16                                rsvd5[2] ;                 // Reserved
+    Uint16                                rsvd4[12];                 // Reserved
+    union   SOFTPRES0_REG                 SOFTPRES0;                 // Peripheral Software Reset register
+    Uint16                                rsvd5[2];                  // Reserved
     union   SOFTPRES2_REG                 SOFTPRES2;                 // Peripheral Software Reset register
     union   SOFTPRES3_REG                 SOFTPRES3;                 // Peripheral Software Reset register
     union   SOFTPRES4_REG                 SOFTPRES4;                 // Peripheral Software Reset register
@@ -604,7 +616,7 @@ struct CPUSYSLOCK1_BITS {               // bits description
     Uint32 GPIOLPMSEL0:1;               // 22 Lock bit for GPIOLPMSEL0 Register
     Uint32 GPIOLPMSEL1:1;               // 23 Lock bit for GPIOLPMSEL1 Register
     Uint32 PCLKCR17:1;                  // 24 Lock bit for PCLKCR17 Register
-    Uint32 PCLKCR18:1;                  // 25 Lock bit for PCLKCR18 Register
+    Uint32 rsvd_pclkcr18:1;             // 25 Reserved
     Uint32 PCLKCR19:1;                  // 26 Lock bit for PCLKCR19 Register
     Uint32 PCLKCR20:1;                  // 27 Lock bit for PCLKCR20 Register
     Uint32 PCLKCR21:1;                  // 28 Lock bit for PCLKCR21 Register
@@ -843,20 +855,6 @@ union PCLKCR17_REG {
     struct  PCLKCR17_BITS  bit;
 };
 
-struct PCLKCR18_BITS {                  // bits description
-    Uint32 rsvd1:1;                     // 0 Reserved
-    Uint32 rsvd2:1;                     // 1 Reserved
-    Uint32 rsvd3:1;                     // 2 Reserved
-    Uint32 rsvd4:1;                     // 3 Reserved
-    Uint32 rsvd5:12;                    // 15:4 Reserved
-    Uint32 rsvd6:16;                    // 31:16 Reserved
-};
-
-union PCLKCR18_REG {
-    Uint32  all;
-    struct  PCLKCR18_BITS  bit;
-};
-
 struct PCLKCR19_BITS {                  // bits description
     Uint32 LIN_A:1;                     // 0 LIN_A Clock Enable bit
     Uint32 rsvd1:1;                     // 1 Reserved
@@ -1002,17 +1000,16 @@ union TMR2CLKCTL_REG {
 };
 
 struct RESCCLR_BITS {                   // bits description
-    Uint32 POR:1;                       // 0 POR Reset Cause Indication Bit
-    Uint32 XRSn:1;                      // 1 XRSn Reset Cause Indication Bit
+    Uint32 rsvd1:2;                     // 1:0 Reserved
     Uint32 WDRSn:1;                     // 2 WDRSn Reset Cause Indication Bit
     Uint32 NMIWDRSn:1;                  // 3 NMIWDRSn Reset Cause Indication Bit
-    Uint32 rsvd1:1;                     // 4 Reserved
-    Uint32 rsvd2:1;                     // 5 Reserved
-    Uint32 rsvd3:1;                     // 6 Reserved
-    Uint32 rsvd4:1;                     // 7 Reserved
+    Uint32 rsvd2:1;                     // 4 Reserved
+    Uint32 rsvd3:1;                     // 5 Reserved
+    Uint32 rsvd4:1;                     // 6 Reserved
+    Uint32 rsvd5:1;                     // 7 Reserved
     Uint32 SCCRESETn:1;                 // 8 SCCRESETn Reset Cause Indication Bit
-    Uint32 rsvd5:7;                     // 15:9 Reserved
-    Uint32 rsvd6:16;                    // 31:16 Reserved
+    Uint32 rsvd6:7;                     // 15:9 Reserved
+    Uint32 rsvd7:16;                    // 31:16 Reserved
 };
 
 union RESCCLR_REG {
@@ -1021,17 +1018,16 @@ union RESCCLR_REG {
 };
 
 struct RESC_BITS {                      // bits description
-    Uint32 POR:1;                       // 0 POR Reset Cause Indication Bit
-    Uint32 XRSn:1;                      // 1 XRSn Reset Cause Indication Bit
+    Uint32 rsvd1:2;                     // 1:0 Reserved
     Uint32 WDRSn:1;                     // 2 WDRSn Reset Cause Indication Bit
     Uint32 NMIWDRSn:1;                  // 3 NMIWDRSn Reset Cause Indication Bit
-    Uint32 rsvd1:1;                     // 4 Reserved
-    Uint32 rsvd2:1;                     // 5 Reserved
-    Uint32 rsvd3:1;                     // 6 Reserved
-    Uint32 rsvd4:1;                     // 7 Reserved
+    Uint32 rsvd2:1;                     // 4 Reserved
+    Uint32 rsvd3:1;                     // 5 Reserved
+    Uint32 rsvd4:1;                     // 6 Reserved
+    Uint32 rsvd5:1;                     // 7 Reserved
     Uint32 SCCRESETn:1;                 // 8 SCCRESETn Reset Cause Indication Bit
-    Uint32 rsvd5:7;                     // 15:9 Reserved
-    Uint32 rsvd6:14;                    // 29:16 Reserved
+    Uint32 rsvd6:7;                     // 15:9 Reserved
+    Uint32 rsvd7:14;                    // 29:16 Reserved
     Uint32 XRSn_pin_status:1;           // 30 XRSN Pin Status
     Uint32 DCON:1;                      // 31 Debugger conntion status to C28x
 };
@@ -1061,7 +1057,7 @@ struct CPU_REGS {
     Uint16                                   rsvd4[2];                     // Reserved
     union   PCLKCR16_REG                     PCLKCR16;                     // Peripheral Clock Gating Registers
     union   PCLKCR17_REG                     PCLKCR17;                     // Peripheral Clock Gating Registers
-    union   PCLKCR18_REG                     PCLKCR18;                     // Peripheral Clock Gating Registers
+    Uint32                                   rsvd_0x8C;                  // Reserved, CPU_SYS+0x8C
     union   PCLKCR19_REG                     PCLKCR19;                     // Peripheral Clock Gating Registers
     union   PCLKCR20_REG                     PCLKCR20;                     // Peripheral Clock Gating Registers
     union   PCLKCR21_REG                     PCLKCR21;                     // Peripheral Clock Gating Registers

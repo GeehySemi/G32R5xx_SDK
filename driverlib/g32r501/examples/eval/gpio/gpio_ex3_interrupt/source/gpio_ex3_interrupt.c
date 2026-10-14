@@ -98,7 +98,7 @@ void example_main(void)
     //
     // Set the priority group to indicate the PREEMPT and SUB priority bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     //
     // Set the global and group interrupt priority to allow CPU interrupts
@@ -110,8 +110,11 @@ void example_main(void)
     //
     Board_init();
 
-    GPIO_setInterruptType(GPIO_INT_XINT1, GPIO_INT_TYPE_FALLING_EDGE);
+    // Before configuring the interrupt type, you MUST first configure the
+    // GPIO pin that will trigger the interrupt. Set the interrupt GPIO number with
+    // GPIO_setInterruptPin(...) and then configure the interrupt trigger type.
     GPIO_setInterruptPin(myGPIOInputInterrupt0, GPIO_INT_XINT1);
+    GPIO_setInterruptType(GPIO_INT_XINT1, GPIO_INT_TYPE_FALLING_EDGE);
     GPIO_enableInterrupt(GPIO_INT_XINT1);
 
     Interrupt_register(INT_XINT1, &gpioInterruptHandler);

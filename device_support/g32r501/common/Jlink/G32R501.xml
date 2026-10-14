@@ -1,0 +1,38 @@
+<Database>
+  <Device>
+    <ChipInfo Name="G32R501DVY" Vendor="Geehy" Core="JLINK_CORE_CORTEX_M52" WorkRAMAddr="0x20300000" WorkRAMSize="0x4000" JLinkScriptFile="Geehy_G32R501_ConnectCore.jlinkscript"/>
+    <FlashBankInfo Name="Flash_ITCM" BaseAddr="0x00100000" AlwaysPresent="0">
+      <LoaderInfo Name="Flash" Loader="G32R5xx_Program_Algorithm.FLM" LoaderType="FLASH_ALGO_TYPE_OPEN" MaxSize="0xA0000"/>
+    </FlashBankInfo>
+    <FlashBankInfo Name="Flash_CBUS" BaseAddr="0x08000000" AlwaysPresent="1">
+      <LoaderInfo Name="Flash" Loader="G32R5xx_Program_Algorithm.FLM" LoaderType="FLASH_ALGO_TYPE_OPEN" MaxSize="0xA0000"/>
+    </FlashBankInfo>
+  </Device>
+  <Device>
+    <ChipInfo Name="G32R501RC" Vendor="Geehy" Core="JLINK_CORE_CORTEX_M52" WorkRAMAddr="0x20300000" WorkRAMSize="0x4000" JLinkScriptFile="Geehy_G32R501_ConnectCore.jlinkscript"/>
+    <FlashBankInfo Name="Flash_CBUS" BaseAddr="0x08000000" AlwaysPresent="1">
+      <LoaderInfo Name="Flash" Loader="G32R5xx_Program_Algorithm.FLM" LoaderType="FLASH_ALGO_TYPE_OPEN" MaxSize="0x40000"/>
+    </FlashBankInfo>
+  </Device>
+  <Device InheritFrom="G32R501DVY">
+    <ChipInfo Name="G32R501DNY"/>
+  </Device>
+  <Device InheritFrom="G32R501DVY">
+    <ChipInfo Name="G32R501DRY"/>
+  </Device>
+  <Device InheritFrom="G32R501DVY">
+    <ChipInfo Name="G32R501DMY"/>
+  </Device>
+  <Device InheritFrom="G32R501DVY">
+    <ChipInfo Name="G32R501NY"/>
+  </Device>
+  <Device InheritFrom="G32R501DVY">
+    <ChipInfo Name="G32R501RY"/>
+  </Device>
+  <Device InheritFrom="G32R501DVY">
+    <ChipInfo Name="G32R501MY"/>
+  </Device>
+  <Device InheritFrom="G32R501DVY">
+    <ChipInfo Name="G32R501VY"/>
+  </Device>
+</Database>

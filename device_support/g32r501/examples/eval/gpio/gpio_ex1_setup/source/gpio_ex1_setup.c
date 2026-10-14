@@ -189,7 +189,7 @@ void setup1GPIO(void)
     GpioCtrlRegs.GPAPUD.bit.GPIO7 = 0;    // Enable pullup on GPIO7
     GpioCtrlRegs.GPAQSEL1.bit.GPIO7 = 0;  // Synch to SYSCLOUT
     InputXbarRegs.INPUT7SELECT = 7;       // INPUT7 = GPIO7
-    Cap1Regs.CCTL0.bit.INPUTSEL = 7;    // Select CAP1 TO INPUT7
+    Cap1Regs.ECCTL0.bit.INPUTSEL = 7;    // Select CAP1 TO INPUT7
 
     //
     // Enable GPIO outputs on GPIO8 - GPIO11, set it high
@@ -267,7 +267,7 @@ void setup1GPIO(void)
     GpioCtrlRegs.GPAPUD.bit.GPIO24 = 0;   // Enable pullup on GPIO24
     GpioCtrlRegs.GPAQSEL2.bit.GPIO24 = 0; // Synch to SYSCLKOUT
     InputXbarRegs.INPUT8SELECT = 24;      // INPUT8 = GPIO24
-    Cap2Regs.CCTL0.bit.INPUTSEL=8;      // Select CAP2 TO INPUT8
+    Cap2Regs.ECCTL0.bit.INPUTSEL=8;      // Select CAP2 TO INPUT8
 
     //
     // Set input qualifcation period for GPIO25 & GPIO26
@@ -379,7 +379,7 @@ void setup2GPIO(void)
     GpioCtrlRegs.GPAPUD.bit.GPIO7 = 0;    // Enable pullup on GPIO7
     GpioCtrlRegs.GPAQSEL1.bit.GPIO7 = 0;  // Synch to SYSCLOUT
     InputXbarRegs.INPUT7SELECT = 7;       // INPUT7 = GPIO7
-    Cap1Regs.CCTL0.bit.INPUTSEL=7;      // Select CAP1 TO INPUT7
+    Cap1Regs.ECCTL0.bit.INPUTSEL=7;      // Select CAP1 TO INPUT7
 
     //
     // Enable GPIO outputs on GPIO8 - GPIO11, set it high
@@ -442,7 +442,7 @@ void setup2GPIO(void)
     GpioCtrlRegs.GPAPUD.bit.GPIO24 = 0;   // Enable pullup on GPIO24
     GpioCtrlRegs.GPAQSEL2.bit.GPIO24 = 0; // Synch to SYSCLKOUT
     InputXbarRegs.INPUT8SELECT = 24;      // INPUT8 = GPIO24
-    Cap2Regs.CCTL0.bit.INPUTSEL=8;      // Select CAP2 TO INPUT8
+    Cap2Regs.ECCTL0.bit.INPUTSEL=8;      // Select CAP2 TO INPUT8
 
     //
     // Set input qualifcation period for GPIO25 & GPIO26

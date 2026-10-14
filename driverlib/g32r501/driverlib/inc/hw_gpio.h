@@ -67,9 +67,9 @@
 #define GPIO_O_GPAINV        (0x10*2)    // GPIO A Input Inversion (GPIO0 to GPIO31)
 #define GPIO_O_GPAODR        (0x12*2)    // GPIO A Open Drain Output Mode (GPIO0 to GPIO31)
 #define GPIO_O_GPAAMSEL      (0x14*2)    // GPIO A Analog Mode Select (GPIO0 to GPIO31)
-#define GPIO_O_GPADSEL1      (0x2C)      // GPIO A XXX (GPIO0 to GPIO15)
-#define GPIO_O_GPADSEL2      (0x30)      // GPIO A XXX (GPIO16 to GPIO31)
-#define GPIO_O_GPAFEN        (0x34)      // GPIO A XXX (GPIO0 to GPIO31)
+#define GPIO_O_GPADSEL1      (0x2C)      // GPIO A Driver Capability Select (GPIO0 to GPIO15)
+#define GPIO_O_GPADSEL2      (0x30)      // GPIO A Driver Capability Select (GPIO16 to GPIO31)
+#define GPIO_O_GPAFEN        (0x34)      // GPIO A Max Output Frequency Enable (GPIO0 to GPIO31)
 #define GPIO_O_GPAGMUX1      (0x20*2)    // GPIO A Peripheral Group Mux (GPIO0 to GPIO15)
 #define GPIO_O_GPAGMUX2      (0x22*2)    // GPIO A Peripheral Group Mux (GPIO16 to GPIO31)
 #define GPIO_O_GPACSEL1      (0x28*2)    // GPIO A Master Core Select (GPIO0 to GPIO7)
@@ -78,15 +78,15 @@
 #define GPIO_O_GPACSEL4      (0x2E*2)    // GPIO A Master Core Select (GPIO24 to GPIO31)
 #define GPIO_O_GPALOCK       (0x3C*2)    // GPIO A Lock Register (GPIO0 to GPIO31)
 #define GPIO_O_GPACR         (0x3E*2)    // GPIO A Lock Commit Register (GPIO0 to GPIO31)
-#define GPIO_O_GPBCTRL       (0x40*2)    // GPIO B Qualification Sampling Period (GPIO32 to GPIO63)
+#define GPIO_O_GPBCTRL       (0x40*2)    // GPIO B Qualification Sampling Period (GPIO32 to GPIO59)
 #define GPIO_O_GPBQSEL1      (0x42*2)    // GPIO B Qualification Type (GPIO32 to GPIO47)
 #define GPIO_O_GPBQSEL2      (0x44*2)    // GPIO B Qualification Type (GPIO48 to GPIO63)
 #define GPIO_O_GPBMUX1       (0x46*2)    // GPIO B Peripheral Mux (GPIO32 to GPIO47)
 #define GPIO_O_GPBMUX2       (0x48*2)    // GPIO B Peripheral Mux (GPIO48 to GPIO63)
-#define GPIO_O_GPBDIR        (0x4A*2)    // GPIO B Direction (GPIO32 to GPIO63)
-#define GPIO_O_GPBPUD        (0x4C*2)    // GPIO B Pull-Up Disable (GPIO32 to GPIO63)
-#define GPIO_O_GPBINV        (0x50*2)    // GPIO B Input Inversion (GPIO32 to GPIO63)
-#define GPIO_O_GPBODR        (0x52*2)    // GPIO B Open Drain Output Mode (GPIO32 to GPIO63)
+#define GPIO_O_GPBDIR        (0x4A*2)    // GPIO B Direction (GPIO32 to GPIO59)
+#define GPIO_O_GPBPUD        (0x4C*2)    // GPIO B Pull-Up Disable (GPIO32 to GPIO59)
+#define GPIO_O_GPBINV        (0x50*2)    // GPIO B Input Inversion (GPIO32 to GPIO59)
+#define GPIO_O_GPBODR        (0x52*2)    // GPIO B Open Drain Output Mode (GPIO32 to GPIO59)
 #define GPIO_O_GPBDSEL1      (0xAC)      // GPIO B Driver capability select (GPIO32 to GPIO47)
 #define GPIO_O_GPBDSEL2      (0xB0)      // GPIO B Driver capability select (GPIO48 to GPIO59)
 #define GPIO_O_GPBFEN        (0xB4)      // GPIO B Maximum Output Frequency Enable (GPIO32 to GPIO59)
@@ -96,8 +96,8 @@
 #define GPIO_O_GPBCSEL2      (0x6A*2)    // GPIO B Master Core Select (GPIO40 to GPIO47)
 #define GPIO_O_GPBCSEL3      (0x6C*2)    // GPIO B Master Core Select (GPIO48 to GPIO55)
 #define GPIO_O_GPBCSEL4      (0x6E*2)    // GPIO B Master Core Select (GPIO56 to GPIO63)
-#define GPIO_O_GPBLOCK       (0x7C*2)    // GPIO B Lock Register (GPIO32 to GPIO63)
-#define GPIO_O_GPBCR         (0x7E*2)    // GPIO B Lock Commit Register (GPIO32 to GPIO63)
+#define GPIO_O_GPBLOCK       (0x7C*2)    // GPIO B Lock Register (GPIO32 to GPIO59)
+#define GPIO_O_GPBCR         (0x7E*2)    // GPIO B Lock Commit Register (GPIO32 to GPIO59)
 #define GPIO_O_GPHCTRL       (0x1C0*2)   // GPIO H Qualification Sampling Period (GPIO224 to GPIO255)
 #define GPIO_O_GPHQSEL1      (0x1C2*2)   // GPIO H Qualification Type (GPIO224 to GPIO239)
 #define GPIO_O_GPHQSEL2      (0x1C4*2)   // GPIO H Qualification Type (GPIO240 to GPIO255)
@@ -109,13 +109,13 @@
 
 #define GPIO_O_GPADAT        (0x0*2)     // GPIO A Data Register (GPIO0 to GPIO31)
 #define GPIO_O_GPASET        (0x2*2)     // GPIO A Output Set (GPIO0 to GPIO31)
-#define GPIO_O_GPACLEAR      (0x4*2)     // GPIO A Output Clear (GPIO0 to GPIO31)
+#define GPIO_O_GPACLR        (0x4*2)     // GPIO A Output Clear (GPIO0 to GPIO31)
 #define GPIO_O_GPATOGGLE     (0x6*2)     // GPIO A Output Toggle (GPIO0 to GPIO31)
-#define GPIO_O_GPBDAT        (0x8*2)     // GPIO B Data Register (GPIO32 to GPIO64)
-#define GPIO_O_GPBSET        (0xA*2)     // GPIO B Output Set (GPIO32 to GPIO64)
-#define GPIO_O_GPBCLEAR      (0xC*2)     // GPIO B Output Clear (GPIO32 to GPIO64)
-#define GPIO_O_GPBTOGGLE     (0xE*2)     // GPIO B Output Toggle (GPIO32 to GPIO64)
-#define GPIO_O_GPHDAT        (0x38*2)    // GPIO H Data Register (GPIO0 to GPIO255)
+#define GPIO_O_GPBDAT        (0x8*2)     // GPIO B Data Register (GPIO32 to GPIO59)
+#define GPIO_O_GPBSET        (0xA*2)     // GPIO B Output Set (GPIO32 to GPIO59)
+#define GPIO_O_GPBCLR        (0xC*2)     // GPIO B Output Clear (GPIO32 to GPIO59)
+#define GPIO_O_GPBTOGGLE     (0xE*2)     // GPIO B Output Toggle (GPIO32 to GPIO59)
+#define GPIO_O_GPHDAT        (0x38*2)    // GPIO H Data Register (GPIO224 to GPIO254)
 
 
 
@@ -1747,41 +1747,41 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the GPACLEAR register
+// The following are defines for the bit fields in the GPACLR register
 //
 //*************************************************************************************************
-#define GPIO_GPACLEAR_GPIO0    0x1U          // Clear the GPIO0 output data latch
-#define GPIO_GPACLEAR_GPIO1    0x2U          // Clear the GPIO1 output data latch
-#define GPIO_GPACLEAR_GPIO2    0x4U          // Clear the GPIO2 output data latch
-#define GPIO_GPACLEAR_GPIO3    0x8U          // Clear the GPIO3 output data latch
-#define GPIO_GPACLEAR_GPIO4    0x10U         // Clear the GPIO4 output data latch
-#define GPIO_GPACLEAR_GPIO5    0x20U         // Clear the GPIO5 output data latch
-#define GPIO_GPACLEAR_GPIO6    0x40U         // Clear the GPIO6 output data latch
-#define GPIO_GPACLEAR_GPIO7    0x80U         // Clear the GPIO7 output data latch
-#define GPIO_GPACLEAR_GPIO8    0x100U        // Clear the GPIO8 output data latch
-#define GPIO_GPACLEAR_GPIO9    0x200U        // Clear the GPIO9 output data latch
-#define GPIO_GPACLEAR_GPIO10   0x400U        // Clear the GPIO10 output data latch
-#define GPIO_GPACLEAR_GPIO11   0x800U        // Clear the GPIO11 output data latch
-#define GPIO_GPACLEAR_GPIO12   0x1000U       // Clear the GPIO12 output data latch
-#define GPIO_GPACLEAR_GPIO13   0x2000U       // Clear the GPIO13 output data latch
-#define GPIO_GPACLEAR_GPIO14   0x4000U       // Clear the GPIO14 output data latch
-#define GPIO_GPACLEAR_GPIO15   0x8000U       // Clear the GPIO15 output data latch
-#define GPIO_GPACLEAR_GPIO16   0x10000U      // Clear the GPIO16 output data latch
-#define GPIO_GPACLEAR_GPIO17   0x20000U      // Clear the GPIO17 output data latch
-#define GPIO_GPACLEAR_GPIO18   0x40000U      // Clear the GPIO18 output data latch
-#define GPIO_GPACLEAR_GPIO19   0x80000U      // Clear the GPIO19 output data latch
-#define GPIO_GPACLEAR_GPIO20   0x100000U     // Clear the GPIO20 output data latch
-#define GPIO_GPACLEAR_GPIO21   0x200000U     // Clear the GPIO21 output data latch
-#define GPIO_GPACLEAR_GPIO22   0x400000U     // Clear the GPIO22 output data latch
-#define GPIO_GPACLEAR_GPIO23   0x800000U     // Clear the GPIO23 output data latch
-#define GPIO_GPACLEAR_GPIO24   0x1000000U    // Clear the GPIO24 output data latch
-#define GPIO_GPACLEAR_GPIO25   0x2000000U    // Clear the GPIO25 output data latch
-#define GPIO_GPACLEAR_GPIO26   0x4000000U    // Clear the GPIO26 output data latch
-#define GPIO_GPACLEAR_GPIO27   0x8000000U    // Clear the GPIO27 output data latch
-#define GPIO_GPACLEAR_GPIO28   0x10000000U   // Clear the GPIO28 output data latch
-#define GPIO_GPACLEAR_GPIO29   0x20000000U   // Clear the GPIO29 output data latch
-#define GPIO_GPACLEAR_GPIO30   0x40000000U   // Clear the GPIO30 output data latch
-#define GPIO_GPACLEAR_GPIO31   0x80000000U   // Clear the GPIO31 output data latch
+#define GPIO_GPACLR_GPIO0    0x1U          // Clear the GPIO0 output data latch
+#define GPIO_GPACLR_GPIO1    0x2U          // Clear the GPIO1 output data latch
+#define GPIO_GPACLR_GPIO2    0x4U          // Clear the GPIO2 output data latch
+#define GPIO_GPACLR_GPIO3    0x8U          // Clear the GPIO3 output data latch
+#define GPIO_GPACLR_GPIO4    0x10U         // Clear the GPIO4 output data latch
+#define GPIO_GPACLR_GPIO5    0x20U         // Clear the GPIO5 output data latch
+#define GPIO_GPACLR_GPIO6    0x40U         // Clear the GPIO6 output data latch
+#define GPIO_GPACLR_GPIO7    0x80U         // Clear the GPIO7 output data latch
+#define GPIO_GPACLR_GPIO8    0x100U        // Clear the GPIO8 output data latch
+#define GPIO_GPACLR_GPIO9    0x200U        // Clear the GPIO9 output data latch
+#define GPIO_GPACLR_GPIO10   0x400U        // Clear the GPIO10 output data latch
+#define GPIO_GPACLR_GPIO11   0x800U        // Clear the GPIO11 output data latch
+#define GPIO_GPACLR_GPIO12   0x1000U       // Clear the GPIO12 output data latch
+#define GPIO_GPACLR_GPIO13   0x2000U       // Clear the GPIO13 output data latch
+#define GPIO_GPACLR_GPIO14   0x4000U       // Clear the GPIO14 output data latch
+#define GPIO_GPACLR_GPIO15   0x8000U       // Clear the GPIO15 output data latch
+#define GPIO_GPACLR_GPIO16   0x10000U      // Clear the GPIO16 output data latch
+#define GPIO_GPACLR_GPIO17   0x20000U      // Clear the GPIO17 output data latch
+#define GPIO_GPACLR_GPIO18   0x40000U      // Clear the GPIO18 output data latch
+#define GPIO_GPACLR_GPIO19   0x80000U      // Clear the GPIO19 output data latch
+#define GPIO_GPACLR_GPIO20   0x100000U     // Clear the GPIO20 output data latch
+#define GPIO_GPACLR_GPIO21   0x200000U     // Clear the GPIO21 output data latch
+#define GPIO_GPACLR_GPIO22   0x400000U     // Clear the GPIO22 output data latch
+#define GPIO_GPACLR_GPIO23   0x800000U     // Clear the GPIO23 output data latch
+#define GPIO_GPACLR_GPIO24   0x1000000U    // Clear the GPIO24 output data latch
+#define GPIO_GPACLR_GPIO25   0x2000000U    // Clear the GPIO25 output data latch
+#define GPIO_GPACLR_GPIO26   0x4000000U    // Clear the GPIO26 output data latch
+#define GPIO_GPACLR_GPIO27   0x8000000U    // Clear the GPIO27 output data latch
+#define GPIO_GPACLR_GPIO28   0x10000000U   // Clear the GPIO28 output data latch
+#define GPIO_GPACLR_GPIO29   0x20000000U   // Clear the GPIO29 output data latch
+#define GPIO_GPACLR_GPIO30   0x40000000U   // Clear the GPIO30 output data latch
+#define GPIO_GPACLR_GPIO31   0x80000000U   // Clear the GPIO31 output data latch
 
 //*************************************************************************************************
 //
@@ -1887,35 +1887,35 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the GPBCLEAR register
+// The following are defines for the bit fields in the GPBCLR register
 //
 //*************************************************************************************************
-#define GPIO_GPBCLEAR_GPIO32   0x1U         // Clear the GPIO32 output data latch
-#define GPIO_GPBCLEAR_GPIO33   0x2U         // Clear the GPIO33 output data latch
-#define GPIO_GPBCLEAR_GPIO34   0x4U         // Clear the GPIO34 output data latch
-#define GPIO_GPBCLEAR_GPIO35   0x8U         // Clear the GPIO35 output data latch
-#define GPIO_GPBCLEAR_GPIO37   0x20U        // Clear the GPIO37 output data latch
-#define GPIO_GPBCLEAR_GPIO39   0x80U        // Clear the GPIO39 output data latch
-#define GPIO_GPBCLEAR_GPIO40   0x100U       // Clear the GPIO40 output data latch
-#define GPIO_GPBCLEAR_GPIO41   0x200U       // Clear the GPIO41 output data latch
-#define GPIO_GPBCLEAR_GPIO42   0x400U       // Clear the GPIO42 output data latch
-#define GPIO_GPBCLEAR_GPIO43   0x800U       // Clear the GPIO43 output data latch
-#define GPIO_GPBCLEAR_GPIO44   0x1000U      // Clear the GPIO44 output data latch
-#define GPIO_GPBCLEAR_GPIO45   0x2000U      // Clear the GPIO45 output data latch
-#define GPIO_GPBCLEAR_GPIO46   0x4000U      // Clear the GPIO46 output data latch
-#define GPIO_GPBCLEAR_GPIO47   0x8000U      // Clear the GPIO47 output data latch
-#define GPIO_GPBCLEAR_GPIO48   0x10000U     // Clear the GPIO48 output data latch
-#define GPIO_GPBCLEAR_GPIO49   0x20000U     // Clear the GPIO49 output data latch
-#define GPIO_GPBCLEAR_GPIO50   0x40000U     // Clear the GPIO50 output data latch
-#define GPIO_GPBCLEAR_GPIO51   0x80000U     // Clear the GPIO51 output data latch
-#define GPIO_GPBCLEAR_GPIO52   0x100000U    // Clear the GPIO52 output data latch
-#define GPIO_GPBCLEAR_GPIO53   0x200000U    // Clear the GPIO53 output data latch
-#define GPIO_GPBCLEAR_GPIO54   0x400000U    // Clear the GPIO54 output data latch
-#define GPIO_GPBCLEAR_GPIO55   0x800000U    // Clear the GPIO55 output data latch
-#define GPIO_GPBCLEAR_GPIO56   0x1000000U   // Clear the GPIO56 output data latch
-#define GPIO_GPBCLEAR_GPIO57   0x2000000U   // Clear the GPIO57 output data latch
-#define GPIO_GPBCLEAR_GPIO58   0x4000000U   // Clear the GPIO58 output data latch
-#define GPIO_GPBCLEAR_GPIO59   0x8000000U   // Clear the GPIO59 output data latch
+#define GPIO_GPBCLR_GPIO32   0x1U         // Clear the GPIO32 output data latch
+#define GPIO_GPBCLR_GPIO33   0x2U         // Clear the GPIO33 output data latch
+#define GPIO_GPBCLR_GPIO34   0x4U         // Clear the GPIO34 output data latch
+#define GPIO_GPBCLR_GPIO35   0x8U         // Clear the GPIO35 output data latch
+#define GPIO_GPBCLR_GPIO37   0x20U        // Clear the GPIO37 output data latch
+#define GPIO_GPBCLR_GPIO39   0x80U        // Clear the GPIO39 output data latch
+#define GPIO_GPBCLR_GPIO40   0x100U       // Clear the GPIO40 output data latch
+#define GPIO_GPBCLR_GPIO41   0x200U       // Clear the GPIO41 output data latch
+#define GPIO_GPBCLR_GPIO42   0x400U       // Clear the GPIO42 output data latch
+#define GPIO_GPBCLR_GPIO43   0x800U       // Clear the GPIO43 output data latch
+#define GPIO_GPBCLR_GPIO44   0x1000U      // Clear the GPIO44 output data latch
+#define GPIO_GPBCLR_GPIO45   0x2000U      // Clear the GPIO45 output data latch
+#define GPIO_GPBCLR_GPIO46   0x4000U      // Clear the GPIO46 output data latch
+#define GPIO_GPBCLR_GPIO47   0x8000U      // Clear the GPIO47 output data latch
+#define GPIO_GPBCLR_GPIO48   0x10000U     // Clear the GPIO48 output data latch
+#define GPIO_GPBCLR_GPIO49   0x20000U     // Clear the GPIO49 output data latch
+#define GPIO_GPBCLR_GPIO50   0x40000U     // Clear the GPIO50 output data latch
+#define GPIO_GPBCLR_GPIO51   0x80000U     // Clear the GPIO51 output data latch
+#define GPIO_GPBCLR_GPIO52   0x100000U    // Clear the GPIO52 output data latch
+#define GPIO_GPBCLR_GPIO53   0x200000U    // Clear the GPIO53 output data latch
+#define GPIO_GPBCLR_GPIO54   0x400000U    // Clear the GPIO54 output data latch
+#define GPIO_GPBCLR_GPIO55   0x800000U    // Clear the GPIO55 output data latch
+#define GPIO_GPBCLR_GPIO56   0x1000000U   // Clear the GPIO56 output data latch
+#define GPIO_GPBCLR_GPIO57   0x2000000U   // Clear the GPIO57 output data latch
+#define GPIO_GPBCLR_GPIO58   0x4000000U   // Clear the GPIO58 output data latch
+#define GPIO_GPBCLR_GPIO59   0x8000000U   // Clear the GPIO59 output data latch
 
 //*************************************************************************************************
 //

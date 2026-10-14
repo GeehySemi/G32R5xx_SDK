@@ -73,6 +73,8 @@
 // - 2024-07-08: 
 // 1. Modified some function and macro definition and variable names.
 // 2. Updated interrupt handling to use NVIC functions.
+// - 2026-08-18:
+// 1. Removed ESTOP0 checkpoints after successful EEPROM DMA transactions.
 //
 //###########################################################################
 
@@ -186,8 +188,6 @@ void example_main(void)
     //Wait for TransactionStatus to be set to SPI_DMA_TRANSACTION_COMPLETE
     while (SPI_DMA_Handle.TransactionStatus != SPI_DMA_TRANSACTION_COMPLETE);
 
-    ESTOP0;
-
     EEPROM_readTransaction(eepromAddr, 4U);
 
     //Wait for TransactionStatus to be set to SPI_DMA_TRANSACTION_COMPLETE
@@ -197,7 +197,6 @@ void example_main(void)
     //So, RXdata will contain received data
     //Receive data is also available in with start address pointed by
     //SPI_DMA_Handle.pSPIRXDMA->pbuffer
-    ESTOP0;
 
     EEPROM_readTransaction(eepromAddr, BUFFER_SIZE);
 
@@ -208,7 +207,6 @@ void example_main(void)
     //So, RXdata will not contain any data
     //Receive data is also available in with start address pointed by
     //SPI_DMA_Handle.pSPIRXDMA->pbuffer
-    ESTOP0;
 
     volatile uint16_t error = 0;
     for (i = 0; i < BUFFER_SIZE; i++)

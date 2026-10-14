@@ -64,14 +64,14 @@ extern "C" {
 struct COMPCTL_BITS {                  // bits description
     Uint16 COMPHSOURCE:1;               // 0 High Comparator Source Select
     Uint16 COMPHINV:1;                  // 1 High Comparator Invert Select
-    Uint16 HPWMHSEL:2;                  // 3:2 High Comparator Trip Select
-    Uint16 HOUTHSEL:2;                  // 5:4 High Comparator Trip Output Select
+    Uint16 CTRIPHSEL:2;                 // 3:2 High Comparator Trip Select
+    Uint16 CTRIPOUTHSEL:2;              // 5:4 High Comparator Trip Output Select
     Uint16 ASYNCHEN:1;                  // 6 High Comparator Asynchronous Path Enable
     Uint16 rsvd1:1;                     // 7 Reserved
     Uint16 COMPLSOURCE:1;               // 8 Low Comparator Source Select
     Uint16 COMPLINV:1;                  // 9 Low Comparator Invert Select
-    Uint16 PWMLSEL:2;                   // 11:10 Low Comparator Trip Select
-    Uint16 OUTLSEL:2;                   // 13:12 Low Comparator Trip Output Select
+    Uint16 CTRIPLSEL:2;                 // 11:10 Low Comparator Trip Select
+    Uint16 CTRIPOUTLSEL:2;              // 13:12 Low Comparator Trip Output Select
     Uint16 ASYNCLEN:1;                  // 14 Low Comparator Asynchronous Path Enable
     Uint16 COMPDACE:1;                  // 15 Comparator/DAC Enable
 };
@@ -285,6 +285,7 @@ struct COMP_REGS {
     union   CTRIPHFILCTL_REG                 CTRIPHFILCTL;                 // CTRIPH Filter Control Register
     union   CTRIPHFILCLKCTL_REG              CTRIPHFILCLKCTL;              // CTRIPH Filter Clock Control Register
     union   COMPLOCK_REG                     COMPLOCK;                     // COMP Lock Register
+    Uint16                                   rsvd7;                        // Reserved, 4-byte alignment to comply with compiler requirements.
 };
 
 //---------------------------------------------------------------------------

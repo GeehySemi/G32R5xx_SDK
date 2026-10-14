@@ -1,0 +1,12 @@
+*** Using Compiler 'V6.22', folder: 'C:\Keil_v541\ARM\ARMCLANG\Bin'
+Build target 'g32r501'
+linking...
+Program Size: Code=15572 RO-data=1084 RW-data=56 ZI-data=13592  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output ".\Output\g32r501\Objects\g32r501_eval_cpu1.bin" "D:\Desktop\502\Work\G32R5xx_SDK\kernel\FreeRTOS\Demo\g32r501_eval\cpu1\project\MDK\Output\g32r501\Objects\g32r501_eval_cpu1.axf"
+After Build - User command #2: ..\..\..\..\..\..\..\utilities\keil_dbg_tool\keil_dbg_tool -r -a "D:\Desktop\502\Work\G32R5xx_SDK\kernel\FreeRTOS\Demo\g32r501_eval\cpu1\project\MDK\Output\g32r501\Objects\g32r501_eval_cpu1.axf" -d .\r501_dbg.ini
+[keil_dbg_tool] Firmware: MSP=0x20002000 PC=0x08050EC4
+[keil_dbg_tool] INI: MSP=0x20002000 PC=0x08050EC4
+[keil_dbg_tool] Compare: MATCH
+".\Output\g32r501\Objects\g32r501_eval_cpu1.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:04

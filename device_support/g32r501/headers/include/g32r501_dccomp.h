@@ -62,125 +62,125 @@ extern "C" {
 // DCCOMP Individual Register Bit Definitions:
 
 struct DCCOMPCTRL_BITS {                // bits description
-    bp_32 DCCOMPEN:4;                   // 3:0 DCCOMP Enable
-    bp_32 ERREN:4;                      // 7:4 Error Enable
-    bp_32 SIGEN:4;                      // 11:8 Single Shot Mode Enable
-    bp_32 DONEEN:4;                     // 15:12 DONE Enable
-    bp_32 rsvd1:16;                     // 31:16 Reserved
+    Uint32 DCCOMPEN:4;                   // 3:0 DCCOMP Enable
+    Uint32 ERREN:4;                      // 7:4 Error Enable
+    Uint32 SIGEN:4;                      // 11:8 Single Shot Mode Enable
+    Uint32 DONEEN:4;                     // 15:12 DONE Enable
+    Uint32 rsvd1:16;                     // 31:16 Reserved
 };
 
 union DCCOMPCTRL_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCTRL_BITS  bit;
 };
 
 struct DCCOMPREV_BITS {                 // bits description
-    bp_32 MINOR:6;                      // 5:0 Major Revision Number
-    bp_32 rsvd1:2;                      // 7:6 Reserved
-    bp_32 MAJOR:3;                      // 10:8 Major Revision Number
-    bp_32 rsvd2:5;                      // 15:11 Reserved
-    bp_32 rsvd3:12;                     // 27:16 Reserved
-    bp_32 rsvd4:2;                      // 29:28 Reserved
-    bp_32 rsvd5:2;                      // 31:30 Reserved
+    Uint32 MINOR:6;                      // 5:0 Major Revision Number
+    Uint32 rsvd1:2;                      // 7:6 Reserved
+    Uint32 MAJOR:3;                      // 10:8 Major Revision Number
+    Uint32 rsvd2:5;                      // 15:11 Reserved
+    Uint32 rsvd3:12;                     // 27:16 Reserved
+    Uint32 rsvd4:2;                      // 29:28 Reserved
+    Uint32 rsvd5:2;                      // 31:30 Reserved
 };
 
 union DCCOMPREV_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPREV_BITS  bit;
 };
 
 struct DCCOMPCNTSEED0_BITS {            // bits description
-    bp_32 CNTSEED0:20;                  // 19:0 Counter 0 Seed Value
-    bp_32 rsvd1:12;                     // 31:20 Reserved
+    Uint32 CNTSEED0:20;                  // 19:0 Counter 0 Seed Value
+    Uint32 rsvd1:12;                     // 31:20 Reserved
 };
 
 union DCCOMPCNTSEED0_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCNTSEED0_BITS  bit;
 };
 
 struct DCCOMPVALSEED0_BITS {            // bits description
-    bp_32 VALSEED0:16;                  // 15:0 Valid Duration Counter 0 Seed Value
-    bp_32 rsvd1:16;                     // 31:16 Reserved
+    Uint32 VALSEED0:16;                  // 15:0 Valid Duration Counter 0 Seed Value
+    Uint32 rsvd1:16;                     // 31:16 Reserved
 };
 
 union DCCOMPVALSEED0_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPVALSEED0_BITS  bit;
 };
 
 struct DCCOMPCNTSEED1_BITS {            // bits description
-    bp_32 CNTSEED1:20;                  // 19:0 Counter 1 Seed Value
-    bp_32 rsvd1:12;                     // 31:20 Reserved
+    Uint32 CNTSEED1:20;                  // 19:0 Counter 1 Seed Value
+    Uint32 rsvd1:12;                     // 31:20 Reserved
 };
 
 union DCCOMPCNTSEED1_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCNTSEED1_BITS  bit;
 };
 
 struct DCCOMPFLG_BITS {                 // bits description
-    bp_32 ERRFLG:1;                     // 0 Error Flag
-    bp_32 SIGDONEFLG:1;                 // 1 Single-Shot Done Flag
-    bp_32 rsvd1:14;                     // 15:2 Reserved
-    bp_32 rsvd2:16;                     // 31:16 Reserved
+    Uint32 ERRFLG:1;                     // 0 Error Flag
+    Uint32 SIGDONEFLG:1;                 // 1 Single-Shot Done Flag
+    Uint32 rsvd1:14;                     // 15:2 Reserved
+    Uint32 rsvd2:16;                     // 31:16 Reserved
 };
 
 union DCCOMPFLG_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPFLG_BITS  bit;
 };
 
 struct DCCOMPCLKSRCCNT0_BITS {           // bits description
-    bp_32 CLKSRCCNT0:20;                 // 19:0 Clock Source 0 counter attached Value
-    bp_32 rsvd1:12;                      // 31:20 Reserved
+    Uint32 CLKSRCCNT0:20;                 // 19:0 Clock Source 0 counter attached Value
+    Uint32 rsvd1:12;                      // 31:20 Reserved
 };
 
 union DCCOMPCLKSRCCNT0_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCLKSRCCNT0_BITS  bit;
 };
 
 struct DCCOMPCLKSRCVAL0_BITS {          // bits description
-    bp_32 CLKSRCVAL0:16;                // 15:0 Clock Source 0 valid counter attached Value
-    bp_32 rsvd1:16;                     // 31:16 Reserved
+    Uint32 CLKSRCVAL0:16;                // 15:0 Clock Source 0 valid counter attached Value
+    Uint32 rsvd1:16;                     // 31:16 Reserved
 };
 
 union DCCOMPCLKSRCVAL0_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCLKSRCVAL0_BITS  bit;
 };
 
 struct DCCOMPCLKSRCCNT1_BITS {          // bits description
-    bp_32 CLKSRCCNT1:20;                // 19:0 Clock Source 1 counter attached Value
-    bp_32 rsvd1:12;                     // 31:20 Reserved
+    Uint32 CLKSRCCNT1:20;                // 19:0 Clock Source 1 counter attached Value
+    Uint32 rsvd1:12;                     // 31:20 Reserved
 };
 
 union DCCOMPCLKSRCCNT1_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCLKSRCCNT1_BITS  bit;
 };
 
 struct DCCOMPCLKSRCSEL1_BITS {          // bits description
-    bp_32 CLKSRCSEL1:4;                 // 3:0 Counter 1 Clock Source Select
-    bp_32 rsvd1:8;                      // 11:4 Reserved
-    bp_32 CLKSRCWEN:4;                  // 15:12 Counter 1 Clock Source Write Enable
-    bp_32 rsvd2:16;                     // 31:16 Reserved
+    Uint32 CLKSRCSEL1:4;                 // 3:0 Counter 1 Clock Source Select
+    Uint32 rsvd1:8;                      // 11:4 Reserved
+    Uint32 CLKSRCWEN:4;                  // 15:12 Counter 1 Clock Source Write Enable
+    Uint32 rsvd2:16;                     // 31:16 Reserved
 };
 
 union DCCOMPCLKSRCSEL1_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCLKSRCSEL1_BITS  bit;
 };
 
 struct DCCOMPCLKSRCSEL0_BITS {          // bits description
-    bp_32 CLKSRCSEL0:4;                 // 3:0 Counter 0 Clock Source Select
-    bp_32 rsvd1:12;                     // 15:4 Reserved
-    bp_32 rsvd2:16;                     // 31:16 Reserved
+    Uint32 CLKSRCSEL0:4;                 // 3:0 Counter 0 Clock Source Select
+    Uint32 rsvd1:12;                     // 15:4 Reserved
+    Uint32 rsvd2:16;                     // 31:16 Reserved
 };
 
 union DCCOMPCLKSRCSEL0_REG {
-    bp_32  all;
+    Uint32  all;
     struct  DCCOMPCLKSRCSEL0_BITS  bit;
 };
 

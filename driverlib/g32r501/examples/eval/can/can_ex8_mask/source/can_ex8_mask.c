@@ -104,6 +104,17 @@ void example_main(void)
     Device_initGPIO();
 
     //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
+
+    //
     // Configure GPIO pins for CANTX/CANRX
     //
     GPIO_setPinConfig(DEVICE_GPIO_CFG_CANRXA);

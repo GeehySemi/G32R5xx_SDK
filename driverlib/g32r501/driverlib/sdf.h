@@ -1663,8 +1663,8 @@ SDF_getWaitForSyncStatus(uint32_t base, SDF_FilterNumber filterNumber)
     //
     // Read WTSYNFLG bit
     //
-    return(((HWREGH(base + SDF_O_SDSYNC1 + ((uint32_t)filterNumber * 16U * 2U)) &
-            SDF_SDSYNC1_WTSYNCLR) >> 7U) == 0x1U);
+    return(((HWREGH(base + SDF_O_SDF_SYNCTRL1 + ((uint32_t)filterNumber * 16U * 2U)) &
+            SDF_SDF_SYNCTRL1_WTSYNCLR) >> 7U) == 0x1U);
 }
 
 //*****************************************************************************
@@ -1689,8 +1689,8 @@ SDF_clearWaitForSyncFlag(uint32_t base, SDF_FilterNumber filterNumber)
     //
     // Clear WTSYNCLR bit
     //
-    HWREGH(base + SDF_O_SDSYNC1 + ((uint32_t)filterNumber * 16U * 2U)) |=
-           SDF_SDSYNC1_WTSYNCLR;
+    HWREGH(base + SDF_O_SDF_SYNCTRL1 + ((uint32_t)filterNumber * 16U * 2U)) |=
+           SDF_SDF_SYNCTRL1_WTSYNCLR;
     WRPRT_ENABLE;
 }
 
@@ -1717,8 +1717,8 @@ SDF_enableWaitForSync(uint32_t base, SDF_FilterNumber filterNumber)
     //
     // Set WTSYNCEN bit
     //
-    HWREGH(base + SDF_O_SDSYNC1 + ((uint32_t)filterNumber * 16U * 2U)) |=
-        SDF_SDSYNC1_WTSYNCEN;
+    HWREGH(base + SDF_O_SDF_SYNCTRL1 + ((uint32_t)filterNumber * 16U * 2U)) |=
+        SDF_SDF_SYNCTRL1_WTSYNCEN;
     WRPRT_ENABLE;
 }
 
@@ -1745,8 +1745,8 @@ SDF_disableWaitForSync(uint32_t base, SDF_FilterNumber filterNumber)
     //
     // Clear WTSYNCEN bit
     //
-    HWREGH(base + SDF_O_SDSYNC1 + ((uint32_t)filterNumber * 16U * 2U)) &=
-        ~SDF_SDSYNC1_WTSYNCEN;
+    HWREGH(base + SDF_O_SDF_SYNCTRL1 + ((uint32_t)filterNumber * 16U * 2U)) &=
+        ~SDF_SDF_SYNCTRL1_WTSYNCEN;
     WRPRT_ENABLE;
 }
 
@@ -1774,7 +1774,7 @@ SDF_setPWMSyncSource(uint32_t base, SDF_FilterNumber filterNumber,
 
     ASSERT(SDF_isBaseValid(base));
 
-    address = base + SDF_O_SDSYNC1 + ((uint32_t)filterNumber * 16U * 2U);
+    address = base + SDF_O_SDF_SYNCTRL1 + ((uint32_t)filterNumber * 16U * 2U);
 
     WRPRT_DISABLE;
 
@@ -1782,7 +1782,7 @@ SDF_setPWMSyncSource(uint32_t base, SDF_FilterNumber filterNumber,
     // Write to SYNCSEL bits
     //
     HWREGH(address) =
-        (HWREGH(address) & ~SDF_SDSYNC1_SYNCSEL_M) | (uint16_t)syncSource;
+        (HWREGH(address) & ~SDF_SDF_SYNCTRL1_SYNCSEL_M) | (uint16_t)syncSource;
     WRPRT_ENABLE;
 
     //
@@ -1816,14 +1816,14 @@ SDF_setFIFOClearOnSyncMode(uint32_t base, SDF_FilterNumber filterNumber,
 
     ASSERT(SDF_isBaseValid(base));
 
-    address = base + SDF_O_SDSYNC1 + ((uint32_t)filterNumber * 16U * 2U);
+    address = base + SDF_O_SDF_SYNCTRL1 + ((uint32_t)filterNumber * 16U * 2U);
 
     WRPRT_DISABLE;
 
     //
     // Write to FFSYNCCLREN bit
     //
-    HWREGH(address) = (HWREGH(address) & ~SDF_SDSYNC1_FFSYNCCLREN) |
+    HWREGH(address) = (HWREGH(address) & ~SDF_SDF_SYNCTRL1_FFSYNCCLREN) |
                       ((uint16_t)fifoClearSyncMode << 9U);
     WRPRT_ENABLE;
 }
@@ -1855,14 +1855,14 @@ SDF_setWaitForSyncClearMode(uint32_t base, SDF_FilterNumber filterNumber,
 
     ASSERT(SDF_isBaseValid(base));
 
-    address = base + SDF_O_SDSYNC1 + ((uint32_t)filterNumber * 16U * 2U);
+    address = base + SDF_O_SDF_SYNCTRL1 + ((uint32_t)filterNumber * 16U * 2U);
 
     WRPRT_DISABLE;
 
     //
     // Write to WTSCLREN  bit
     //
-    HWREGH(address) = (HWREGH(address) & ~SDF_SDSYNC1_WTSCLREN) |
+    HWREGH(address) = (HWREGH(address) & ~SDF_SDF_SYNCTRL1_WTSCLREN) |
                       ((uint16_t)syncClearMode << 10U);
     WRPRT_ENABLE;
 }

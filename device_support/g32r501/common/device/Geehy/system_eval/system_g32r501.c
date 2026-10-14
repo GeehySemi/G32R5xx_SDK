@@ -52,7 +52,7 @@
 // Exception / Interrupt Vector Table
 //
 //*****************************************************************************
-extern const PINT __VECTOR_TABLE[512];
+extern const PINT __VECTOR_TABLE[NVIC_RAM_VECTOR_SIZE];
 
 //*****************************************************************************
 //

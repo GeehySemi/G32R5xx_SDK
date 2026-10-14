@@ -157,7 +157,7 @@ void example_main(void)
     Interrupt_register(INT_UARTA_TX, INT_UARTA_TX_IRQHandler);
     Interrupt_register(INT_UARTA_RX, INT_UARTA_RX_IRQHandler);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     Interrupt_setPriority(INT_UARTA_TX,1,0);
     Interrupt_setPriority(INT_UARTA_RX,0,0);

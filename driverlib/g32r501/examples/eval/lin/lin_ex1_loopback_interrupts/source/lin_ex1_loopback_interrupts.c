@@ -98,8 +98,8 @@ uint16_t rxData[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 //
 // Function Prototypes
 //
-void INT_LINA_0_IRQHandler(void);
 void INT_LINA_1_IRQHandler(void);
+void INT_LINA_2_IRQHandler(void);
 
 //
 // Main
@@ -139,19 +139,19 @@ void example_main(void)
     // ISR functions found within this file.
     // This registers the interrupt handler in NVIC vector table.
     //
-    Interrupt_register(INT_LINA_0, &INT_LINA_0_IRQHandler);
     Interrupt_register(INT_LINA_1, &INT_LINA_1_IRQHandler);
+    Interrupt_register(INT_LINA_2, &INT_LINA_2_IRQHandler);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
-    Interrupt_setPriority(INT_LINA_1, 1, 0);
-    Interrupt_setPriority(INT_LINA_0, 0, 0);
+    Interrupt_setPriority(INT_LINA_2, 1, 0);
+    Interrupt_setPriority(INT_LINA_1, 0, 0);
 
     //
     // Enable the LIN interrupt signals
     //
-    Interrupt_enable(INT_LINA_0);
     Interrupt_enable(INT_LINA_1);
+    Interrupt_enable(INT_LINA_2);
 
     //
     // Initialize the LIN module
@@ -290,7 +290,7 @@ void example_main(void)
 // line 0. This ISR saves the offset vector indicating the current highest
 // priority pending interrupt.
 //
-void INT_LINA_0_IRQHandler(void)
+void INT_LINA_1_IRQHandler(void)
 {
     //
     // Increment the interrupt count
@@ -310,7 +310,7 @@ void INT_LINA_0_IRQHandler(void)
 // line 1. This ISR saves the offset vector indicating the current highest
 // priority pending interrupt.
 //
-void INT_LINA_1_IRQHandler(void)
+void INT_LINA_2_IRQHandler(void)
 {
     //
     // Increment the interrupt count

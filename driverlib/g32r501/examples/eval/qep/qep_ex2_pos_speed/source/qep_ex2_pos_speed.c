@@ -191,7 +191,7 @@ void example_main(void)
     //
     // Set the priority group to indicate the PREEMPT and SUB priority bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     //
     // Set the global and group interrupt priority to allow CPU interrupts

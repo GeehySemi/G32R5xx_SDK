@@ -215,7 +215,10 @@ COMP_isBaseValid(uint32_t base)
            (base == COMP1_BASE) ||
            (base == COMP2_BASE) ||
            (base == COMP3_BASE) ||
-           (base == COMP4_BASE) 
+           (base == COMP4_BASE) ||
+           (base == COMP5_BASE) ||
+           (base == COMP6_BASE) ||
+           (base == COMP7_BASE)
           );
 }
 #endif
@@ -412,8 +415,8 @@ COMP_configOutputsHigh(uint32_t base, uint16_t config)
     WRPRT_DISABLE;
 
     HWREGH(base + COMP_O_COMPCTL) = (HWREGH(base + COMP_O_COMPCTL) &
-                                      ~(COMP_COMPCTL_HOUTHSEL_M |
-                                        COMP_COMPCTL_HPWMHSEL_M))  |
+                                      ~(COMP_COMPCTL_CTRIPOUTHSEL_M |
+                                        COMP_COMPCTL_CTRIPHSEL_M))  |
                                      config;
 
     WRPRT_ENABLE;
@@ -461,8 +464,8 @@ COMP_configOutputsLow(uint32_t base, uint16_t config)
     WRPRT_DISABLE;
 
     HWREGH(base + COMP_O_COMPCTL) = (HWREGH(base + COMP_O_COMPCTL) &
-                                      ~(COMP_COMPCTL_OUTLSEL_M |
-                                        COMP_COMPCTL_OUTLSEL_M)) |
+                                      ~(COMP_COMPCTL_CTRIPOUTLSEL_M |
+                                        COMP_COMPCTL_CTRIPLSEL_M)) |
                                      (config << 8U);
 
     WRPRT_ENABLE;

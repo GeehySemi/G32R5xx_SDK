@@ -2,20 +2,27 @@ This SDK contains some software subject to open source licenses. In this documen
 apply to these open source software components and indicate where you can find these license.
 
 1. \kernel\FreeRTOS\Source\
-FreeRTOS is freely available under a MIT license.The source code is derived from "https://freertos.org/".
-You can find the license at this directory path.
+FreeRTOS is freely available under an MIT license. The source code is derived from "https://freertos.org/".
+You can find the license at \kernel\FreeRTOS\License\license.txt.
 
-2.\device_support\g32r501\common\device\CMSIS\
-CMSIS is freely available under a Apache-2.0 license.The source code is derived from https://github.com/ARM-software/CMSIS_6
-You can find the license at this directory path.
+2. CMSIS (Arm Cortex Microcontroller Software Interface Standard)
+CMSIS is freely available under an Apache-2.0 license. The source code is derived from https://github.com/ARM-software/CMSIS_6
+The copy used by this SDK is under:
+  \device_support\common\CMSIS\
+You can find the license file under that directory path.
 
-3. \device_support\g32r501
-Some .h/c files supported by the g32r501 device support are available for free under the BSD-3 license.
+3. \device_support\g32r501 and \device_support\g32r502
+Some .h/c files supported by the g32r501/g32r502 device support are available for free under the BSD-3 license.
 Specific files can be found in the file comments.
 
-4. \driverlib\g32r501
-Some .h/c files supported by the g32r501 driverlib are available for free under the BSD-3 license.
+4. \driverlib\g32r501 and \driverlib\g32r502
+Some .h/c files supported by the g32r501/g32r502 driverlib are available for free under the BSD-3 license.
 Specific files can be found in the file comments.
+
+5. \libraries\CoreMark\common\
+CoreMark benchmark is available under the Apache-2.0 license.
+The source code is derived from EEMBC CoreMark (https://www.eembc.org/coremark/).
+You can find the license in the file headers and LICENSE.md under this directory path.
 
 You can also access the applicable open source software terms and related statements at the following URL.
 Apache License : https://opensource.org/license/apache-2-0/

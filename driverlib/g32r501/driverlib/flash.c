@@ -159,7 +159,7 @@ Flash_selectLowECCBlock(uint32_t eccBase)
     //
     ASSERT(Flash_isECCBaseValid(eccBase));
 
-    uint32_t ctrlBase = eccBase;
+    uint32_t ctrlBase = FLASH0CTRL_BASE;
     uint32_t eccTestAddr = FLASH_MEMORY_BASE_ADDRESS +
                   HWREG(eccBase + FLASH_O_FADDR_TEST);
 
@@ -251,7 +251,7 @@ Flash_selectHighECCBlock(uint32_t eccBase)
     //
     ASSERT(Flash_isECCBaseValid(eccBase));
 
-    uint32_t ctrlBase = eccBase;
+    uint32_t ctrlBase = FLASH0CTRL_BASE;
     uint32_t eccTestAddr = FLASH_MEMORY_BASE_ADDRESS +
                   HWREG(eccBase + FLASH_O_FADDR_TEST);
 

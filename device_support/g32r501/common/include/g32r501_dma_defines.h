@@ -128,10 +128,10 @@ extern "C" {
 #define DMA_SDF1FLT3     98
 #define DMA_SDF1FLT4     99
 
-#define DMA_SPIATX      109
-#define DMA_SPIARX      110
-#define DMA_SPIBTX      111
-#define DMA_SPIBRX      112
+#define DMA_SPIA_TX     109
+#define DMA_SPIA_RX     110
+#define DMA_SPIB_TX     111
+#define DMA_SPIB_RX     112
 
 #define DMA_LINATX      117
 #define DMA_LINARX      118

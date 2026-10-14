@@ -101,7 +101,7 @@ void configTMR(uint32_t cpuTimer, float freq, float bitrate);
 //Interrupt Service Routines
 //
 void INT_CANA0_IRQHandler(void);
-void INT_TIMER0_IRQHandler(void);
+void INT_TMR0_IRQHandler(void);
 
 //
 //Global Variables
@@ -266,7 +266,7 @@ void example_main(void)
     // This registers the interrupt handler in NVIC vector table.
     //
     Interrupt_register(INT_CANA0, &INT_CANA0_IRQHandler);
-    Interrupt_register(INT_TIMER0, &INT_TIMER0_IRQHandler);
+    Interrupt_register(INT_TMR0, &INT_TMR0_IRQHandler);
 
     //
     // Initializes the Device Peripheral. For this example, only initialize the
@@ -292,7 +292,7 @@ void example_main(void)
     // Enables CPU int1 which is connected to CPU-Timer 0,
     // Enable TINT0 in the NVIC: Group 1 interrupt 7
     //
-    Interrupt_enable(INT_TIMER0);
+    Interrupt_enable(INT_TMR0);
 
     //
     // Enable the CAN interrupt signal
@@ -741,7 +741,7 @@ void INT_CANA0_IRQHandler(void)
 //
 // TMR0ISR - Counter for TMR0
 //
-void INT_TIMER0_IRQHandler(void)
+void INT_TMR0_IRQHandler(void)
 {
 
     //

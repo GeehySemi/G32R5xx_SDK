@@ -1,0 +1,376 @@
+#! armclang -E --target=arm-arm-none-eabi -mcpu=cortex-m52 -xc
+;---------------------------------------------------------------------------
+; FILE:    g32r501dxy_cpu0_cbus_flash.sct
+; TITLE:   MDK scatter file for G32R501 (dxy CPU0 CBUS Flash)
+; VERSION: 1.0.1
+; DATE:    2026-08-10
+; NOTE:    Eval examples default to this family (dxy sizes).
+;          DTCM budget: STACK+HEAP (0x1000 each) + 0x400 vector when REGION=0.
+;---------------------------------------------------------------------------
+; command above MUST be in first line (no comment above!)
+
+/*
+;-------- <<< Use Configuration Wizard in Context Menu >>> -------------------
+*/
+
+/*--------------------- ITCM / DTCM RAM Configuration --------------------------
+; <h> ITCM / DTCM RAM Configuration
+;   <o0> CPU0 ITCM Base Address <0x0-0xFFFFFFFF:8>
+;   <o1> CPU0 ITCM Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o2> CPU0 DTCM Base Address <0x0-0xFFFFFFFF:8>
+;   <o3> CPU0 DTCM Size (in Bytes) <0x0-0xFFFFFFFF:8>
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __CPU0_ITCM_BASE              0x00000000
+#define __CPU0_ITCM_SIZE              0x0000C000
+#define __CPU0_DTCM_BASE              0x20000000
+#define __CPU0_DTCM_SIZE              0x00004000
+
+/*--------------------- CBUS / ITCM Flash Configuration ------------------------
+; <h> CBUS / ITCM Flash Configuration
+;   <o0> CPU0 CBUS Flash Base <0x0-0xFFFFFFFF:8>
+;   <o1> CPU0 CBUS Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o2> CPU1 CBUS Flash Base <0x0-0xFFFFFFFF:8>
+;   <o3> CPU1 CBUS Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o4> CPU0 ITCM Flash Base <0x0-0xFFFFFFFF:8>
+;   <o5> CPU0 ITCM Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o6> CPU1 ITCM Flash Base <0x0-0xFFFFFFFF:8>
+;   <o7> CPU1 ITCM Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <i> Set unused flash views to base/size 0.
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __CPU0_CBUS_FLASH_BASE        0x08000000
+#define __CPU0_CBUS_FLASH_SIZE        0x00050000
+#define __CPU1_CBUS_FLASH_BASE        0x08050000
+#define __CPU1_CBUS_FLASH_SIZE        0x00050000
+#define __CPU0_ITCM_FLASH_BASE        0x0
+#define __CPU0_ITCM_FLASH_SIZE        0x0
+#define __CPU1_ITCM_FLASH_BASE        0x0
+#define __CPU1_ITCM_FLASH_SIZE        0x0
+
+#define __CPU0_ROM_BASE               __CPU0_CBUS_FLASH_BASE
+#define __CPU0_ROM_SIZE               __CPU0_CBUS_FLASH_SIZE
+#define __CPU1_ROM_BASE               __CPU1_CBUS_FLASH_BASE
+#define __CPU1_ROM_SIZE               __CPU1_CBUS_FLASH_SIZE
+
+
+/*--------------------- SRAM Configuration ----------------------------------
+; <h> SRAM Configuration
+;   <e0> Enable SRAM1
+;     <i> Note: Enabling this option will configure SRAM1 for use.
+;     <o1> SRAM1 Base Address <0x0-0xFFFFFFFF:8>
+;     <o2> SRAM1 Size (in Bytes) <0x0-0x2000:8>
+;     <i> Note: In dual-core MCUs, you need to consider that the SRAM1 ranges used by different cores cannot be the same!
+;   </e>
+;
+;   <e4> Enable SRAM2
+;     <i> Note: Enabling this option will configure SRAM2 for use.
+;     <o5> SRAM2 Base Address <0x0-0xFFFFFFFF:8>
+;     <o6> SRAM2 Size (in Bytes) <0x0-0x2000:8>
+;     <i> Note: In dual-core MCUs, you need to consider that the SRAM2 ranges used by different cores cannot be the same!
+;   </e>
+;
+;   <e8> Enable SRAM3
+;     <i> Note: Enabling this option will configure SRAM3 for use.
+;     <o9> SRAM3 Base Address <0x0-0xFFFFFFFF:8>
+;     <o10> SRAM3 Size (in Bytes) <0x0-0x8000:8>
+;     <i> Note: In dual-core MCUs, you need to consider that the SRAM3 ranges used by different cores cannot be the same!
+;   </e>
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __SRAM1_ENABLED     1
+#define __SRAM1_BASE        0x20100000
+#define __SRAM1_SIZE        0x00002000
+
+#define __SRAM2_ENABLED     1
+#define __SRAM2_BASE        0x20200000
+#define __SRAM2_SIZE        0x00002000
+
+#define __SRAM3_ENABLED     1
+#define __SRAM3_BASE        0x20300000
+#define __SRAM3_SIZE        0x00008000
+
+/*--------------------- Stack / Heap Configuration ---------------------------
+; <h> Stack / Heap Configuration
+;   <o0> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o1> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o2> Stack Top Location
+;      <0=> DTCM (Default)
+;      <1=> SRAM1
+;      <2=> SRAM2
+;      <3=> SRAM3
+;   <i> Heap follows the stack bank (below stack).
+;   <i> Boot Status Snapshot (if enabled) stays at DTCM physical top.
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __STACK_SIZE                  0x00003000
+#define __HEAP_SIZE                   0x00000000
+#define __STACK_TOP_LOCATION          0
+/*--------------------- Boot Status Snapshot Configuration -------------------
+; <h> Boot Status Snapshot Configuration
+;   <o> Reserve Boot Status Snapshot
+;       <0=> Disabled
+;       <1=> Reserve last 0x20 bytes of DTCM for Boot status snapshot
+;   <i> Enable this option when G32R501_DTCM_BOOT_STATUS_ENABLE is defined.
+;   <i> Snapshot at DTCM physical top; stack moves down by 0x20.
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __BOOT_STATUS_SNAPSHOT_ENABLE       0
+
+#if __BOOT_STATUS_SNAPSHOT_ENABLE == 0
+    #define __BOOT_STATUS_SNAPSHOT_SIZE     0x00000000
+#elif __BOOT_STATUS_SNAPSHOT_ENABLE == 1
+    #define __BOOT_STATUS_SNAPSHOT_SIZE     0x00000020
+#else
+    #error "Unsupported BOOT_STATUS_SNAPSHOT_ENABLE value"
+#endif
+
+/*--------------------- Generic RW/ZI Placement (bit mask) ---------------------
+; <h> Generic RW/ZI Placement
+;   <q.0> Place generic +RW/+ZI in DTCM
+;   <q.1> Place generic +RW/+ZI in ITCM
+;   <q.2> Place generic +RW/+ZI in SRAM1
+;   <q.3> Place generic +RW/+ZI in SRAM2
+;   <q.4> Place generic +RW/+ZI in SRAM3
+;   <i> Checked bits form the generic RW/ZI pool (linker may spill across them).
+;   <i> SRAM bits require the matching __SRAM*_ENABLED; otherwise build errors.
+;   <i> dtcm.data/dtcm.bss always DTCM; itcm.instruction/itcm.ramfunc always ITCM.
+;   <i> sram*.share_data always matching SRAM (independent of these bits).
+;   <i> Stack / vector window are NOT selected by this mask.
+;   <i> Default: all bits set (0x1F). itcm_ram masters default 0x1D (no ITCM bit).
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __RWZI_BANK  0x0000001D
+
+#if (__RWZI_BANK & 0x1F) == 0
+    #error "__RWZI_BANK must select at least one bank (bit0..bit4)"
+#endif
+#if ((__RWZI_BANK & 0x04) != 0) && (__SRAM1_ENABLED == 0)
+    #error "RWZI bit2 (SRAM1) set but __SRAM1_ENABLED == 0"
+#endif
+#if ((__RWZI_BANK & 0x08) != 0) && (__SRAM2_ENABLED == 0)
+    #error "RWZI bit3 (SRAM2) set but __SRAM2_ENABLED == 0"
+#endif
+#if ((__RWZI_BANK & 0x10) != 0) && (__SRAM3_ENABLED == 0)
+    #error "RWZI bit4 (SRAM3) set but __SRAM3_ENABLED == 0"
+#endif
+
+/*--------------------- Vector Configuration ---------------------------
+; <h> Vector Execution Region Configuration
+;   <o> Vector Execution Region
+;      <0=> DTCM (Default)
+;      <1=> ITCM
+;      <2=> None (Lib / no RAM vector)
+; </h>
+ *----------------------------------------------------------------------------*/
+#define __VECTOR_REGION  0
+
+#define __VECTOR_SIZE    0x00000400
+
+/*----------------------------------------------------------------------------
+  Vector-derived region bases (__VECTOR_REGION)
+ *----------------------------------------------------------------------------*/
+#if __VECTOR_REGION == 0
+#define __VECTOR_BASE    __CPU0_DTCM_BASE
+#define __DTCM_RW_BASE   (__CPU0_DTCM_BASE + __VECTOR_SIZE)
+#define __ITCM_RW_BASE   __CPU0_ITCM_BASE
+#define __ITCM_RW_SIZE   __CPU0_ITCM_SIZE
+#elif __VECTOR_REGION == 1
+#define __VECTOR_BASE    __CPU0_ITCM_BASE
+#define __DTCM_RW_BASE   __CPU0_DTCM_BASE
+#define __ITCM_RW_BASE   (__CPU0_ITCM_BASE + __VECTOR_SIZE)
+#define __ITCM_RW_SIZE   (__CPU0_ITCM_SIZE - __VECTOR_SIZE)
+#elif __VECTOR_REGION == 2
+#define __VECTOR_BASE    __CPU0_DTCM_BASE
+#define __DTCM_RW_BASE   __CPU0_DTCM_BASE
+#define __ITCM_RW_BASE   __CPU0_ITCM_BASE
+#define __ITCM_RW_SIZE   __CPU0_ITCM_SIZE
+#else
+    #error "Unsupported __VECTOR_REGION value"
+#endif
+
+#define __DTCM_TOP              (__CPU0_DTCM_BASE + __CPU0_DTCM_SIZE)
+#define __ITCM_TOP              (__CPU0_ITCM_BASE + __CPU0_ITCM_SIZE)
+
+#if __STACK_TOP_LOCATION == 0
+    #define __DTCM_STACK_TAX    (__STACK_SIZE + __HEAP_SIZE)
+    #define __SRAM1_RW_SIZE     __SRAM1_SIZE
+    #define __SRAM2_RW_SIZE     __SRAM2_SIZE
+    #define __SRAM3_RW_SIZE     __SRAM3_SIZE
+    #define __STACK_TOP         (__DTCM_TOP - __BOOT_STATUS_SNAPSHOT_SIZE)
+#elif __STACK_TOP_LOCATION == 1
+    #if __SRAM1_ENABLED == 0
+        #error "STACK_TOP_LOCATION=SRAM1 but __SRAM1_ENABLED==0"
+    #endif
+    #define __DTCM_STACK_TAX    0
+    #define __SRAM1_RW_SIZE     (__SRAM1_SIZE - __STACK_SIZE - __HEAP_SIZE)
+    #define __SRAM2_RW_SIZE     __SRAM2_SIZE
+    #define __SRAM3_RW_SIZE     __SRAM3_SIZE
+    #define __STACK_TOP         (__SRAM1_BASE + __SRAM1_SIZE)
+#elif __STACK_TOP_LOCATION == 2
+    #if __SRAM2_ENABLED == 0
+        #error "STACK_TOP_LOCATION=SRAM2 but __SRAM2_ENABLED==0"
+    #endif
+    #define __DTCM_STACK_TAX    0
+    #define __SRAM1_RW_SIZE     __SRAM1_SIZE
+    #define __SRAM2_RW_SIZE     (__SRAM2_SIZE - __STACK_SIZE - __HEAP_SIZE)
+    #define __SRAM3_RW_SIZE     __SRAM3_SIZE
+    #define __STACK_TOP         (__SRAM2_BASE + __SRAM2_SIZE)
+#elif __STACK_TOP_LOCATION == 3
+    #if __SRAM3_ENABLED == 0
+        #error "STACK_TOP_LOCATION=SRAM3 but __SRAM3_ENABLED==0"
+    #endif
+    #define __DTCM_STACK_TAX    0
+    #define __SRAM1_RW_SIZE     __SRAM1_SIZE
+    #define __SRAM2_RW_SIZE     __SRAM2_SIZE
+    #define __SRAM3_RW_SIZE     (__SRAM3_SIZE - __STACK_SIZE - __HEAP_SIZE)
+    #define __STACK_TOP         (__SRAM3_BASE + __SRAM3_SIZE)
+#else
+    #error "Invalid __STACK_TOP_LOCATION (G32R501: 0=DTCM, 1=SRAM1, 2=SRAM2, 3=SRAM3)"
+#endif
+
+#define __DTCM_RW_SIZE   (__CPU0_DTCM_SIZE - (__DTCM_RW_BASE - __CPU0_DTCM_BASE) - __DTCM_STACK_TAX - __BOOT_STATUS_SNAPSHOT_SIZE)
+#define __HEAP_BASE             (AlignExpr((__STACK_TOP - __STACK_SIZE - __HEAP_SIZE), 8))
+
+/*--------------------- Code Execution Region Configuration ------------------
+; <h> Code Execution Region Configuration
+;   <o> Code Execution Region
+;      <0=> Flash (Default)
+;      <1=> SRAM1
+;      <2=> SRAM2
+;      <3=> SRAM3
+;      <4=> ITCM
+;      <5=> DTCM
+;      <6=> Custom Address
+;   <i> Note: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+ *----------------------------------------------------------------------------*/
+#define __CODE_EXEC_REGION  0
+
+#if __CODE_EXEC_REGION == 0
+    #define __RO_BASE    __CPU0_ROM_BASE
+    #define __RO_SIZE    __CPU0_ROM_SIZE
+#elif __CODE_EXEC_REGION == 1
+    #define __RO_BASE    __SRAM1_BASE
+    #define __RO_SIZE    __SRAM1_SIZE
+#elif __CODE_EXEC_REGION == 2
+    #define __RO_BASE    __SRAM2_BASE
+    #define __RO_SIZE    __SRAM2_SIZE
+#elif __CODE_EXEC_REGION == 3
+    #define __RO_BASE    __SRAM3_BASE
+    #define __RO_SIZE    __SRAM3_SIZE
+#elif __CODE_EXEC_REGION == 4
+    #define __RO_BASE    __CPU0_ITCM_BASE
+    #define __RO_SIZE    __CPU0_ITCM_SIZE
+#elif __CODE_EXEC_REGION == 5
+    #define __RO_BASE    __CPU0_DTCM_BASE
+    #define __RO_SIZE    __CPU0_DTCM_SIZE
+#elif __CODE_EXEC_REGION == 6
+    /*--------------------- Custom Address Configuration ---------------------
+    ; <h> Custom Address Configuration
+    ; <i> Note1: Only edit these settings if "Code Execution Region" is set to "Custom Address (6)"
+    ; <i> Note2: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+    ;   <o0> Custom Base Address <0x0-0xFFFFFFFF:8>
+    ;   <i> Note 1: Only edit these settings if "Code Execution Region" is set to "Custom Address (6)"
+    ;   <i> Note 2: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+    ;   <o1> Custom Size (in Bytes) <0x0-0xFFFFFFFF:8>
+    ;   <i> Note 1: Only edit these settings if "Code Execution Region" is set to "Custom Address (6)"
+    ;   <i> Note 2: In dual-core MCUs, you need to consider that the ROM ranges used by different cores cannot be the same!
+    ; </h>
+     *------------------------------------------------------------------------*/
+    #define __CUSTOM_BASE  0x08000000 // Default custom base address
+    #define __CUSTOM_SIZE  0x00050000 // Default custom size
+    #define __RO_BASE      __CUSTOM_BASE
+    #define __RO_SIZE      __CUSTOM_SIZE
+#endif
+
+#if __CODE_EXEC_REGION == 4 && ((__RWZI_BANK & 0x02) != 0)
+    #error "When code executes from ITCM, clear __RWZI_BANK bit1 (ITCM)"
+#endif
+
+LR_ROM __RO_BASE __RO_SIZE {                       ; load region (code/const)
+  ER_ROM __RO_BASE __RO_SIZE {                     ; exec = load
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+   .ANY (+XO)
+#if __CODE_EXEC_REGION == 4
+    .ANY (itcm.instruction)
+    .ANY (itcm.ramfunc)
+#endif
+  }
+
+#if __CODE_EXEC_REGION != 4
+  RW_RAM_CPU0_ITCM __ITCM_RW_BASE __ITCM_RW_SIZE { ; itcm.instruction / itcm.ramfunc
+    .ANY (itcm.instruction)
+    .ANY (itcm.ramfunc)
+#if (__RWZI_BANK & 0x02) != 0
+    .ANY (+RW +ZI)
+#endif
+  }
+#elif (__RWZI_BANK & 0x02) != 0
+  RW_RAM_CPU0_ITCM __ITCM_RW_BASE __ITCM_RW_SIZE { ; generic RW/ZI only (code owns ITCM RO)
+    .ANY (+RW +ZI)
+  }
+#endif
+  RW_RAM_CPU0_DTCM __DTCM_RW_BASE __DTCM_RW_SIZE { ; dtcm.* + optional generic RW/ZI
+    .ANY (dtcm.data)
+    .ANY (dtcm.bss)
+#if (__RWZI_BANK & 0x01) != 0
+    .ANY (+RW +ZI)
+#endif
+  }
+
+#if __SRAM1_ENABLED
+  RW_RAM_SRAM1 __SRAM1_BASE __SRAM1_RW_SIZE { ; sram1.share_data + optional generic RW/ZI
+    .ANY (sram1.share_data)
+#if (__RWZI_BANK & 0x04) != 0
+    .ANY (+RW +ZI)
+#endif
+  }
+#endif
+
+#if __SRAM2_ENABLED
+  RW_RAM_SRAM2 __SRAM2_BASE __SRAM2_RW_SIZE { ; sram2.share_data + optional generic RW/ZI
+    .ANY (sram2.share_data)
+#if (__RWZI_BANK & 0x08) != 0
+    .ANY (+RW +ZI)
+#endif
+  }
+#endif
+
+#if __SRAM3_ENABLED
+  RW_RAM_SRAM3 __SRAM3_BASE __SRAM3_RW_SIZE { ; sram3.share_data + optional generic RW/ZI
+    .ANY (sram3.share_data)
+#if (__RWZI_BANK & 0x10) != 0
+    .ANY (+RW +ZI)
+#endif
+  }
+#endif
+
+#if __HEAP_SIZE > 0
+  ARM_LIB_HEAP __HEAP_BASE EMPTY __HEAP_SIZE {   ; empty reserve for heap
+  }
+#endif
+
+  ARM_LIB_STACK __STACK_TOP EMPTY - __STACK_SIZE {   ; empty reserve; stack toward DTCM top
+  }
+
+#if __BOOT_STATUS_SNAPSHOT_SIZE > 0
+  BOOT_STATUS_SNAPSHOT (__DTCM_TOP - __BOOT_STATUS_SNAPSHOT_SIZE) EMPTY __BOOT_STATUS_SNAPSHOT_SIZE {
+  }
+#endif
+}
+
+#if __VECTOR_REGION <= 1
+LR_VEC __VECTOR_BASE { ; RAM vector window
+  RW_VECTOR_VEC __VECTOR_BASE UNINIT { ; .bss.ram.intvec
+    *(.bss.ram.intvec)
+  }
+}
+#endif
+
+LR_ROM_CPU1 __CPU1_ROM_BASE __CPU1_ROM_SIZE { ; cpu1_code stub image
+  ER_ROM_CPU1 __CPU1_ROM_BASE __CPU1_ROM_SIZE { ; cpu1 stub exec = load
+    .ANY (cpu1_code)
+  }
+}

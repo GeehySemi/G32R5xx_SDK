@@ -82,6 +82,17 @@ void example_main(void)
     Device_initGPIO();
 
     //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
+
+    //
     // Select the clock source for XCLKOUT. Refer to the enum SysCtl_ClockOut
     // for other clock sources.
     //

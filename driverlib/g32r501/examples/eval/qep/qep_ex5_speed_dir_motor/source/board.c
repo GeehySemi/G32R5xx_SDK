@@ -47,6 +47,8 @@
 // Modifications:
 // - 2024-07-08: 
 // 1. Modified function names and macro definition names.
+// - 2026-08-18:
+// 1. Set QEP unit timer period to DEVICE_APBCLK_FREQ / 100.
 //
 //###########################################################################
 
@@ -177,8 +179,9 @@ void myQEP0_init(){
     QEP_setPosition(myQEP0_BASE,0U);
     //
     // Enables the QEP module unit timer.
+    // Period = DEVICE_APBCLK_FREQ / 100 -> 10 ms timeout (100 Hz) at 100 MHz APBCLK.
     //
-    QEP_enableUnitTimer(myQEP0_BASE,1000000U);
+    QEP_enableUnitTimer(myQEP0_BASE, (DEVICE_APBCLK_FREQ / 100U));
     //
     // Disables the QEP module watchdog timer.
     //
@@ -223,7 +226,7 @@ void INTERRUPT_init(){
     //
     // Set the priority group to indicate the PREEMPT and SUB priority bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     //
     // Set the global and group interrupt priority to allow CPU interrupts

@@ -2,8 +2,32 @@ Release Notes for G32R5xx SDK
 
 Update History
 
-V1.0.0 / 15-01-2025
-First Release version of G32R501 SDK.
+V1.1.1 / 31-08-2026
+1. Optimized G32R501 device support.
+2. Integrated G32R502 device support into G32R5xx SDK (device_support,
+   driverlib, libraries, examples, and related utilities), unifying
+   G32R501 and G32R502 delivery in a single package.
+3. Updated CMSIS-Pack / device description baseline for G32R502
+   (see package/ and docs application notes for details).
+4. MDK scatter (*.sct): restored Stack Top Location in the Stack/Heap
+   Configuration Wizard.
+   - G32R501: DTCM (default), SRAM1, SRAM2, SRAM3 (same enum as prior
+     G32R501 packages; no ITCM stack option).
+   - G32R502: DTCM (default), ITCM (no SRAM1/2/3 options).
+   - Default remains DTCM; leaving the default unchanged keeps the prior
+     stack layout. Heap follows the selected stack bank. Boot Status
+     Snapshot (if enabled) stays at the DTCM top.
+   - Scope: MDK *.sct only in this release; IAR/Eclipse linker scripts
+     are tracked separately.
+5. FlashAPI example scatter files (*_lnk.sct): Stack Top Location options
+   follow each example layout (kernel images: SRAM1 on G32R501; LFU/LDFU:
+   DTCM or DTCM/ITCM on G32R502 as shown in the scatter wizard).
+6. QSPI.SWITCH bit1 qspi_ssi_sleep removed per latest user manual
+   (bitfield, driverlib hw_qspi.h, and related CMSIS-SVD / generated headers).
+7. G32R502 DCS: SVD and g32r502_dcs.h aligned with DCS user manual V1.0.
+   Breaking rename: SECERRCLR, Z1/Z2_OTPSECLOCK (JTAGLOCK/PSWDLOCK),
+   Z1_BOOTDEF_HIGH/LOW, Z1_BOOTPIN_CONFIG, Z1_GPREG2 replace legacy
+   SEERRCLR, Z1LOCK, Z1BOOTH, CSPSLOCK, etc.
 
 V1.1.0 / 15-04-2025
 1. Fixed certain defects in the SDK.
@@ -14,4 +38,5 @@ V1.1.0 / 15-04-2025
 5. Provided new example projects, such as i2c_ex6_eeprom_interrupt, and other additional demonstration routines.
 6. GCC-based linker scripts: Created a new ld folder (device_support\g32r501\common\ld) containing .ld scripts for GCC-based projects.
 
-
+V1.0.0 / 15-01-2025
+First Release version of G32R501 SDK.

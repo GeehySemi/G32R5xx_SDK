@@ -1,32 +1,3 @@
-//###########################################################################
-//
-// FILE:    g32r501_device_ex.h
-//
-// TITLE:   g32r501 Device Definitions.
-//
-// VERSION: 1.0.0
-//
-// DATE:    2025-01-15
-//
-//###########################################################################
-//
-//
-// $Copyright:
-// Copyright (C) 2024 Geehy Semiconductor - http://www.geehy.com/
-//
-// You may not use this file except in compliance with the
-// GEEHY COPYRIGHT NOTICE (GEEHY SOFTWARE PACKAGE LICENSE).
-//
-// The program is only for reference, which is distributed in the hope
-// that it will be useful and instructional for customers to develop
-// their software. Unless required by applicable law or agreed to in
-// writing, the program is distributed on an "AS IS" BASIS, WITHOUT
-// ANY WARRANTY OR CONDITIONS OF ANY KIND, either express or implied.
-// See the GEEHY SOFTWARE PACKAGE LICENSE for the governing permissions
-// and limitations under the License.
-// $
-//###########################################################################
-
 #ifndef G32R501_DEVICE_EX_H
 #define G32R501_DEVICE_EX_H
 
@@ -34,13 +5,12 @@
 extern "C" {
 #endif
 
+// G32R501 EXTENSION MODULE BEGIN
+// Install G32R5xx SDK Extension package for FLB/DCS/QSPI/CFGSMS APIs.
+// G32R5XX EXTENSION MODULE END
 
 #ifdef __cplusplus
 }
-#endif                                  /* extern "C" */
+#endif
 
-#endif                                  // end of G32R501_DEVICE_EX_H definition
-
-//===========================================================================
-// End of file.
-//===========================================================================
+#endif

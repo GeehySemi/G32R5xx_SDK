@@ -101,6 +101,8 @@
 // Modifications:
 // - 2024-07-08: 
 // 1. Modified some function and macro definition and variable names.
+// - 2026-08-18:
+// 1. Mask SPI 16-bit wrap in RX FIFO compare and pointer increment.
 //
 //###########################################################################
 
@@ -230,7 +232,7 @@ void example_main(void)
     //
     // Set the priority group to indicate the PREEMPT and SUB priortiy bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
     //
     // Set the global and group priority to allow CPU interrupts
     // with higher priority
@@ -552,14 +554,14 @@ NO_OPTIMIZE
      //
      for(i = 0; i < 2; i++)
      {
-         if(rDataspiA[i] != (rDataPointspiA + i))
+         if(rDataspiA[i] != ((rDataPointspiA + i) & 0xFFFF))
          {
              // Something went wrong. rDataspiA doesn't contain expected data.
              ESTOP0;
          }
      }
 
-     rDataPointspiA++;
+     rDataPointspiA = (rDataPointspiA + 1) & 0xFFFF;
 
      //
      // Clear interrupt flag and issue ACK

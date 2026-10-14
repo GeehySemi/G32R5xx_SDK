@@ -6,7 +6,7 @@
 //
 // VERSION: 1.0.1
 //
-// DATE:    2025-04-15
+// DATE:    2026-08-31
 //
 //###########################################################################
 // $Copyright:
@@ -48,6 +48,8 @@
 //   some function parameter types and naming.
 // 2. Content of CAN_writeDataReg_16bit() function,
 //   Content of CAN_writeDataReg_32bit() function.
+// - 2026-08-31:
+// 1. Note on CAN_transferMessage() dmaRequest BUSY wait / SysCtl_delay spacing.
 //
 //###########################################################################
 #ifndef CAN_H
@@ -1908,6 +1910,12 @@ extern bool CAN_readMessageWithID(uint32_t base,
 //! This function transfers the contents of the interface registers to message
 //! RAM or vice versa depending on the value passed to direction.  This
 //! function is designed to be used with DMA transfers.
+//!
+//! When \e dmaRequest is true, the function still waits for the IFx BUSY
+//! flag to clear, but it spaces those BUSY reads with SysCtl_delay(). A
+//! tight poll of the same IFx command register would be the first IFx
+//! access after the transfer and would clear the DMA request before the
+//! DMA controller reads the IFx data registers.
 //!
 //! \return None.
 //

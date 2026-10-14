@@ -128,16 +128,6 @@ volatile struct CAN_REGS CanbRegs;
 
 //----------------------------------------
 #if defined (__ARMCC_VERSION)
-    AT_ADDR(FLBXBAR_BASE)
-#elif defined (__GNUC__) && !defined (__ARMCC_VERSION)
-    __attribute__((section(".flb_xbar")))
-#elif defined (__CC_ARM) || defined (__ICCARM__)
-    #pragma location = FLBXBAR_BASE
-#endif
-volatile struct FLB_XBAR_REGS FLBXbarRegs;
-
-//----------------------------------------
-#if defined (__ARMCC_VERSION)
     AT_ADDR(CLKCFG_BASE)
 #elif defined (__GNUC__) && !defined (__ARMCC_VERSION)
     __attribute__((section(".clk_cfg")))
@@ -727,7 +717,4 @@ volatile struct FLASH_CTRL_REGS Flash0CtrlRegs;
 volatile struct FLASH_ECC_REGS Flash0EccRegs;
 
 
-
-//
-// End of file
-//
+// G32R501 EXTENSION MODULE BEGIN

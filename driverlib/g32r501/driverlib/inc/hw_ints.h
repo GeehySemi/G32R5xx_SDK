@@ -72,9 +72,9 @@
 // NVIC Interrupt Numbers
 //
 //*****************************************************************************
-#define INT_DCCOMP             11    // DCCOMP Interrupt
-#define INT_TIMER1             13    // CPU Timer 1 Interrupt
-#define INT_TIMER2             14    // CPU Timer 2 Interrupt
+#define INT_DCCOMP             11    // DCCOMP0 Interrupt
+#define INT_TMR1               13    // CPU Timer 1 Interrupt
+#define INT_TMR2               14    // CPU Timer 2 Interrupt
 #define INT_CFGSMS             16    // CFGSMS Interrupt
 #define INT_IPC_COP_TE0        17    // IPC TE0 Interrupt
 #define INT_IPC_COP_TE1        18    // IPC TE1 Interrupt
@@ -91,7 +91,7 @@
 #define INT_ADCA1              32    // ADCA Interrupt 1
 #define INT_ADCB1              33    // ADCB Interrupt 1
 #define INT_ADCC1              34    // ADCC Interrupt 1
-#define INT_TIMER0             38    // Timer 0 Interrupt
+#define INT_TMR0               38    // Timer 0 Interrupt
 #define INT_WAKE               39    // Halt Wakeup/Watchdog Interrupt
 #define INT_PWM1_TZ            40    // PWM1 Trip Zone Interrupt
 #define INT_PWM2_TZ            41    // PWM2 Trip Zone Interrupt
@@ -180,8 +180,8 @@
 #define INT_SDF1DR2            165   // SDF1DR2 Interrupt
 #define INT_SDF1DR3            166   // SDF1DR3 Interrupt
 #define INT_SDF1DR4            167   // SDF1DR4 Interrupt
-#define INT_LINA_0             184   // LINA Interrupt0
-#define INT_LINA_1             185   // LINA Interrupt1
+#define INT_LINA_1             184   // LINA INT1
+#define INT_LINA_2             185   // LINA INT2
 #define INT_PMBUSA             188   // PMBUSA Interrupt
 #define INT_ADCC_EVT           200   // ADCC Event Interrupt
 #define INT_ADCC2              201   // ADCC Interrupt 2

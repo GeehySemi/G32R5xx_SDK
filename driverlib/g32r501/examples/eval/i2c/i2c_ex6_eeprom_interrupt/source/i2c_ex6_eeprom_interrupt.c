@@ -165,7 +165,7 @@ void example_main(void)
 
     Interrupt_enable(INT_I2CA);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     Interrupt_setPriority(INT_I2CA_FIFO,1,0);
     Interrupt_setPriority(INT_I2CA,0,0);
@@ -347,13 +347,13 @@ void I2C_GPIO_init(void)
     GPIO_setDrivingCapability(DEVICE_GPIO_PIN_SDAA,GPIO_DRIVE_LEVEL_VERY_HIGH);
     GPIO_setDirectionMode(DEVICE_GPIO_PIN_SDAA, GPIO_DIR_MODE_IN);
     GPIO_setPadConfig(DEVICE_GPIO_PIN_SDAA, GPIO_PIN_TYPE_PULLUP);
-    GPIO_setMasterCore(DEVICE_GPIO_PIN_SDAA, GPIO_CORE_CPU1);
+    GPIO_setMasterCore(DEVICE_GPIO_PIN_SDAA, GPIO_CORE_CPU0);
     GPIO_setQualificationMode(DEVICE_GPIO_PIN_SDAA, GPIO_QUAL_ASYNC);
 
     GPIO_setDrivingCapability(DEVICE_GPIO_PIN_SCLA,GPIO_DRIVE_LEVEL_VERY_HIGH);
     GPIO_setDirectionMode(DEVICE_GPIO_PIN_SCLA, GPIO_DIR_MODE_IN);
     GPIO_setPadConfig(DEVICE_GPIO_PIN_SCLA, GPIO_PIN_TYPE_PULLUP);
-    GPIO_setMasterCore(DEVICE_GPIO_PIN_SCLA, GPIO_CORE_CPU1);
+    GPIO_setMasterCore(DEVICE_GPIO_PIN_SCLA, GPIO_CORE_CPU0);
     GPIO_setQualificationMode(DEVICE_GPIO_PIN_SCLA, GPIO_QUAL_ASYNC);
 
     GPIO_setPinConfig(DEVICE_GPIO_CFG_SDAA);

@@ -218,7 +218,7 @@ void myGPIO0_init(){
     GPIO_setDrivingCapability(myGPIO0,GPIO_DRIVE_LEVEL_VERY_HIGH);
     GPIO_setQualificationMode(myGPIO0, GPIO_QUAL_ASYNC);
     GPIO_setDirectionMode(myGPIO0, GPIO_DIR_MODE_IN);
-    GPIO_setMasterCore(myGPIO0, GPIO_CORE_CPU1);
+    GPIO_setMasterCore(myGPIO0, GPIO_CORE_CPU0);
 }
 
 //*****************************************************************************
@@ -244,7 +244,7 @@ void INTERRUPT_init(){
     //
     // Set the priority group to indicate the PREEMPT and SUB priority bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     //
     // Set the global and group interrupt priority to allow CPU interrupts

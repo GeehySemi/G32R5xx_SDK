@@ -54,15 +54,15 @@
 #include "sysctl.h"
 #include "dccomp.h"
 
-#define SYSCTL_CLKSRCCTL1_DELAY      __asm volatile ( \
+#define SYSCTL_CLKSRCCTL1_DELAY()   {__asm volatile ( \
                                     "MOV R1,LR \n" \
                                     "MOV LR,#149 \n" \
-                                    "nop_loop: \n" \
+                                    "1: \n" \
                                     "NOP \n" \
                                     "SUBS LR, LR, #1 \n" \
-                                    "BNE nop_loop \n" \
+                                    "BNE 1b \n" \
                                     "MOV LR,R1 \n" \
-                                    )
+                                    );}
 
 //*****************************************************************************
 //
@@ -575,7 +575,7 @@ SysCtl_selectOscSource(uint32_t oscSource)
             HWREGH(CLKCFG_BASE + SYSCTL_O_CLKSRCCTL1) &=
                 ~SYSCTL_CLKSRCCTL1_INTOSC2OFF;
 
-            SYSCTL_CLKSRCCTL1_DELAY;
+            SYSCTL_CLKSRCCTL1_DELAY();
 
             //
             // Clk Src = INTOSC2

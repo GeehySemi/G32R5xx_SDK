@@ -257,8 +257,8 @@ extern "C"
 // API as rstCauses or returned by the SysCtl_getResetCause() API.
 //
 //*****************************************************************************
-#define SYSCTL_CAUSE_POR                 0x00000001U //!< Power-on reset
-#define SYSCTL_CAUSE_XRS                 0x00000002U //!< External reset pin
+#define SYSCTL_CAUSE_POR                 0x00000001U //!< Power-on reset (from Boot ROM status)
+#define SYSCTL_CAUSE_XRS                 0x00000002U //!< External reset pin (from Boot ROM status)
 #define SYSCTL_CAUSE_WDRS                0x00000004U //!< Watchdog reset
 #define SYSCTL_CAUSE_NMIWDRS             0x00000008U //!< NMI watchdog reset
 #define SYSCTL_CAUSE_SCCRESET            0x00000100U //!< SCCRESETn by DCS
@@ -723,8 +723,6 @@ typedef enum
 typedef enum
 {
     SYSCTL_LDOVOLT_0 = 0U,                      //!<  LDO voltage 1.1v
-    SYSCTL_LDOVOLT_1 = 1U,                      //!<  LDO voltage 0.8v
-    SYSCTL_LDOVOLT_2 = 2U,                      //!<  LDO voltage 0.9v
     SYSCTL_LDOVOLT_3 = 3U,                      //!<  LDO voltage 1.0v
     SYSCTL_LDOVOLT_4 = 4U,                      //!<  LDO voltage 1.05v
     SYSCTL_LDOVOLT_5 = 5U,                      //!<  LDO voltage 1.1v
@@ -1138,11 +1136,14 @@ SysCtl_resetDevice(void)
 //! reasons are sticky until either cleared by software or an external reset,
 //! multiple reset reasons may be returned if multiple resets have occurred.
 //! The reset reason will be a logical OR of
-//! - \b SYSCTL_CAUSE_POR - Power-on reset
-//! - \b SYSCTL_CAUSE_XRS - External reset pin
+//! - \b SYSCTL_CAUSE_POR - Power-on reset (from Boot ROM status only)
+//! - \b SYSCTL_CAUSE_XRS - External reset pin (from Boot ROM status only)
 //! - \b SYSCTL_CAUSE_WDRS - Watchdog reset
 //! - \b SYSCTL_CAUSE_NMIWDRS - NMI watchdog reset
 //! - \b SYSCTL_CAUSE_SCCRESET - SCCRESETn reset from DCS
+//!
+//! \note POR and XRS are reported from Boot ROM status only. RESC bit0/bit1
+//! are reserved and are not used for reset-cause detection.
 //!
 //! \note If you re-purpose the reserved boot ROM RAM, the POR and XRS reset
 //! statuses won't be accurate.
@@ -1156,11 +1157,10 @@ SysCtl_getResetCause(void)
     uint32_t resetCauses;
 
     //
-    // Read CPU reset register
+    // Read CPU reset register (RESC bit0/bit1 are reserved)
     //
     resetCauses = HWREG(CPUSYS_BASE + SYSCTL_O_RESC) &
-                  ((uint32_t)SYSCTL_RESC_POR | (uint32_t)SYSCTL_RESC_XRSN |
-                   (uint32_t)SYSCTL_RESC_WDRSN |
+                  ((uint32_t)SYSCTL_RESC_WDRSN |
                    (uint32_t)SYSCTL_RESC_NMIWDRSN |
                    (uint32_t)SYSCTL_RESC_SCCRESETN
                    );
@@ -1171,12 +1171,12 @@ SysCtl_getResetCause(void)
     if((HWREG(SYSCTL_BOOT_ROM_STATUS) & (uint32_t)SYSCTL_BOOT_ROM_POR) ==
        (uint32_t)SYSCTL_BOOT_ROM_POR)
     {
-        resetCauses |= SYSCTL_RESC_POR;
+        resetCauses |= SYSCTL_CAUSE_POR;
     }
     if((HWREG(SYSCTL_BOOT_ROM_STATUS) & (uint32_t)SYSCTL_BOOT_ROM_XRS) ==
        (uint32_t)SYSCTL_BOOT_ROM_XRS)
     {
-        resetCauses |= SYSCTL_RESC_XRSN;
+        resetCauses |= SYSCTL_CAUSE_XRS;
     }
 
     //
@@ -1191,8 +1191,6 @@ SysCtl_getResetCause(void)
 //!
 //! \param rstCauses are the reset causes to be cleared; must be a logical
 //! OR of
-//! - \b SYSCTL_CAUSE_POR - Power-on reset
-//! - \b SYSCTL_CAUSE_XRS - External reset pin
 //! - \b SYSCTL_CAUSE_WDRS - Watchdog reset
 //! - \b SYSCTL_CAUSE_NMIWDRS - NMI watchdog reset
 //! - \b SYSCTL_CAUSE_SCCRESET - SCCRESETn reset from DCS

@@ -61,18 +61,18 @@ extern "C" {
 //---------------------------------------------------------------------------
 // CAP Individual Register Bit Definitions:
 
-struct CCTL0_BITS {                     // bits description
+struct ECCTL0_BITS {                     // bits description
     Uint32 INPUTSEL : 7;               // 6:0 INPUT source select
     Uint32 rsvd1    : 9;               // 15:7 Reserved
     Uint32 rsvd2    : 16;              // 31:16 Reserved
 };
 
-union CCTL0_REG {
+union ECCTL0_REG {
     Uint32  all;
-    struct  CCTL0_BITS  bit;
+    struct  ECCTL0_BITS  bit;
 };
 
-struct CCTL1_BITS {                   // bits description
+struct ECCTL1_BITS {                   // bits description
     Uint16 CAP1POL   : 1;            // [0..0] Capture Event 1 Polarity select
     Uint16 CTRRST1   : 1;            // [1..1] Capture Event 1 Counter Reset
     Uint16 CAP2POL   : 1;            // [2..2] Capture Event 2 Polarity select
@@ -86,12 +86,12 @@ struct CCTL1_BITS {                   // bits description
     Uint16 FREE_SOFT : 2;            // [15..14] TSCTR counter run mode Select
 };
 
-union CCTL1_REG {
+union ECCTL1_REG {
     Uint16  all;
-    struct  CCTL1_BITS  bit;
+    struct  ECCTL1_BITS  bit;
 };
 
-struct CCTL2_BITS {                    // bits description
+struct ECCTL2_BITS {                    // bits description
     Uint16 CONT_ONESHT : 1;           // [0..0] Operate mode Select
     Uint16 STOP_WRAP   : 2;           // [2..1] Select how to run after capture events in capture / one-shot mode
     Uint16 REARM       : 1;           // [3..3] Re-Arming Control
@@ -106,12 +106,12 @@ struct CCTL2_BITS {                    // bits description
     Uint16 MODCNTRSTS  : 2;           // [15..14] reads modulo counter status
 };
 
-union CCTL2_REG {
+union ECCTL2_REG {
     Uint16  all;
-    struct  CCTL2_BITS  bit;
+    struct  ECCTL2_BITS  bit;
 };
 
-struct CEINT_BITS {                   // bits description
+struct ECEINT_BITS {                   // bits description
     Uint16 rsvd1:1;
     Uint16 CEVT1      : 1;            // [1..1] Capture Event 1 Interrupt Enable
     Uint16 CEVT2      : 1;            // [2..2] Capture Event 2 Interrupt Enable
@@ -124,12 +124,12 @@ struct CEINT_BITS {                   // bits description
     Uint16 rsvd3      : 7;
 };
 
-union CEINT_REG {
+union ECEINT_REG {
     Uint16  all;
-    struct  CEINT_BITS  bit;
+    struct  ECEINT_BITS  bit;
 };
 
-struct CFLG_BITS {                    // bits description
+struct ECFLG_BITS {                    // bits description
     Uint16 INT        : 1;            // [0..0] Global Interrupt Flag
     Uint16 CEVT1      : 1;            // [1..1] Capture Event 1 Interrupt Flag
     Uint16 CEVT2      : 1;            // [2..2] Capture Event 2 Interrupt Flag
@@ -142,12 +142,12 @@ struct CFLG_BITS {                    // bits description
     Uint16 rsvd2      : 7;
 };
 
-union CFLG_REG {
+union ECFLG_REG {
     Uint16  all;
-    struct  CFLG_BITS  bit;
+    struct  ECFLG_BITS  bit;
 };
 
-struct CCLR_BITS {                    // bits description
+struct ECCLR_BITS {                    // bits description
     Uint16 INT        : 1;            // [0..0] Global Interrupt Flag Clear
     Uint16 CEVT1      : 1;            // [1..1] Capture Event 1 Interrupt Flag Clear
     Uint16 CEVT2      : 1;            // [2..2] Capture Event 2 Interrupt Flag Clear
@@ -160,12 +160,12 @@ struct CCLR_BITS {                    // bits description
     Uint16 rsvd2      : 7;
 };
 
-union CCLR_REG {
+union ECCLR_REG {
     Uint16  all;
-    struct  CCLR_BITS  bit;
+    struct  ECCLR_BITS  bit;
 };
 
-struct CFRC_BITS {                    // bits description
+struct ECFRC_BITS {                    // bits description
     Uint16 rsvd1      : 1;
     Uint16 CEVT1      : 1;            // [1..1] Force Capture Event 1 Interrupt
     Uint16 CEVT2      : 1;            // [2..2] Force Capture Event 2 Interrupt
@@ -178,9 +178,9 @@ struct CFRC_BITS {                    // bits description
     Uint16 rsvd3      : 7;
 };
 
-union CFRC_REG {
+union ECFRC_REG {
     Uint16  all;
-    struct  CFRC_BITS  bit;
+    struct  ECFRC_BITS  bit;
 };
 
 struct CAP_REGS {
@@ -191,13 +191,13 @@ struct CAP_REGS {
     Uint32                                   CAP3;                         // 0x10 Capture 3 Register
     Uint32                                   CAP4;                         // 0x14 Capture 4 Register
     Uint16                                   rsvd1[6];                     // 0x18 Reserved
-    union   CCTL0_REG                        CCTL0;                        // 0x24 Capture Control Register 0
-    union   CCTL1_REG                        CCTL1;                        // 0x28 Capture Control Register 1
-    union   CCTL2_REG                        CCTL2;                        // 0x2A Capture Control Register 2
-    union   CEINT_REG                        CEINT;                        // 0x2C Capture Interrupt Enable Register
-    union   CFLG_REG                         CFLG;                         // 0x2E Capture Interrupt Flag Register
-    union   CCLR_REG                         CCLR;                         // 0x30 Capture Interrupt Clear Register
-    union   CFRC_REG                         CFRC;                         // 0x32 Capture Interrupt Force Register
+    union   ECCTL0_REG                       ECCTL0;                        // 0x24 Capture Control Register 0
+    union   ECCTL1_REG                       ECCTL1;                        // 0x28 Capture Control Register 1
+    union   ECCTL2_REG                       ECCTL2;                        // 0x2A Capture Control Register 2
+    union   ECEINT_REG                       ECEINT;                        // 0x2C Capture Interrupt Enable Register
+    union   ECFLG_REG                        ECFLG;                         // 0x2E Capture Interrupt Flag Register
+    union   ECCLR_REG                        ECCLR;                         // 0x30 Capture Interrupt Clear Register
+    union   ECFRC_REG                        ECFRC;                         // 0x32 Capture Interrupt Force Register
 };
 
 struct HRCTL_BITS {                   // bits description

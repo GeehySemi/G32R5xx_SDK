@@ -84,6 +84,8 @@
 // Modifications:
 // - 2024-07-08: 
 // 1. Modified some function and macro definition and variable names.
+// - 2026-08-18:
+// 1. Configured CPU timers with DEVICE_SYSCLK_FREQ for a 1 s period.
 //
 //###########################################################################
 
@@ -119,9 +121,9 @@ uint16_t  traceISRIndex = 0;
 //
 // Function Prototypes
 //
-__interrupt void INT_TIMER0_IRQHandler(void);
-__interrupt void INT_TIMER1_IRQHandler(void);
-__interrupt void INT_TIMER2_IRQHandler(void);
+__interrupt void INT_TMR0_IRQHandler(void);
+__interrupt void INT_TMR1_IRQHandler(void);
+__interrupt void INT_TMR2_IRQHandler(void);
 
 void initTMRs(void);
 void configTMR(uint32_t, float, float);
@@ -157,9 +159,9 @@ void example_main(void)
     //
     // ISRs for each CPU Timer interrupt
     //
-    Interrupt_register(INT_TIMER0, &INT_TIMER0_IRQHandler);
-    Interrupt_register(INT_TIMER1, &INT_TIMER1_IRQHandler);
-    Interrupt_register(INT_TIMER2, &INT_TIMER2_IRQHandler);
+    Interrupt_register(INT_TMR0, &INT_TMR0_IRQHandler);
+    Interrupt_register(INT_TMR1, &INT_TMR1_IRQHandler);
+    Interrupt_register(INT_TMR2, &INT_TMR2_IRQHandler);
 
     //
     // Reset the ISR trace
@@ -179,30 +181,30 @@ void example_main(void)
     // Configure CPU-Timer 0, 1, and 2 to interrupt every second:
     // 1 second Period (in uSeconds)
     //
-    configTMR(TMR0_BASE, DEVICE_OSCSRC_FREQ, 1000000);
-    configTMR(TMR1_BASE, DEVICE_OSCSRC_FREQ, 1000000);
-    configTMR(TMR2_BASE, DEVICE_OSCSRC_FREQ, 1000000);
+    configTMR(TMR0_BASE, DEVICE_SYSCLK_FREQ, 1000000);
+    configTMR(TMR1_BASE, DEVICE_SYSCLK_FREQ, 1000000);
+    configTMR(TMR2_BASE, DEVICE_SYSCLK_FREQ, 1000000);
 
     //
     // Set the priority group to indicate the PREEMPT and SUB priortiy bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     //
     // Set the global and group priority to allow CPU interrupts
     // with higher priority
     //
-    Interrupt_setPriority(INT_TIMER0, 2, 0);
-    Interrupt_setPriority(INT_TIMER1, 1, 0);
-    Interrupt_setPriority(INT_TIMER2, 0, 0);
+    Interrupt_setPriority(INT_TMR0, 2, 0);
+    Interrupt_setPriority(INT_TMR1, 1, 0);
+    Interrupt_setPriority(INT_TMR2, 0, 0);
 
     //
     // Enables CPU int38, int13, and int14 which are connected to CPU-Timer 0,
     // CPU-Timer 1, and CPU-Timer 2 respectively.
     //
-    Interrupt_enable(INT_TIMER0);
-    Interrupt_enable(INT_TIMER1);
-    Interrupt_enable(INT_TIMER2);
+    Interrupt_enable(INT_TMR0);
+    Interrupt_enable(INT_TMR1);
+    Interrupt_enable(INT_TMR2);
 
     //
     // To ensure precise timing, use write-only instructions to write to the
@@ -331,7 +333,7 @@ configTMR(uint32_t cpuTimer, float freq, float period)
 //
 // cpuTimer0ISR - Counter for CpuTimer0
 //
-__interrupt void INT_TIMER0_IRQHandler(void)
+__interrupt void INT_TMR0_IRQHandler(void)
 {
     //
     //  Add ISR to Trace
@@ -359,7 +361,7 @@ __interrupt void INT_TIMER0_IRQHandler(void)
 //
 // cpuTimer1ISR - Counter for CpuTimer1
 //
-__interrupt void INT_TIMER1_IRQHandler(void)
+__interrupt void INT_TMR1_IRQHandler(void)
 {
     //
     //  Add ISR to Trace
@@ -384,7 +386,7 @@ __interrupt void INT_TIMER1_IRQHandler(void)
 //
 // cpuTimer2ISR - Counter for CpuTimer2
 //
-__interrupt void INT_TIMER2_IRQHandler(void)
+__interrupt void INT_TMR2_IRQHandler(void)
 {
     //
     //  Add ISR to Trace

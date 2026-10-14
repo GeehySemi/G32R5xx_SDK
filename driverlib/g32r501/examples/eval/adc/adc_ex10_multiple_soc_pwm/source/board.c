@@ -216,7 +216,7 @@ void INTERRUPT_init()
 {
     // Interrupt Setings for INT_myADC0_1
     Interrupt_register(INT_myADC0_1, &INT_ADCA1_IRQHandler);
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
     Interrupt_setPriority(INT_myADC0_1, 2, 0);
     Interrupt_enable(INT_myADC0_1);
 }

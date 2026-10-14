@@ -79,7 +79,7 @@ DAC_tuneOffsetTrim(uint32_t base, float32_t referenceVoltage)
     // Calculate new offset trim value if DAC is operating at a reference
     // voltage other than 2.5v.
     //
-    newOffsetTrim = ((float32_t)(2.5 / referenceVoltage) *
+    newOffsetTrim = ((float32_t)(2.5F / referenceVoltage) *
                      (int16_t)oldOffsetTrim);
 
     //

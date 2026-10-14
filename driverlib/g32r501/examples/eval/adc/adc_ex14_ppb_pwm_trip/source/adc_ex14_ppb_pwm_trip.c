@@ -624,7 +624,7 @@ void INT_ADCA1_IRQHandler(void)
     //
     // Resetting Profiling GPIO12
     //
-    HWREG(GPIODATA_BASE  + GPIO_O_GPACLEAR) = 0x1000;
+    HWREG(GPIODATA_BASE  + GPIO_O_GPACLR) = 0x1000;
 #endif
 }
 

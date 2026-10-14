@@ -222,7 +222,7 @@ void example_main(void)
     //
     currentMsgPtr = &i2cMsgOut;
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     Interrupt_setPriority(INT_I2CA,0,0);
 

@@ -11,42 +11,24 @@
 //! \addtogroup driver_example_list
 //! <h1> PWM Real-Time Interrupt </h1>
 //!
-//!  This example configures the PWM1 Timer and increments a counter each time
-//!  the ISR is executed. PWM interrupt can be configured as time critical
-//!  to demonstrate real-time mode functionality and real-time interrupt
-//!  capability.
+//! This example configures PWM1 in up-count mode and increments
+//! \b Pwm1TimerIntCount on each PWM1 interrupt (TBCTR = 0). LED1 (GPIO23)
+//! toggles in the main loop every 200 ms. LED2 (GPIO34) toggles in the PWM
+//! ISR every 500 interrupts.
 //!
-//!  The example uses 2 LEDs - LED1 is toggled in the main loop and LED2 is
-//!  toggled in the PWM Timer Interrupt. FREE_SOFT bits and DBGIER.INT3 bit
-//!  must be set to enable PWM1 interrupt to be time critical and operational
-//!  in real time mode after halt command
-//!
-//!  Run this example key points:
-//!  - Add the watch variables as mentioned below and enable Continuous Refresh.
-//!  - Enable real-time mode (Run->Advanced->Enable Silicon Real-time Mode)
-//!  - Initially, the DBGIER register is set to 0 and the PWM emulation mode
-//!    is set to PWM_EMULATION_STOP_AFTER_NEXT_TB (FREE_SOFT = 0)
-//!  - When the application is running, you will find both LEDs toggling and
-//!    the watch variables Pwm1TimerIntCount, Pwm1Regs.TBCTR getting updated.
-//!  - When the application is halted, both LEDs stop toggling and the watch
-//!    variables remain constant. PWM counter is stopped on debugger halt.
-//!  - To enable PWM counter run during debugger halt, set emulation mode as
-//!    PWM_EMULATION_FREE_RUN (FREE_SOFT = 2). You will find Pwm1Regs.TBCTR
-//!    is running, but Pwm1TimerIntCount remains constant. This means,
-//!    the PWM counter is running, but the ISRs are not getting serviced.
-//!  - To enable real-time interrupts, set DBGIER.INT3 = 1 (PWM1 interrupt is
-//!    part of NVIC Group 3). You will find that the Pwm1TimerIntCount is
-//!    incrementing and the LED starts toggling. The PWM ISR is getting
-//!    serviced even during a debugger halt.
+//! PWM1 starts with \b PWM_EMULATION_STOP_AFTER_NEXT_TB. While the debugger
+//! is halted, the PWM time-base stops and the ISR is not serviced, so
+//! \b Pwm1TimerIntCount and LED2 stay still. Set the emulation mode to
+//! \b PWM_EMULATION_FREE_RUN if the time-base must keep running during halt;
+//! the ISR still does not run while the core is halted.
 //!
 //! \b External \b Connections \n
 //!  - None
 //!
 //! \b Watch \b Variables \n
-//! - Pwm1TimerIntCount        - PWM1 ISR counter
-//! - Pwm1Regs.TBCTR.TBCTR     - PWM1 Time Base counter
-//! - Pwm1Regs.TBCTL.FREE_SOFT - Set this to 2 to enable free run
-//! - DBGIER.INT3              - Set to 1 to enable real time interrupt
+//! - \b Pwm1TimerIntCount - PWM1 ISR counter
+//! - PWM1 TBCTR at \b PWM1_BASE
+//! - PWM1 emulation mode (STOP_AFTER_NEXT_TB or FREE_RUN)
 //!
 //
 //#############################################################################
@@ -88,6 +70,10 @@
 // Modifications:
 // - 2024-07-08: 
 // 1. Modified some function and macro definition and variable names.
+// - 2026-08-18:
+// 1. Configured LED1 and LED2 pinmux.
+// 2. Updated the file header for PWM1_BASE watch variables and halt behavior.
+// 3. Set PWM clock prescaler so TBCLK equals APBCLK.
 //
 //###########################################################################
 
@@ -112,7 +98,6 @@ uint16_t LEDcount;
 //
 // Function Prototypes
 //
-extern void SetDBGIER(uint16_t dbgier); // Defined in <device>_dbgier.asm file
 void initPWM(void);
 __interrupt void INT_PWM1_IRQHandler(void);
 
@@ -130,11 +115,13 @@ void example_main(void)
     // Configures the GPIO pin as a push-pull output
     //
     Device_initGPIO();
+    GPIO_setPinConfig(DEVICE_GPIO_CFG_LED1);
     GPIO_setDrivingCapability(DEVICE_GPIO_PIN_LED1,GPIO_DRIVE_LEVEL_VERY_HIGH);
     GPIO_setPadConfig(DEVICE_GPIO_PIN_LED1, GPIO_PIN_TYPE_STD);
     GPIO_setDirectionMode(DEVICE_GPIO_PIN_LED1, GPIO_DIR_MODE_OUT);
     GPIO_setMasterCore(DEVICE_GPIO_PIN_LED1, GPIO_CORE_CPU0);
     GPIO_setQualificationMode(DEVICE_GPIO_PIN_LED1, GPIO_QUAL_SYNC);
+    GPIO_setPinConfig(DEVICE_GPIO_CFG_LED2);
     GPIO_setDrivingCapability(DEVICE_GPIO_PIN_LED2,GPIO_DRIVE_LEVEL_VERY_HIGH);
     GPIO_setPadConfig(DEVICE_GPIO_PIN_LED2, GPIO_PIN_TYPE_STD);
     GPIO_setDirectionMode(DEVICE_GPIO_PIN_LED2, GPIO_DIR_MODE_OUT);
@@ -172,7 +159,7 @@ void example_main(void)
     //
     // Set the priority group to indicate the PREEMPT and SUB priortiy bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
     //
     // Set the global and group priority to allow CPU interrupts
     // with higher priority
@@ -219,8 +206,10 @@ void initPWM()
     PWM_setEmulationMode(PWM1_BASE, PWM_EMULATION_STOP_AFTER_NEXT_TB);
 
     //
-    // Setup TBCLK
+    // Setup TBCLK = APBCLK (reset HSPCLKDIV is /2)
     //
+    PWM_setClockPrescaler(PWM1_BASE, PWM_CLOCK_DIVIDER_1,
+                          PWM_HSCLOCK_DIVIDER_1);
     PWM_setTimeBasePeriod(PWM1_BASE, PWM1_TIMER_TBPRD);
     PWM_setTimeBaseCounterMode(PWM1_BASE, PWM_COUNTER_MODE_UP);
     PWM_setTimeBaseCounter(PWM1_BASE, 0U);

@@ -64,6 +64,13 @@ extern "C"
   * @}
   */
 
+/** @defgroup CORTEX_SysTick_clock_source CORTEX _SysTick clock source 
+  * @{
+  */
+#define SYSTICK_CLKSOURCE_HCLK_DIV8    0x00000000U
+#define SYSTICK_CLKSOURCE_HCLK         0x00000004U
+
+
 #define IS_NVIC_PRIORITY_GROUP(GROUP) (((GROUP) == NVIC_PRIORITYGROUP_0) || \
                                        ((GROUP) == NVIC_PRIORITYGROUP_1) || \
                                        ((GROUP) == NVIC_PRIORITYGROUP_2) || \
@@ -77,6 +84,8 @@ extern "C"
 
 #define IS_NVIC_DEVICE_IRQ(IRQ)                ((IRQ) >= (IRQn_Type)0x00U)
 
+#define IS_SYSTICK_CLK_SOURCE(SOURCE) (((SOURCE) == SYSTICK_CLKSOURCE_HCLK) || \
+                                       ((SOURCE) == SYSTICK_CLKSOURCE_HCLK_DIV8))
 
 
 extern void NVIC_setPriorityGrouping(uint32_t PriorityGroup);
@@ -92,6 +101,7 @@ uint32_t NVIC_getPendingIRQ(IRQn_Type IRQn);
 void NVIC_setPendingIRQ(IRQn_Type IRQn);
 void NVIC_clearPendingIRQ(IRQn_Type IRQn);
 uint32_t NVIC_getActive(IRQn_Type IRQn);
+void SYSTICK_CLKSourceConfig(uint32_t CLKSource);
 
 
 //*****************************************************************************

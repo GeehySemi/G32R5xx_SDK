@@ -87,8 +87,8 @@ typedef enum IRQn
     // Interrupts
     //
     DCCOMP_IRQn             = 11,    // DCCOMP Interrupt
-    TIMER1_IRQn             = 13,    // CPU Timer 1 Interrupt
-    TIMER2_IRQn             = 14,    // CPU Timer 2 Interrupt
+    TMR1_IRQn               = 13,    // CPU Timer 1 Interrupt
+    TMR2_IRQn               = 14,    // CPU Timer 2 Interrupt
     RAM_IRQn                = 16,    // RAM Interrupt
     IPC_TE0_IRQn            = 17,    // IPC TE0 Interrupt
     IPC_TE1_IRQn            = 18,    // IPC TE1 Interrupt
@@ -105,7 +105,7 @@ typedef enum IRQn
     ADCA1_IRQn              = 32,    // ADCA Interrupt 1
     ADCB1_IRQn              = 33,    // ADCB Interrupt 1
     ADCC1_IRQn              = 34,    // ADCC Interrupt 1
-    TIMER0_IRQn             = 38,    // Timer 0 Interrupt
+    TMR0_IRQn               = 38,    // Timer 0 Interrupt
     WAKE_IRQn               = 39,    // Halt Wakeup/Watchdog Interrupt
     PWM1_TZ_IRQn            = 40,    // PWM1 Trip Zone Interrupt
     PWM2_TZ_IRQn            = 41,    // PWM2 Trip Zone Interrupt
@@ -206,6 +206,10 @@ typedef enum IRQn
     CTI_0_IRQn              = 225,   // CTI Interrupt 0
     CTI_1_IRQn              = 226    // CTI Interrupt 1
 } IRQn_Type;
+
+/* NVIC RAM vector table: 16 system exceptions + 227 external IRQ channels */
+#define NVIC_RAM_VECTOR_SIZE        (16U + 227U)
+#define NVIC_RAM_VECTOR_ALIGN       0x400U
 
 #if defined(__CORE_CPU0__) || defined(__CORE_CPU1__)
 
@@ -555,6 +559,12 @@ typedef struct
   #define SECTION_SRAM1_SHARE_DATA  __attribute__((section("sram1.share_data")))
   #define SECTION_SRAM2_SHARE_DATA  __attribute__((section("sram2.share_data")))
   #define SECTION_SRAM3_SHARE_DATA  __attribute__((section("sram3.share_data")))
+  /* clang (non-AC6): section name without leading '.' */
+  #if defined (__clang__) && !defined (__ARMCC_VERSION)
+    #define SECTION_RAM_VEC         __attribute__((section("ram.intvec")))
+  #else
+    #define SECTION_RAM_VEC         __attribute__((section(".bss.ram.intvec")))
+  #endif
 #else
   #error "Unsupported compiler: no section macros can be defined."
 #endif

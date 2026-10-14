@@ -92,7 +92,6 @@ uint32_t cap3IntCount;
 uint32_t capPassCount;
 uint32_t pwm3TimerDirection;
 volatile uint16_t pwm3PeriodCount;
-// TODO: New for example 4, remove comment later
 volatile uint16_t cap1Cap1Count;
 volatile uint16_t cap1Cap2Count;
 volatile uint16_t cap1Cap3Count;

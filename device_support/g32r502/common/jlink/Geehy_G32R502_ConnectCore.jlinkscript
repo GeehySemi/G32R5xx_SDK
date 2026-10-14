@@ -1,0 +1,428 @@
+/*********************************************************************
+*            (c) 1995 - 2018 SEGGER Microcontroller GmbH             *
+*                        The Embedded Experts                        *
+*                           www.segger.com                           *
+**********************************************************************
+
+-------------------------- END-OF-HEADER -----------------------------
+
+/*********************************************************************
+*
+*       Geehy_G32R502_ConnectCore
+*
+*       VERSION: 1.0.0
+*
+*       DATE:    2026-08-30
+*
+*/
+
+/* DCS Zone1 Zone2 CSM password */
+U32 Z1_CSM_Buff[4]=
+{
+    0xFFFFFFFF,       // DCS Zone1 CSMPSWD0
+    0xFFFFFFDC,       // DCS Zone1 CSMPSWD1
+    0xFFFFFFFF,       // DCS Zone1 CSMPSWD2
+    0xFFFFFFFF        // DCS Zone1 CSMPSWD3
+};
+U32 Z2_CSM_Buff[4]=
+{
+    0xFFFFFFFF,       // DCS Zone2 CSMPSWD0
+    0xFFFEDFFF,       // DCS Zone2 CSMPSWD1
+    0xFFFFFFFF,       // DCS Zone2 CSMPSWD2
+    0xFFFFFFFF        // DCS Zone2 CSMPSWD3
+};
+
+/*********************************************************************
+*
+*       ConfigTargetSettings
+*
+*       CoreSight AP map; preset Cortex-M55 for J-Link AP scan.
+*
+*/
+
+int ConfigTargetSettings(void) {
+
+    JLINK_SYS_Report("******************************************************");
+    JLINK_SYS_Report("J-Link script: Geehy_G32R502_ConnectCore (Cortex-M52)");
+    JLINK_SYS_Report("VERSION: 1.0.0");
+    JLINK_SYS_Report("DATE:    2026-08-30");
+    JLINK_SYS_Report("******************************************************");
+
+    JLINK_CORESIGHT_AddAP(0x0, CORESIGHT_AHB_AP);
+    JLINK_CORESIGHT_AddAP(0x1, CORESIGHT_AHB_AP);
+    JLINK_CORESIGHT_AddAP(0x2, CORESIGHT_AHB_AP);
+    JLINK_CORESIGHT_AddAP(0x3, CORESIGHT_APB_AP);
+
+    JLINK_CORESIGHT_IndexAHBAPToUse = 0x0;
+
+    JLINK_CPU = CORTEX_M55;  // Preset for J-Link AP scan (chip is Cortex-M52)
+
+    return 0;
+}
+
+/*********************************************************************
+*
+*       _InitDAP / _AhbWriteU32
+*
+*       InitTarget only (no MEM_*). CSM: Z1 0x40010820, Z2 0x400108A0.
+*       Custom CSM: edit Z1_CSM_Buff / Z2_CSM_Buff (same as r502_key.ini).
+*
+*/
+__constant U32 _DP_CTRL_STAT_BIT_DBGPWRUPREQ = (1 << 30);
+__constant U32 _DP_CTRL_STAT_BIT_SYSPWRUPREQ = (1 << 28);
+__constant U32 _DP_CTRL_STAT_BIT_STICKYERR   = (1 << 5);
+
+static int _InitDAP(void) {
+    U32 v;
+    int r;
+    int t;
+
+    JLINK_SYS_Report("-- InitDAP: power up...");
+    v = _DP_CTRL_STAT_BIT_DBGPWRUPREQ | _DP_CTRL_STAT_BIT_SYSPWRUPREQ;
+    if (JLINK_ActiveTIF == JLINK_TIF_JTAG) {
+        v |= _DP_CTRL_STAT_BIT_STICKYERR;
+    } else {
+        JLINK_CORESIGHT_WriteDP(JLINK_CORESIGHT_DP_REG_ABORT, 0x1E);
+    }
+    JLINK_CORESIGHT_WriteDP(JLINK_CORESIGHT_DP_REG_CTRL_STAT, v);
+
+    r = -1;
+    t = JLINK_GetTime() + 500;
+    do {
+        r = JLINK_CORESIGHT_ReadDP(JLINK_CORESIGHT_DP_REG_CTRL_STAT);
+        if (r == -1) {
+            break;
+        }
+        v = r;
+        if (v & (0xF << 28)) {
+            r = 0;
+            break;
+        }
+        if ((t - JLINK_GetTime()) <= 0) {
+            break;
+        }
+    } while (1);
+
+    if (r < 0) {
+        JLINK_SYS_Report("-- InitDAP: PWRUPACK timeout / DP error");
+        JLINK_SYS_Report1("-- CTRL/STAT=", v);
+        return -1;
+    }
+    JLINK_SYS_Report1("-- InitDAP: CTRL/STAT OK ", v);
+
+    v = (0 << 4) | (0 << 24);
+    JLINK_CORESIGHT_WriteDP(JLINK_CORESIGHT_DP_REG_SELECT, v);
+    v = (2 << 0) | (0 << 4) | (1 << 24) | (1 << 25) | (1 << 29);
+    r = JLINK_CORESIGHT_WriteAP(JLINK_CORESIGHT_AP_REG_CTRL, v);
+    if (r < 0) {
+        JLINK_SYS_Report("-- InitDAP: CSW write failed");
+        return -1;
+    }
+    return 0;
+}
+
+static int _AhbWriteU32(U32 Addr, U32 Data) {
+    int r;
+
+    r = JLINK_CORESIGHT_WriteAP(JLINK_CORESIGHT_AP_REG_ADDR, Addr);
+    if (r < 0) {
+        return -1;
+    }
+    r = JLINK_CORESIGHT_WriteAP(JLINK_CORESIGHT_AP_REG_DATA, Data);
+    return r;
+}
+
+static void _Report_DCS_Keys(void) {
+    JLINK_SYS_Report("********************************************************");
+    JLINK_SYS_Report("DCS unlock: edit Z1_CSM_Buff / Z2_CSM_Buff in");
+    JLINK_SYS_Report("Geehy_G32R502_ConnectCore.jlinkscript if OTP keys differ.");
+    JLINK_SYS_Report("  Zone1 CSMPSWD0..3:");
+    JLINK_SYS_Report1("    [0]=", Z1_CSM_Buff[0]);
+    JLINK_SYS_Report1("    [1]=", Z1_CSM_Buff[1]);
+    JLINK_SYS_Report1("    [2]=", Z1_CSM_Buff[2]);
+    JLINK_SYS_Report1("    [3]=", Z1_CSM_Buff[3]);
+    JLINK_SYS_Report("  Zone2 CSMPSWD0..3:");
+    JLINK_SYS_Report1("    [0]=", Z2_CSM_Buff[0]);
+    JLINK_SYS_Report1("    [1]=", Z2_CSM_Buff[1]);
+    JLINK_SYS_Report1("    [2]=", Z2_CSM_Buff[2]);
+    JLINK_SYS_Report1("    [3]=", Z2_CSM_Buff[3]);
+    JLINK_SYS_Report("********************************************************");
+}
+
+static int _DCS_KEY_Setup_CS(void) {
+    int r;
+
+    _Report_DCS_Keys();
+    JLINK_SYS_Report("-- CoreSight write Z1/Z2 CSM...");
+    r = _AhbWriteU32(0x40010820, Z1_CSM_Buff[0]);
+    if (r < 0) { return -1; }
+    r = _AhbWriteU32(0x40010824, Z1_CSM_Buff[1]);
+    if (r < 0) { return -1; }
+    r = _AhbWriteU32(0x40010828, Z1_CSM_Buff[2]);
+    if (r < 0) { return -1; }
+    r = _AhbWriteU32(0x4001082C, Z1_CSM_Buff[3]);
+    if (r < 0) { return -1; }
+    r = _AhbWriteU32(0x400108A0, Z2_CSM_Buff[0]);
+    if (r < 0) { return -1; }
+    r = _AhbWriteU32(0x400108A4, Z2_CSM_Buff[1]);
+    if (r < 0) { return -1; }
+    r = _AhbWriteU32(0x400108A8, Z2_CSM_Buff[2]);
+    if (r < 0) { return -1; }
+    r = _AhbWriteU32(0x400108AC, Z2_CSM_Buff[3]);
+    if (r < 0) { return -1; }
+    JLINK_SYS_Report("-- CSM keys written via AHB-AP");
+    return 0;
+}
+
+/*********************************************************************
+*
+*       InitTarget
+*
+*       DCS unlock before MEM_* (CPU auto-detect / flash probe).
+*
+*/
+int InitTarget(void) {
+    int r;
+    U32 v;
+
+    JLINK_SYS_Report(" ******* InitTarget ******* ");
+
+    r = JLINK_CORESIGHT_Configure("");
+    if (r < 0) {
+        JLINK_SYS_Report("-- Configure(\"\") failed");
+        return -1;
+    }
+
+    v = JLINK_CORESIGHT_ReadDP(JLINK_CORESIGHT_DP_REG_IDCODE);
+    JLINK_SYS_Report1("-- DPIDR=", v);
+
+    r = _InitDAP();
+    if (r < 0) {
+        return -1;
+    }
+
+    r = _DCS_KEY_Setup_CS();
+    if (r < 0) {
+        JLINK_SYS_Report("-- CSM write failed");
+        return -1;
+    }
+
+    JLINK_CORESIGHT_CoreBaseAddr = 0xE000E000;
+    JLINK_CPU = CORTEX_M55;
+
+    JLINK_SYS_Report("-- InitTarget done");
+    return 0;
+}
+
+/*********************************************************************
+*
+*       DCS_KEY_Setup
+*
+*       Write Zone1/Zone2 CSM via MEM_* (connect / reset path).
+*
+*/
+void DCS_KEY_Setup(void)
+{
+    // DCS Zone1 CSM (G32R502 addresses)
+    MEM_WriteU32(0x40010820, Z1_CSM_Buff[0]);
+    MEM_WriteU32(0x40010824, Z1_CSM_Buff[1]);
+    MEM_WriteU32(0x40010828, Z1_CSM_Buff[2]);
+    MEM_WriteU32(0x4001082C, Z1_CSM_Buff[3]);
+
+    // DCS Zone2 CSM
+    MEM_WriteU32(0x400108A0, Z2_CSM_Buff[0]);
+    MEM_WriteU32(0x400108A4, Z2_CSM_Buff[1]);
+    MEM_WriteU32(0x400108A8, Z2_CSM_Buff[2]);
+    MEM_WriteU32(0x400108AC, Z2_CSM_Buff[3]);
+}
+
+/*********************************************************************
+*
+*       Init_CPU
+*
+*       CPU, clock, and peripheral init from OTP (AfterResetTarget).
+*
+*/
+int Init_CPU(void)
+{
+    MEM_WriteU32(0xE000ED88, MEM_ReadU32(0xE000ED88) | 0x0C);
+
+    MEM_WriteU32(0x40018200, MEM_ReadU32(0x40018200) & 0xFFFFFFF0);
+    MEM_WriteU16(0x40010052, MEM_ReadU16(0x40010052) | 0x68);
+    MEM_WriteU32(0x40012C74, 0x01);
+    MEM_WriteU16(0x400100C0, 0x0001);
+
+    MEM_WriteU32(0x4001341C, 0x00000000);
+    MEM_WriteU32(0x40013444, 0x00000000);
+
+    MEM_WriteU32(0x40016C78, MEM_ReadU32(0x0810B93C));
+    MEM_WriteU32(0x40016C88, MEM_ReadU32(0x0810B940));
+
+    MEM_WriteU32(0x40017C40, 0x0000000F);
+
+    if((MEM_ReadU32(0x0810B894) & 0xFFFF) == 0x5A5A)
+    {
+        if((MEM_ReadU32(0x0810B878) & 0xFFFF) == 0x5A00)
+        {
+            MEM_WriteU32(0x40016CD4, MEM_ReadU32(0x40016CD4) | 0x8000);
+        }
+        MEM_WriteU32(0x40016C24, MEM_ReadU32(0x0810B884));
+        MEM_WriteU32(0x40016C1C, MEM_ReadU32(0x0810B888));
+        MEM_WriteU32(0x40016C20, MEM_ReadU32(0x0810B88C));
+        MEM_WriteU32(0x40016C28, MEM_ReadU32(0x0810B890));
+    }
+
+    if((MEM_ReadU32(0x0810B898) & 0xFFFF) == 0x5A5A)
+    {
+        MEM_WriteU32(0x40016C00, MEM_ReadU32(0x0810B89C));
+        MEM_WriteU32(0x40016C04, MEM_ReadU32(0x0810B8A0));
+        MEM_WriteU32(0x40016C0C, MEM_ReadU32(0x0810B8A4));
+    }
+
+    MEM_WriteU32(0x40016C98, MEM_ReadU32(0x0810B944));
+
+    MEM_WriteU32(0x40013110, MEM_ReadU32(0x0810B800));
+    MEM_WriteU32(0x40013114, MEM_ReadU32(0x0810B804));
+    MEM_WriteU32(0x4001312C, MEM_ReadU32(0x0810B814));
+    MEM_WriteU32(0x40013130, MEM_ReadU32(0x0810B818));
+    MEM_WriteU32(0x40013134, MEM_ReadU32(0x0810B81C));
+    MEM_WriteU32(0x40013140, MEM_ReadU32(0x0810B828));
+    MEM_WriteU32(0x40013144, MEM_ReadU32(0x0810B82C));
+    MEM_WriteU32(0x40013148, MEM_ReadU32(0x0810B830));
+    MEM_WriteU32(0x4001314C, MEM_ReadU32(0x0810B834));
+    MEM_WriteU32(0x40013158, MEM_ReadU32(0x0810B840));
+    MEM_WriteU32(0x4001315C, MEM_ReadU32(0x0810B844));
+    MEM_WriteU32(0x40013164, MEM_ReadU32(0x0810B84C));
+    MEM_WriteU32(0x40013174, MEM_ReadU32(0x0810B860));
+    MEM_WriteU32(0x4001317C, MEM_ReadU32(0x0810B868));
+    MEM_WriteU32(0x40013180, MEM_ReadU32(0x0810B86C));
+    MEM_WriteU32(0x40013184, MEM_ReadU32(0x0810B870));
+    MEM_WriteU32(0x4001335C, MEM_ReadU32(0x0810B914) & 0x0000000F);
+
+    if((MEM_ReadU32(0x0810B914) & 0xFF000000) == 0x5A000000)
+    {
+        if((MEM_ReadU32(0x0810B914) & 0xFF) == 0x01)
+        {
+            MEM_WriteU32(0x40030018, MEM_ReadU32(0x40030018) & 0xFFFFFFFF);
+            MEM_WriteU32(0x40030098, MEM_ReadU32(0x40030098) & 0x0003FFFF);
+        }
+        if((MEM_ReadU32(0x0810B914) & 0xFF) == 0x02)
+        {
+            MEM_WriteU32(0x40030018, MEM_ReadU32(0x40030018) & 0x31FF3FFF);
+            MEM_WriteU32(0x40030098, MEM_ReadU32(0x40030098) & 0x000083FB);
+        }
+        if((MEM_ReadU32(0x0810B914) & 0xFF) == 0x04)
+        {
+            MEM_WriteU32(0x40030018, MEM_ReadU32(0x40030018) & 0x311D30FF);
+            MEM_WriteU32(0x40030098, MEM_ReadU32(0x40030098) & 0x000090FB);
+        }
+        if((MEM_ReadU32(0x0810B914) & 0xFF) == 0x05)
+        {
+            MEM_WriteU32(0x40030018, MEM_ReadU32(0x40030018) & 0x310C08AB);
+            MEM_WriteU32(0x40030098, MEM_ReadU32(0x40030098) & 0x000080F9);
+        }
+    }
+
+    if((MEM_ReadU32(0x0810BA00) & 0xFFFF) == 0xA5A5)
+    {
+        MEM_WriteU32(0x40016C0C, MEM_ReadU32(0x0810BA04));
+        MEM_WriteU32(0x40016C00, MEM_ReadU32(0x0810BA08));
+        MEM_WriteU32(0x40016C04, MEM_ReadU32(0x0810BA0C));
+
+        MEM_WriteU32(0x40013678, MEM_ReadU32(0x40013678) | 0x05);
+        MEM_WriteU32(0x50001C7C, MEM_ReadU32(0x0810BA10));
+        MEM_WriteU32(0x5000207C, MEM_ReadU32(0x0810BA18));
+        MEM_WriteU16(0x50001C76, MEM_ReadU16(0x0810BA1C));
+        MEM_WriteU16(0x50002076, MEM_ReadU16(0x0810BA24));
+        MEM_WriteU32(0x50001CE0, MEM_ReadU32(0x0810BA28));
+        MEM_WriteU32(0x50001CE4, MEM_ReadU32(0x0810BA2C));
+        MEM_WriteU32(0x50001CE8, MEM_ReadU32(0x0810BA30));
+        MEM_WriteU32(0x500020E0, MEM_ReadU32(0x0810BA40));
+        MEM_WriteU32(0x500020E4, MEM_ReadU32(0x0810BA44));
+        MEM_WriteU32(0x500020E8, MEM_ReadU32(0x0810BA48));
+
+        MEM_WriteU32(0x40016C3C, MEM_ReadU32(0x0810BA4C));
+
+        MEM_WriteU32(0x40013684, MEM_ReadU32(0x40013684) | 0x00030000);
+        MEM_WriteU16(0x4002400C, (MEM_ReadU16(0x4002400C) & 0xFF00) | (MEM_ReadU16(0x0810BA50) & 0x00FF));
+        MEM_WriteU16(0x4002440C, (MEM_ReadU16(0x4002440C) & 0xFF00) | (MEM_ReadU16(0x0810BA54) & 0x00FF));
+
+        MEM_WriteU32(0x40016C10, MEM_ReadU32(0x0810BA5C));
+        MEM_WriteU32(0x40016C18, MEM_ReadU32(0x0810BA64));
+        MEM_WriteU32(0x40016C68, MEM_ReadU32(0x0810BA68));
+        MEM_WriteU32(0x40016C70, MEM_ReadU32(0x0810BA70));
+    }
+
+    MEM_WriteU32(0x40017C00, 0x00000F00);
+
+    MEM_WriteU32(0x400136FC, 0x00000003);
+
+    MEM_WriteU32(0xE000E180, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E184, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E188, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E18C, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E190, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E194, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E198, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E19C, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1A0, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1A4, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1A8, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1AC, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1B0, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1B4, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1B8, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E1BC, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E280, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E284, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E288, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E28C, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E290, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E294, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E298, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E29C, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2A0, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2A4, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2A8, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2AC, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2B0, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2B4, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2B8, 0xFFFFFFFF);
+    MEM_WriteU32(0xE000E2BC, 0xFFFFFFFF);
+
+    return 0;
+}
+
+/*********************************************************************
+*
+*       SetupTarget
+*
+*       DCS unlock on connect (after MEM_* available).
+*
+*/
+int SetupTarget(void)
+{
+    JLINK_SYS_Report(" ******* SetupTarget ******* ");
+    _Report_DCS_Keys();
+    JLINK_SYS_Report("Unlocking Zone1/Zone2...");
+    DCS_KEY_Setup();
+
+    return 0;
+}
+
+/*********************************************************************
+*
+*       AfterResetTarget
+*
+*       Re-unlock DCS; call Init_CPU().
+*
+*/
+int AfterResetTarget(void)
+{
+    JLINK_SYS_Report(" ******* AfterResetTarget ******* ");
+
+    DCS_KEY_Setup();  // Reset / program load re-locks DCS
+    Init_CPU();
+
+    return 0;
+}

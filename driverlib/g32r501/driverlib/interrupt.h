@@ -4,9 +4,9 @@
 //
 // TITLE:   Interrupt software driver.
 //
-// VERSION: 1.0.0
+// VERSION: 1.0.1
 //
-// DATE:    2025-01-15
+// DATE:    2026-02-25
 //
 //###########################################################################
 // $Copyright:
@@ -66,15 +66,18 @@ extern "C"
 // Values that can be passed to Interrupt_setPriorityGroup() as the
 // priorityGroup and returned by Interrupt_getPriorityGroup().
 //
+// NOTE:
+// These macros represent the PRIGROUP field value written into SCB->AIRCR.
+// The effective split between preempt priority bits and subpriority bits is
+// determined by the combination of PRIGROUP and __NVIC_PRIO_BITS inside CMSIS
+// NVIC_EncodePriority()/NVIC_DecodePriority().
+//
 //*****************************************************************************
-#define INTERRUPT_PRIGROUP_PREEMPT_7_1_SUB_0     0x0U
-#define INTERRUPT_PRIGROUP_PREEMPT_7_2_SUB_1_0   0x1U
-#define INTERRUPT_PRIGROUP_PREEMPT_7_3_SUB_2_0   0x2U
-#define INTERRUPT_PRIGROUP_PREEMPT_7_4_SUB_3_0   0x3U
-#define INTERRUPT_PRIGROUP_PREEMPT_7_5_SUB_4_0   0x4U
-#define INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0   0x5U
-#define INTERRUPT_PRIGROUP_PREEMPT_7_SUB_6_0     0x6U
-#define INTERRUPT_PRIGROUP_PREEMPT_NO_SUB_7_0    0x7U
+#define INTERRUPT_PRIGROUP_PREEMPT_3_0_SUB_NO    (0x0U)
+#define INTERRUPT_PRIGROUP_PREEMPT_3_1_SUB_0     (0x4U)
+#define INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0   (0x5U)
+#define INTERRUPT_PRIGROUP_PREEMPT_3_SUB_2_0     (0x6U)
+#define INTERRUPT_PRIGROUP_PREEMPT_NO_SUB_3_0    (0x7U)
 
 //*****************************************************************************
 //
@@ -315,14 +318,11 @@ Interrupt_clearPending(int32_t interruptNumber)
 //! This function sets NVIC interrupt priority group.
 //!
 //! The \e priorityGroup parameter can be any one of the following:
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_7_1_SUB_0   - Preempt [7:1], Sub [0]
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_7_2_SUB_1_0 - Preempt [7:2], Sub [1:0]
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_7_3_SUB_2_0 - Preempt [7:3], Sub [2:0]
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_7_4_SUB_3_0 - Preempt [7:4], Sub [3:0]
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_7_5_SUB_4_0 - Preempt [7:5], Sub [4:0]
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0 - Preempt [7:6], Sub [5:0]
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_7_SUB_6_0   - Preempt [7], Sub [6:0]
-//! - \b INTERRUPT_PRIGROUP_PREEMPT_NO_SUB_7_0  - Preempt NO, Sub [7:0]
+//! - \b INTERRUPT_PRIGROUP_PREEMPT_3_0_SUB_NO
+//! - \b INTERRUPT_PRIGROUP_PREEMPT_3_1_SUB_0
+//! - \b INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0
+//! - \b INTERRUPT_PRIGROUP_PREEMPT_3_SUB_2_0
+//! - \b INTERRUPT_PRIGROUP_PREEMPT_NO_SUB_3_0
 //!
 //! \return None.
 //
@@ -330,6 +330,7 @@ Interrupt_clearPending(int32_t interruptNumber)
 static inline void
 Interrupt_setPriorityGroup(uint32_t priorityGroup)
 {
+    ASSERT(priorityGroup <= 7U);
     NVIC_SetPriorityGrouping(priorityGroup);
 }
 
@@ -339,8 +340,8 @@ Interrupt_setPriorityGroup(uint32_t priorityGroup)
 //!
 //! This function gets NVIC interrupt priority group.
 //!
-//! \return Return the interrupt priority group, specified as only one of the
-//! \b INTERRUPT_PRIGROUP_PREEMPT_???_SUB_??? values.
+//! \return Return the interrupt priority group, specified as one of
+//! \b INTERRUPT_PRIGROUP_PREEMPT_* values in this header.
 //
 //*****************************************************************************
 static inline uint32_t

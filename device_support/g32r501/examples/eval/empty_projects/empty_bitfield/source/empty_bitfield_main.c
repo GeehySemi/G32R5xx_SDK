@@ -66,6 +66,22 @@
 void example_main(void)
 {
 
+    //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    DINT;
+
+    //
+    // Initialize the NVIC control registers to their default state.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
+
     while(1);
 }
 

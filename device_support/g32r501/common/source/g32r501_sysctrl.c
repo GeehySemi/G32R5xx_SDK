@@ -256,7 +256,6 @@ DisablePeripheralClocks()
     CpuSysRegs.PCLKCR13.all = 0;
     CpuSysRegs.PCLKCR14.all = 0;
     CpuSysRegs.PCLKCR16.all = 0;
-    CpuSysRegs.PCLKCR18.all = 0;
     CpuSysRegs.PCLKCR19.all = 0;
     CpuSysRegs.PCLKCR20.all = 0;
     CpuSysRegs.PCLKCR21.all = 0;
@@ -280,7 +279,7 @@ InitFlash(void)
     // Set the bank fallback power modes to active.
     //
     Flash0CtrlRegs.FBFALLBACK.bit.BNKPWR0 = 0x3;
-    Flash0CtrlRegs.FBFALLBACK.bit.BNKPWR0 = 0x3;
+    Flash0CtrlRegs.FBFALLBACK.bit.BNKPWR1 = 0x3;
 
     //
     // Disable Cache and prefetch mechanism before changing wait states

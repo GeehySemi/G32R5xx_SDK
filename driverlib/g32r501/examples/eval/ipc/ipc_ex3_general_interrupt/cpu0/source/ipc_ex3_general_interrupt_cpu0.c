@@ -92,7 +92,7 @@ void UART_Init(void);
 __attribute__((__used__, section("cpu1_code")))
 void G32R501_incbin(void)
 {
-    __asm(".incbin \"cpu1_image.bin\"");
+    __asm(".incbin \"../../source/cpu1_image.bin\"");
 }
 #elif defined (__clang__) && !defined(__ARMCC_VERSION)
 __attribute__((__used__, section("cpu1_code")))
@@ -177,7 +177,7 @@ void example_main(void)
     //
     // Set the priority group to indicate the PREEMPT and SUB priortiy bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     //
     // Set the global and group priority to allow CPU interrupts

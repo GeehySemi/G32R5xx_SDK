@@ -110,9 +110,9 @@ void example_main(void)
     //
     // ISRs for each CPU Timer interrupt
     //
-    Interrupt_register(INT_TIMER0, &cpuTimer0ISR);
-    Interrupt_register(INT_TIMER1, &cpuTimer1ISR);
-    Interrupt_register(INT_TIMER2, &cpuTimer2ISR);
+    Interrupt_register(INT_TMR0, &cpuTimer0ISR);
+    Interrupt_register(INT_TMR1, &cpuTimer1ISR);
+    Interrupt_register(INT_TMR2, &cpuTimer2ISR);
 
     //
     // Reset the ISR trace
@@ -125,27 +125,27 @@ void example_main(void)
     //
     // Set the priority group to indicate the PREEMPT and SUB priortiy bits.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     //
     // Configures the PREEMPT and SUB priority
     //
-    Interrupt_setPriority(INT_TIMER0, 2, 0);
-    Interrupt_setPriority(INT_TIMER1, 1, 0);
-    Interrupt_setPriority(INT_TIMER2, 0, 0);
+    Interrupt_setPriority(INT_TMR0, 2, 0);
+    Interrupt_setPriority(INT_TMR1, 1, 0);
+    Interrupt_setPriority(INT_TMR2, 0, 0);
 
     //
     // Enables CPU int38, int13, and int14 which are connected to CPU-Timer 0,
     // CPU-Timer 1, and CPU-Timer 2 respectively.
     //
-    Interrupt_enable(INT_TIMER0);
-    Interrupt_enable(INT_TIMER1);
-    Interrupt_enable(INT_TIMER2);
+    Interrupt_enable(INT_TMR0);
+    Interrupt_enable(INT_TMR1);
+    Interrupt_enable(INT_TMR2);
 
     //
     // Force CPU-Timer 0 to trigger interrupt
     //
-    Interrupt_setPending(INT_TIMER0);
+    Interrupt_setPending(INT_TMR0);
 
     //
     // Enable Global Interrupt and realtime interrupt
@@ -182,7 +182,7 @@ cpuTimer0ISR(void)
     //
     // Force CPU-Timer 1 to trigger interrupt
     //
-    Interrupt_setPending(INT_TIMER1);
+    Interrupt_setPending(INT_TMR1);
     DEVICE_DELAY_US(100000);
 
     //
@@ -213,7 +213,7 @@ cpuTimer1ISR(void)
     //
     // Force CPU-Timer 2 to trigger interrupt
     //
-    Interrupt_setPending(INT_TIMER2);
+    Interrupt_setPending(INT_TMR2);
     DEVICE_DELAY_US(100000);
 
     //
@@ -244,7 +244,7 @@ cpuTimer2ISR(void)
     //
     // Force CPUTimer 0 to trigger interrupt
     //
-    Interrupt_setPending(INT_TIMER0);
+    Interrupt_setPending(INT_TMR0);
     DEVICE_DELAY_US(100000);
 
     traceISR[traceISRIndex % TRACE_SIZE] = 0x00E0;

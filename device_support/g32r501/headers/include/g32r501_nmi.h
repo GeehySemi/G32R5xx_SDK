@@ -171,6 +171,7 @@ struct NMI_REGS {
     Uint16                                   NMIWDCNT;                     // NMI Watchdog Counter Register
     Uint16                                   NMIWDPRD;                     // NMI Watchdog Period Register
     union   NMISHDFLG_REG                    NMISHDFLG;                    // NMI Shadow Flag Register
+    Uint16                                   rsvd1;                        // Reserved, 4-byte alignment to comply with compiler requirements.
 };
 
 //---------------------------------------------------------------------------

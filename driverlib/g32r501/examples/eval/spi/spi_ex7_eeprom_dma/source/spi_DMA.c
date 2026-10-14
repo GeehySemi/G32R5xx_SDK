@@ -255,7 +255,7 @@ void SPI_DMA_StartTransaction(struct SPI_DMA_handle *pSPI_DMA_Handle, uint16_t c
     DMA_configAddresses(dmaRXbase, pdestAddr, psrcAddr);
     DMA_configBurst(dmaRXbase, BURST, 0, 1);
     DMA_configTransfer(dmaRXbase, TRANSFER, 0, 1);
-    DMA_configMode(dmaRXbase, DMA_TRIGGER_SPIARX, DMA_CFG_ONESHOT_DISABLE |
+    DMA_configMode(dmaRXbase, DMA_TRIGGER_SPIA_RX, DMA_CFG_ONESHOT_DISABLE |
                    DMA_CFG_CONTINUOUS_ENABLE | DMA_CFG_SIZE_16BIT);
 
     //

@@ -86,17 +86,17 @@
 //*************************************************************************************************
 #define COMP_COMPCTL_COMPHSOURCE     0x1U      // High Comparator Source Select
 #define COMP_COMPCTL_COMPHINV        0x2U      // High Comparator Invert Select
-#define COMP_COMPCTL_HPWMHSEL_S      2U
-#define COMP_COMPCTL_HPWMHSEL_M      0xCU      // High Comparator Trip Select
-#define COMP_COMPCTL_HOUTHSEL_S      4U
-#define COMP_COMPCTL_HOUTHSEL_M      0x30U     // High Comparator Trip Output Select
+#define COMP_COMPCTL_CTRIPHSEL_S     2U
+#define COMP_COMPCTL_CTRIPHSEL_M     0xCU      // High Comparator Trip Select
+#define COMP_COMPCTL_CTRIPOUTHSEL_S  4U
+#define COMP_COMPCTL_CTRIPOUTHSEL_M  0x30U     // High Comparator Trip Output Select
 #define COMP_COMPCTL_ASYNCHEN        0x40U     // High Comparator Asynchronous Path Enable
 #define COMP_COMPCTL_COMPLSOURCE     0x100U    // Low Comparator Source Select
 #define COMP_COMPCTL_COMPLINV        0x200U    // Low Comparator Invert Select
-#define COMP_COMPCTL_PWMLSEL_S       10U
-#define COMP_COMPCTL_PWMLSEL_M       0xC00U    // Low Comparator Trip Select
-#define COMP_COMPCTL_OUTLSEL_S       12U
-#define COMP_COMPCTL_OUTLSEL_M       0x3000U   // Low Comparator Trip Output Select
+#define COMP_COMPCTL_CTRIPLSEL_S     10U
+#define COMP_COMPCTL_CTRIPLSEL_M     0xC00U    // Low Comparator Trip Select
+#define COMP_COMPCTL_CTRIPOUTLSEL_S  12U
+#define COMP_COMPCTL_CTRIPOUTLSEL_M  0x3000U   // Low Comparator Trip Output Select
 #define COMP_COMPCTL_ASYNCLEN        0x4000U   // Low Comparator Asynchronous Path Enable
 #define COMP_COMPCTL_COMPDACE        0x8000U   // Comparator/DAC Enable
 

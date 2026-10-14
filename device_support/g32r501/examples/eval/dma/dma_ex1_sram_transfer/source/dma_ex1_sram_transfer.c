@@ -135,7 +135,7 @@ void example_main(void)
     // Initialize the NVIC vector table with pointers to the default Interrupt
     // Service Routines (ISR)
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     Interrupt_setPriority(INT_DMA_CH6,2,0);
 

@@ -303,7 +303,7 @@ union SDFIFOCTL1_REG {
     struct  SDFIFOCTL1_BITS  bit;
 };
 
-struct SDSYNC1_BITS {                   // bits description
+struct SDF_SYNCTRL1_BITS {                   // bits description
     Uint16 SYNCSEL:6;                   // 5:0 SDSYNC Source Select
     Uint16 WTSYNCEN:1;                  // 6 Wait-for-Sync Enable
     Uint16 WTSYNFLG:1;                  // 7 Wait-for-Sync Flag
@@ -313,9 +313,9 @@ struct SDSYNC1_BITS {                   // bits description
     Uint16 rsvd1:5;                     // 15:11 Reserved
 };
 
-union SDSYNC1_REG {
+union SDF_SYNCTRL1_REG {
     Uint16  all;
-    struct  SDSYNC1_BITS  bit;
+    struct  SDF_SYNCTRL1_BITS  bit;
 };
 
 struct SDCTLPARM2_BITS {                // bits description
@@ -439,7 +439,7 @@ union SDFIFOCTL2_REG {
     struct  SDFIFOCTL2_BITS  bit;
 };
 
-struct SDSYNC2_BITS {                   // bits description
+struct SDF_SYNCTRL2_BITS {                   // bits description
     Uint16 SYNCSEL:6;                   // 5:0 SDSYNC Source Select
     Uint16 WTSYNCEN:1;                  // 6 Wait-for-Sync Enable
     Uint16 WTSYNFLG:1;                  // 7 Wait-for-Sync Flag
@@ -449,9 +449,9 @@ struct SDSYNC2_BITS {                   // bits description
     Uint16 rsvd1:5;                     // 15:11 Reserved
 };
 
-union SDSYNC2_REG {
+union SDF_SYNCTRL2_REG {
     Uint16  all;
-    struct  SDSYNC2_BITS  bit;
+    struct  SDF_SYNCTRL2_BITS  bit;
 };
 
 struct SDCTLPARM3_BITS {                // bits description
@@ -575,7 +575,7 @@ union SDFIFOCTL3_REG {
     struct  SDFIFOCTL3_BITS  bit;
 };
 
-struct SDSYNC3_BITS {                   // bits description
+struct SDF_SYNCTRL3_BITS {                   // bits description
     Uint16 SYNCSEL:6;                   // 5:0 SDSYNC Source Select
     Uint16 WTSYNCEN:1;                  // 6 Wait-for-Sync Enable
     Uint16 WTSYNFLG:1;                  // 7 Wait-for-Sync Flag
@@ -585,9 +585,9 @@ struct SDSYNC3_BITS {                   // bits description
     Uint16 rsvd1:5;                     // 15:11 Reserved
 };
 
-union SDSYNC3_REG {
+union SDF_SYNCTRL3_REG {
     Uint16  all;
-    struct  SDSYNC3_BITS  bit;
+    struct  SDF_SYNCTRL3_BITS  bit;
 };
 
 struct SDCTLPARM4_BITS {                // bits description
@@ -711,7 +711,7 @@ union SDFIFOCTL4_REG {
     struct  SDFIFOCTL4_BITS  bit;
 };
 
-struct SDSYNC4_BITS {                   // bits description
+struct SDF_SYNCTRL4_BITS {                   // bits description
     Uint16 SYNCSEL:6;                   // 5:0 SDSYNC Source Select
     Uint16 WTSYNCEN:1;                  // 6 Wait-for-Sync Enable
     Uint16 WTSYNFLG:1;                  // 7 Wait-for-Sync Flag
@@ -721,9 +721,9 @@ struct SDSYNC4_BITS {                   // bits description
     Uint16 rsvd1:5;                     // 15:11 Reserved
 };
 
-union SDSYNC4_REG {
+union SDF_SYNCTRL4_REG {
     Uint16  all;
-    struct  SDSYNC4_BITS  bit;
+    struct  SDF_SYNCTRL4_BITS  bit;
 };
 
 struct SDF_REGS {
@@ -746,7 +746,7 @@ struct SDF_REGS {
     Uint16                                   rsvd3;                        // Reserved
     union   SDCMPHZ1_REG                     SDCMPHZ1;                     // High-level (Z) Threshold Register for Ch1
     union   SDFIFOCTL1_REG                   SDFIFOCTL1;                   // FIFO Control Register for Ch1
-    union   SDSYNC1_REG                      SDSYNC1;                      // SD Filter Sync control for Ch1
+    union   SDF_SYNCTRL1_REG                 SDF_SYNCTRL1;                 // SD Filter Sync control for Ch1
     Uint16                                   rsvd4;                        // Reserved
     union   SDCTLPARM2_REG                   SDCTLPARM2;                   // Control Parameter Register for Ch2
     union   SDDFPARM2_REG                    SDDFPARM2;                    // Data Filter Parameter Register for Ch2
@@ -760,7 +760,7 @@ struct SDF_REGS {
     Uint16                                   rsvd5;                        // Reserved
     union   SDCMPHZ2_REG                     SDCMPHZ2;                     // High-level (Z) Threshold Register for Ch2
     union   SDFIFOCTL2_REG                   SDFIFOCTL2;                   // FIFO Control Register for Ch2
-    union   SDSYNC2_REG                      SDSYNC2;                      // SD Filter Sync control for Ch2
+    union   SDF_SYNCTRL2_REG                 SDF_SYNCTRL2;                 // SD Filter Sync control for Ch2
     Uint16                                   rsvd6;                        // Reserved
     union   SDCTLPARM3_REG                   SDCTLPARM3;                   // Control Parameter Register for Ch3
     union   SDDFPARM3_REG                    SDDFPARM3;                    // Data Filter Parameter Register for Ch3
@@ -774,7 +774,7 @@ struct SDF_REGS {
     Uint16                                   rsvd7;                        // Reserved
     union   SDCMPHZ3_REG                     SDCMPHZ3;                     // High-level (Z) Threshold Register for Ch3
     union   SDFIFOCTL3_REG                   SDFIFOCTL3;                   // FIFO Control Register for Ch3
-    union   SDSYNC3_REG                      SDSYNC3;                      // SD Filter Sync control for Ch3
+    union   SDF_SYNCTRL3_REG                 SDF_SYNCTRL3;                 // SD Filter Sync control for Ch3
     Uint16                                   rsvd8;                        // Reserved
     union   SDCTLPARM4_REG                   SDCTLPARM4;                   // Control Parameter Register for Ch4
     union   SDDFPARM4_REG                    SDDFPARM4;                    // Data Filter Parameter Register for Ch4
@@ -788,7 +788,7 @@ struct SDF_REGS {
     Uint16                                   rsvd9;                        // Reserved
     union   SDCMPHZ4_REG                     SDCMPHZ4;                     // High-level (Z) Threshold Register for Ch4
     union   SDFIFOCTL4_REG                   SDFIFOCTL4;                   // FIFO Control Register for Ch4
-    union   SDSYNC4_REG                      SDSYNC4;                      // SD Filter Sync control for Ch4
+    union   SDF_SYNCTRL4_REG                 SDF_SYNCTRL4;                 // SD Filter Sync control for Ch4
 };
 
 //---------------------------------------------------------------------------

@@ -60,8 +60,29 @@
 //
 void example_main(void)
 {
+    //
+    // Initialize device clock and peripherals
+    //
+    Device_init();
+
+    //
+    // Disable pin locks and enable internal pullups.
+    //
+    Device_initGPIO();
+
+    //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
 
 }
+
 
 //
 // End of File

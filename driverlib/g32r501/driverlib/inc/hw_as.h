@@ -191,12 +191,10 @@
 #define AS_LOCK_TSNSCTL        0x1U      // TSNSCTL Register Lock
 #define AS_LOCK_ANAREFCTL      0x2U      // ANAREFCTL Register Lock
 #define AS_LOCK_VMONCTL        0x4U      // VMONCTL Register Lock
-#define AS_LOCK_ADCINMXSEL     0x10U     // ADCINMXSEL Register Lock
 #define AS_LOCK_CMPHPMXSEL     0x20U     // CMPHPMXSEL Register Lock
 #define AS_LOCK_CMPLPMXSEL     0x40U     // CMPLPMXSEL Register Lock
 #define AS_LOCK_CMPHNMXSEL     0x80U     // CMPHNMXSEL Register Lock
 #define AS_LOCK_CMPLNMXSEL     0x100U    // CMPLNMXSEL Register Lock
-#define AS_LOCK_VREGCTL        0x200U    // VREGCTL Register Lock
 
 
 

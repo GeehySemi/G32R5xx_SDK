@@ -87,6 +87,7 @@ void NVIC_setPriority(IRQn_Type IRQn, uint32_t  PreemptPriority, uint32_t SubPri
   *         function should be called before. 
   * @param  IRQn External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None
   */
 void NVIC_enableIRQ(IRQn_Type IRQn)
@@ -102,6 +103,7 @@ void NVIC_enableIRQ(IRQn_Type IRQn)
   * @brief  Disables a device specific interrupt in the NVIC interrupt controller.
   * @param  IRQn External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None
   */
 void NVIC_disableIRQ(IRQn_Type IRQn)
@@ -137,6 +139,7 @@ uint32_t NVIC_getPriorityGrouping(void)
   * @brief  Gets the priority of an interrupt.
   * @param  IRQn External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @param   PriorityGroup the priority grouping bits length.
   *         This parameter can be one of the following values:
   *           @arg NVIC_PRIORITYGROUP_0: 0 bits for preemption priority
@@ -165,6 +168,7 @@ void NVIC_getPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t *pPreempt
   * @brief  Sets Pending bit of an external interrupt.
   * @param  IRQn External interrupt number
   *         This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None
   */
 void NVIC_setPendingIRQ(IRQn_Type IRQn)
@@ -181,6 +185,7 @@ void NVIC_setPendingIRQ(IRQn_Type IRQn)
   *         and returns the pending bit for the specified interrupt).
   * @param  IRQn External interrupt number.
   *          This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval status: - 0  Interrupt status is not pending.
   *                 - 1  Interrupt status is pending.
   */
@@ -197,6 +202,7 @@ uint32_t NVIC_getPendingIRQ(IRQn_Type IRQn)
   * @brief  Clears the pending bit of an external interrupt.
   * @param  IRQn External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval None
   */
 void NVIC_clearPendingIRQ(IRQn_Type IRQn)
@@ -212,6 +218,7 @@ void NVIC_clearPendingIRQ(IRQn_Type IRQn)
   * @brief Gets active interrupt ( reads the active register in NVIC and returns the active bit).
   * @param IRQn External interrupt number
   *         This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32f4xxxx.h))
   * @retval status: - 0  Interrupt status is not pending.
   *                 - 1  Interrupt status is pending.
   */
@@ -235,3 +242,30 @@ uint32_t SYSTICK_config(uint32_t TicksNumb)
 {
    return SysTick_Config(TicksNumb);
 }
+
+/**
+  * @brief  Configures the SysTick clock source.
+  * @param  CLKSource specifies the SysTick clock source.
+  *          This parameter can be one of the following values:
+  *             @arg SYSTICK_CLKSOURCE_HCLK_DIV8: AHB clock divided by 8 selected as SysTick clock source.
+  *             @arg SYSTICK_CLKSOURCE_HCLK: AHB clock selected as SysTick clock source.
+  * @retval None
+  */
+void SYSTICK_CLKSourceConfig(uint32_t CLKSource)
+{
+    /* Check the parameters */
+    assert_param(IS_SYSTICK_CLK_SOURCE(CLKSource));
+    if (CLKSource == SYSTICK_CLKSOURCE_HCLK)
+    {
+        SysTick->CTRL |= SYSTICK_CLKSOURCE_HCLK;
+    }
+    else
+    {
+        SysTick->CTRL &= ~SYSTICK_CLKSOURCE_HCLK;
+    }
+}
+
+
+
+
+

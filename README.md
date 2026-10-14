@@ -4,11 +4,11 @@ Official G32R5xx software development kit from Geehy Semiconductor.
 
 ## Current version
 
-- SDK version: V1.1.0
-- Supported device: G32R501
-- Official package date: May 7, 2025
-- Release notes date: April 15, 2025
-- Official download: [G32R501_SDK_V1.1.0.zip](https://global.geehy.com/uploads/tool/G32R501_SDK_V1.1.0.zip)
+- SDK version: V1.1.1
+- Supported device: G32R502、G32R502
+- Official package date: September 24th, 2026
+- Release notes date: August 31st, 2026
+- Official download: [G32R5xx_SDK_V1.1.1.zip](https://www.geehy.com/uploads/tool/G32R5xx_SDK_V1.1.1.zip)
 
 ## Repository contents
 

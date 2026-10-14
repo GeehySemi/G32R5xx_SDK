@@ -91,6 +91,8 @@
 // - 2024-07-08: 
 // 1. Modified some function and macro definition and variable names.
 // 2. Updated interrupt handling to use NVIC functions.
+// - 2026-08-18:
+// 1. Use DEVICE_APBCLK_FREQ for PWM PRD.
 //
 //###########################################################################
 
@@ -104,7 +106,7 @@
 //
 // Defines
 //
-#define TB_CLK    DEVICE_APBCLK_FREQ         // Time base clock is APBCLK / 2
+#define TB_CLK    DEVICE_APBCLK_FREQ         // PWM TBCLK is APBCLK
 #define PWM_CLK   5000U                      // We want to output at 5 kHz
 #define PRD_VAL   (TB_CLK / (PWM_CLK * 2))  // Calculate value period value
                                            // for up-down count mode

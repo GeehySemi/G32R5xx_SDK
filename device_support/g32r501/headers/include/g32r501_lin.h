@@ -310,8 +310,8 @@ union LINLCFG_REG {
 };
 
 struct LINBR_BITS {                           // bits description
-    bp_32 PSCSEL:16;                          // 15:0 24-Bit Prescaler Selcet
-    bp_32 PSCSEH:8;                           // 23:16 24-Bit Prescaler Selcet
+    bp_32 PSCSELL:16;                          // 15:0 24-Bit Prescaler Selcet
+    bp_32 PSCSELH:8;                           // 23:16 24-Bit Prescaler Selcet
     bp_32 FDIVSEL:4;                          // 27:24 4 bit Fractional Divider Selcet
     bp_32 SFDIVSEL:3;                         // 30:28 Superfractional Divider Selcet
     bp_32 rsvd1:1;                            // 31 Reserved
@@ -486,14 +486,14 @@ struct LINEET_BITS {                    // bits description
     bp_32 TXDLYCFG:3;                   // 18:16 Transmit Delay Configure
     bp_32 PSMASK:2;                     // 20:19 Pin sample mask
     bp_32 rsvd3:3;                      // 23:21 Reserved
-    bp_32 BEEN:1;                       // 24 BRKDT error Enable
+    bp_32 BRKEEN:1;                       // 24 BRKDT error Enable
     bp_32 PEEN:1;                       // 25 Parity error Enable
     bp_32 FEEN:1;                       // 26 Frame error Enable
     bp_32 rsvd4:1;                      // 27 Reserved
     bp_32 ISFEEN:1;                     // 28 Inconsistent Sync Field Error Enable
     bp_32 CSEEN:1;                      // 29 Checksum Error Enable
     bp_32 PBEEN:1;                      // 30 Physical Bus Error Enable
-    bp_32 BERRENA:1;                    // 31 Bit Error Enable 
+    bp_32 BEEN:1;                    // 31 Bit Error Enable 
 };
 
 union LINEET_REG {

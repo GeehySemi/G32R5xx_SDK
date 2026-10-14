@@ -59,6 +59,7 @@
 #define SYSCTL_O_PARTIDL              (0x8U*2)      // Lower 32-bit of Device PART Identification Number
 #define SYSCTL_O_PARTIDH              (0xAU*2)      // Upper 32-bit of Device PART Identification Number
 #define SYSCTL_O_REVID                (0xCU*2)      // Device Revision Number
+#define SYSCTL_O_SOFTPRES0            (0x104U)      // Peripheral Software Reset register
 #define SYSCTL_O_SOFTPRES2            (0x86U*2)     // Peripheral Software Reset register
 #define SYSCTL_O_SOFTPRES3            (0x88U*2)     // Peripheral Software Reset register
 #define SYSCTL_O_SOFTPRES4            (0x8AU*2)     // Peripheral Software Reset register
@@ -72,7 +73,6 @@
 #define SYSCTL_O_SOFTPRES14           (0x9EU*2)     // Peripheral Software Reset register
 #define SYSCTL_O_SOFTPRES16           (0xA2U*2)     // Peripheral Software Reset register
 #define SYSCTL_O_SOFTPRES17           (0xA4U*2)     // Peripheral Software Reset register
-#define SYSCTL_O_SOFTPRES18           (0xA6U*2)     // Peripheral Software Reset register
 #define SYSCTL_O_SOFTPRES19           (0xA8U*2)     // Peripheral Software Reset register
 #define SYSCTL_O_SOFTPRES20           (0xAAU*2)     // Peripheral Software Reset register
 #define SYSCTL_O_PACKSEL              (0x12EU*2)    // Chip Package Select
@@ -106,7 +106,6 @@
 #define SYSCTL_O_PCLKCR14      (0x3EU*2)   // Peripheral Clock Gating Registers
 #define SYSCTL_O_PCLKCR16      (0x42U*2)   // Peripheral Clock Gating Registers
 #define SYSCTL_O_PCLKCR17      (0x44U*2)   // Peripheral Clock Gating Registers
-#define SYSCTL_O_PCLKCR18      (0x46U*2)   // Peripheral Clock Gating Registers
 #define SYSCTL_O_PCLKCR19      (0x48U*2)   // Peripheral Clock Gating Registers
 #define SYSCTL_O_PCLKCR20      (0x4AU*2)   // Peripheral Clock Gating Registers
 #define SYSCTL_O_PCLKCR21      (0x4CU*2)   // Peripheral Clock Gating Registers
@@ -502,7 +501,6 @@
 #define SYSCTL_CPUSYSLOCK1_GPIOLPMSEL0   0x400000U     // Lock bit for GPIOLPMSEL0 Register
 #define SYSCTL_CPUSYSLOCK1_GPIOLPMSEL1   0x800000U     // Lock bit for GPIOLPMSEL1 Register
 #define SYSCTL_CPUSYSLOCK1_PCLKCR17      0x1000000U    // Lock bit for PCLKCR17 Register
-#define SYSCTL_CPUSYSLOCK1_PCLKCR18      0x2000000U    // Lock bit for PCLKCR18 Register
 #define SYSCTL_CPUSYSLOCK1_PCLKCR19      0x4000000U    // Lock bit for PCLKCR19 Register
 #define SYSCTL_CPUSYSLOCK1_PCLKCR20      0x8000000U    // Lock bit for PCLKCR20 Register
 #define SYSCTL_CPUSYSLOCK1_PCLKCR21      0x10000000U   // Lock bit for PCLKCR21 Register
@@ -759,8 +757,6 @@
 // The following are defines for the bit fields in the RESCCLR register
 //
 //*************************************************************************************************
-#define SYSCTL_RESCCLR_POR         0x1U     // POR Reset Cause Indication Bit
-#define SYSCTL_RESCCLR_XRSN        0x2U     // XRSn Reset Cause Indication Bit
 #define SYSCTL_RESCCLR_WDRSN       0x4U     // WDRSn Reset Cause Indication Bit
 #define SYSCTL_RESCCLR_NMIWDRSN    0x8U     // NMIWDRSn Reset Cause Indication Bit
 #define SYSCTL_RESCCLR_SCCRESETN   0x100U   // SCCRESETn Reset Cause Indication Bit
@@ -770,8 +766,6 @@
 // The following are defines for the bit fields in the RESC register
 //
 //*************************************************************************************************
-#define SYSCTL_RESC_POR               0x1U          // POR Reset Cause Indication Bit
-#define SYSCTL_RESC_XRSN              0x2U          // XRSn Reset Cause Indication Bit
 #define SYSCTL_RESC_WDRSN             0x4U          // WDRSn Reset Cause Indication Bit
 #define SYSCTL_RESC_NMIWDRSN          0x8U          // NMIWDRSn Reset Cause Indication Bit
 #define SYSCTL_RESC_SCCRESETN         0x100U        // SCCRESETn Reset Cause Indication Bit

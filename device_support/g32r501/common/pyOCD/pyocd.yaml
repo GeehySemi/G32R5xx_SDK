@@ -1,4 +1,12 @@
-# pyocd.yaml
+# pyocd.yaml - G32R501 common template
+#
+# Place this file (and pyocd_user.py) in the project/working directory, or pass:
+#   -j <dir>   and/or   --config pyocd.yaml
+#
+# Vector base is configured in pyocd_user.py (CORE0_SET_ADDR), not here.
+
+user_script: pyocd_user.py
+flash.timeout.init: 30.0
 
 # ------------------------------------------------------------------------------
 # 1) Dual-Core (default)
@@ -6,8 +14,8 @@
 target_override: g32r501dxx
 frequency: 8000000  # SWD frequency (8 MHz)
 session:
-  enable_multicore_debug: true    # Enable dual-core debug
-  persist: true                   # Keep session open
+  enable_multicore_debug: true
+  persist: true
 
 
 # ------------------------------------------------------------------------------
@@ -17,4 +25,4 @@ session:
 # frequency: 8000000
 # session:
 #   enable_multicore_debug: false
-#   persist: true                   # Keep session open
+#   persist: true

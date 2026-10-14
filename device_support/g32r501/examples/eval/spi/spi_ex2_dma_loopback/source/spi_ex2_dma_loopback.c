@@ -152,7 +152,7 @@ void example_main(void)
     // Interrupts that are used in this example are re-mapped to
     // ISR functions found within this file.
     //
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
     Interrupt_setPriority(INT_DMA_CH5, 0, 0);
     Interrupt_setPriority(INT_DMA_CH6, 0, 1);
@@ -252,7 +252,7 @@ void dma_init()
     DMACH5AddrConfig(&SpiaRegs.SPITXBUF,DMASource);
     DMACH5BurstConfig(BURST,1,0);         // Burst size, src step, dest step
     DMACH5TransferConfig(TRANSFER,1,0);   // transfer size, src step, dest step
-    DMACH5ModeConfig(DMA_SPIATX,PERINT_ENABLE,SIGDIS_DISABLE,CONT_DISABLE,
+    DMACH5ModeConfig(DMA_SPIA_TX,PERINT_ENABLE,SIGDIS_DISABLE,CONT_DISABLE,
                      SYNC_DISABLE,SYNC_SRC,OVRFLOW_DISABLE,SIXTEEN_BIT,
                      CHINT_END,CHINT_ENABLE);
 
@@ -262,7 +262,7 @@ void dma_init()
     DMACH6AddrConfig(DMADest,&SpiaRegs.SPIRXBUF);
     DMACH6BurstConfig(BURST,0,1);
     DMACH6TransferConfig(TRANSFER,0,1);
-    DMACH6ModeConfig(DMA_SPIARX,PERINT_ENABLE,SIGDIS_DISABLE,CONT_DISABLE,
+    DMACH6ModeConfig(DMA_SPIA_RX,PERINT_ENABLE,SIGDIS_DISABLE,CONT_DISABLE,
                      SYNC_DISABLE,SYNC_SRC,OVRFLOW_DISABLE,SIXTEEN_BIT,
                      CHINT_END,CHINT_ENABLE);
 }

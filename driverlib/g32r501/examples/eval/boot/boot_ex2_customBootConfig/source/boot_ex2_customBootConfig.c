@@ -144,6 +144,17 @@ void example_main(void)
     //
     Device_init();
 
+    //
+    // Initialize NVIC and clears NVIC registers. Disables CPU interrupts.
+    //
+    Interrupt_initModule();
+
+    //
+    // Initialize the NVIC vector table with pointers to the shell Interrupt
+    // Service Routines (ISR).
+    //
+    Interrupt_initVectorTable();
+
     #if STANDALONE_BOOT
 
         //

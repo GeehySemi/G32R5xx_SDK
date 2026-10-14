@@ -72,7 +72,7 @@
 #define SDF_O_SDCDATA1     (0x1A*2U)   // Comparator Filter Data Register (16b) for Ch1
 #define SDF_O_SDCMPHZ1     (0x1C*2U)   // High-level (Z) Threshold Register for Ch1
 #define SDF_O_SDFIFOCTL1   (0x1D*2U)   // FIFO Control Register for Ch1
-#define SDF_O_SDSYNC1      (0x1E*2U)   // SD Filter Sync control for Ch1
+#define SDF_O_SDF_SYNCTRL1 (0x1E*2U)   // SD Filter Sync control for Ch1
 #define SDF_O_SDCTLPARM2   (0x20*2U)   // Control Parameter Register for Ch2
 #define SDF_O_SDDFPARM2    (0x21*2U)   // Data Filter Parameter Register for Ch2
 #define SDF_O_SDDPARM2     (0x22*2U)   // Data Parameter Register for Ch2
@@ -84,7 +84,7 @@
 #define SDF_O_SDCDATA2     (0x2A*2U)   // Comparator Filter Data Register (16b) for Ch2
 #define SDF_O_SDCMPHZ2     (0x2C*2U)   // High-level (Z) Threshold Register for Ch2
 #define SDF_O_SDFIFOCTL2   (0x2D*2U)   // FIFO Control Register for Ch2
-#define SDF_O_SDSYNC2      (0x2E*2U)   // SD Filter Sync control for Ch2
+#define SDF_O_SDF_SYNCTRL2 (0x2E*2U)   // SD Filter Sync control for Ch2
 #define SDF_O_SDCTLPARM3   (0x30*2U)   // Control Parameter Register for Ch3
 #define SDF_O_SDDFPARM3    (0x31*2U)   // Data Filter Parameter Register for Ch3
 #define SDF_O_SDDPARM3     (0x32*2U)   // Data Parameter Register for Ch3
@@ -96,7 +96,7 @@
 #define SDF_O_SDCDATA3     (0x3A*2U)   // Comparator Filter Data Register (16b) for Ch3
 #define SDF_O_SDCMPHZ3     (0x3C*2U)   // High-level (Z) Threshold Register for Ch3
 #define SDF_O_SDFIFOCTL3   (0x3D*2U)   // FIFO Control Register for Ch3
-#define SDF_O_SDSYNC3      (0x3E*2U)   // SD Filter Sync control for Ch3
+#define SDF_O_SDF_SYNCTRL3 (0x3E*2U)   // SD Filter Sync control for Ch3
 #define SDF_O_SDCTLPARM4   (0x40*2U)   // Control Parameter Register for Ch4
 #define SDF_O_SDDFPARM4    (0x41*2U)   // Data Filter Parameter Register for Ch4
 #define SDF_O_SDDPARM4     (0x42*2U)   // Data Parameter Register for Ch4
@@ -108,7 +108,7 @@
 #define SDF_O_SDCDATA4     (0x4A*2U)   // Comparator Filter Data Register (16b) for Ch4
 #define SDF_O_SDCMPHZ4     (0x4C*2U)   // High-level (Z) Threshold Register for Ch4
 #define SDF_O_SDFIFOCTL4   (0x4D*2U)   // FIFO Control Register for Ch4
-#define SDF_O_SDSYNC4      (0x4E*2U)   // SD Filter Sync control for Ch4
+#define SDF_O_SDF_SYNCTRL4 (0x4E*2U)   // SD Filter Sync control for Ch4
 
 
 //*************************************************************************************************
@@ -309,16 +309,16 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the SDSYNC1 register
+// The following are defines for the bit fields in the SDF_SYNCTRL1 register
 //
 //*************************************************************************************************
-#define SDF_SDSYNC1_SYNCSEL_S     0U
-#define SDF_SDSYNC1_SYNCSEL_M     0x3FU    // SDSYNC Source Select
-#define SDF_SDSYNC1_WTSYNCEN      0x40U    // Wait-for-Sync Enable
-#define SDF_SDSYNC1_WTSYNFLG      0x80U    // Wait-for-Sync Flag
-#define SDF_SDSYNC1_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
-#define SDF_SDSYNC1_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
-#define SDF_SDSYNC1_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
+#define SDF_SDF_SYNCTRL1_SYNCSEL_S     0U
+#define SDF_SDF_SYNCTRL1_SYNCSEL_M     0x3FU    // SDSYNC Source Select
+#define SDF_SDF_SYNCTRL1_WTSYNCEN      0x40U    // Wait-for-Sync Enable
+#define SDF_SDF_SYNCTRL1_WTSYNFLG      0x80U    // Wait-for-Sync Flag
+#define SDF_SDF_SYNCTRL1_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
+#define SDF_SDF_SYNCTRL1_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
+#define SDF_SDF_SYNCTRL1_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
 
 //*************************************************************************************************
 //
@@ -428,16 +428,16 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the SDSYNC2 register
+// The following are defines for the bit fields in the SDF_SYNCTRL2 register
 //
 //*************************************************************************************************
-#define SDF_SDSYNC2_SYNCSEL_S     0U
-#define SDF_SDSYNC2_SYNCSEL_M     0x3FU    // SDSYNC Source Select
-#define SDF_SDSYNC2_WTSYNCEN      0x40U    // Wait-for-Sync Enable
-#define SDF_SDSYNC2_WTSYNFLG      0x80U    // Wait-for-Sync Flag
-#define SDF_SDSYNC2_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
-#define SDF_SDSYNC2_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
-#define SDF_SDSYNC2_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
+#define SDF_SDF_SYNCTRL2_SYNCSEL_S     0U
+#define SDF_SDF_SYNCTRL2_SYNCSEL_M     0x3FU    // SDSYNC Source Select
+#define SDF_SDF_SYNCTRL2_WTSYNCEN      0x40U    // Wait-for-Sync Enable
+#define SDF_SDF_SYNCTRL2_WTSYNFLG      0x80U    // Wait-for-Sync Flag
+#define SDF_SDF_SYNCTRL2_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
+#define SDF_SDF_SYNCTRL2_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
+#define SDF_SDF_SYNCTRL2_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
 
 //*************************************************************************************************
 //
@@ -547,16 +547,16 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the SDSYNC3 register
+// The following are defines for the bit fields in the SDF_SYNCTRL3 register
 //
 //*************************************************************************************************
-#define SDF_SDSYNC3_SYNCSEL_S     0U
-#define SDF_SDSYNC3_SYNCSEL_M     0x3FU    // SDSYNC Source Select
-#define SDF_SDSYNC3_WTSYNCEN      0x40U    // Wait-for-Sync Enable
-#define SDF_SDSYNC3_WTSYNFLG      0x80U    // Wait-for-Sync Flag
-#define SDF_SDSYNC3_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
-#define SDF_SDSYNC3_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
-#define SDF_SDSYNC3_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
+#define SDF_SDF_SYNCTRL3_SYNCSEL_S     0U
+#define SDF_SDF_SYNCTRL3_SYNCSEL_M     0x3FU    // SDSYNC Source Select
+#define SDF_SDF_SYNCTRL3_WTSYNCEN      0x40U    // Wait-for-Sync Enable
+#define SDF_SDF_SYNCTRL3_WTSYNFLG      0x80U    // Wait-for-Sync Flag
+#define SDF_SDF_SYNCTRL3_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
+#define SDF_SDF_SYNCTRL3_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
+#define SDF_SDF_SYNCTRL3_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
 
 //*************************************************************************************************
 //
@@ -666,16 +666,16 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the SDSYNC4 register
+// The following are defines for the bit fields in the SDF_SYNCTRL4 register
 //
 //*************************************************************************************************
-#define SDF_SDSYNC4_SYNCSEL_S     0U
-#define SDF_SDSYNC4_SYNCSEL_M     0x3FU    // SDSYNC Source Select
-#define SDF_SDSYNC4_WTSYNCEN      0x40U    // Wait-for-Sync Enable
-#define SDF_SDSYNC4_WTSYNFLG      0x80U    // Wait-for-Sync Flag
-#define SDF_SDSYNC4_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
-#define SDF_SDSYNC4_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
-#define SDF_SDSYNC4_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
+#define SDF_SDF_SYNCTRL4_SYNCSEL_S     0U
+#define SDF_SDF_SYNCTRL4_SYNCSEL_M     0x3FU    // SDSYNC Source Select
+#define SDF_SDF_SYNCTRL4_WTSYNCEN      0x40U    // Wait-for-Sync Enable
+#define SDF_SDF_SYNCTRL4_WTSYNFLG      0x80U    // Wait-for-Sync Flag
+#define SDF_SDF_SYNCTRL4_WTSYNCLR      0x100U   // Wait-for-Sync Flag Clear
+#define SDF_SDF_SYNCTRL4_FFSYNCCLREN   0x200U   // FIFO Clear-on-SDSYNC Enable
+#define SDF_SDF_SYNCTRL4_WTSCLREN      0x400U   // WTSYNFLG Clear-on-FIFOINT Enable
 
 
 

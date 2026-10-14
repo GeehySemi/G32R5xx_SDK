@@ -1,0 +1,107 @@
+/*
+ * FILE:    g32r502xcx7_cbus_flash.icf
+ * TITLE:   IAR linker configuration for G32R502
+ * VERSION: 1.0.0
+ * DATE:    2026-08-10
+  */
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\linker\Geehy\IcfEditor\g32r502.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x08000000;
+define symbol __ICFEDIT_intvec_size__  = 0x400;
+/*0:DTCM, 1:ITCM, 2:None (Lib / no RAM vector)*/
+define symbol __vector_region__ = 0;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_CBUS_FLASH_start__ = 0x08000000;
+define symbol __ICFEDIT_region_CBUS_FLASH_end__   = 0x0803FFFF;
+define symbol __ICFEDIT_region_ITCM_RAM_start__   = 0x00000000;
+define symbol __ICFEDIT_region_ITCM_RAM_end__     = 0x00003FFF;
+define symbol __ICFEDIT_region_DTCM_RAM_start__   = 0x20000000;
+define symbol __ICFEDIT_region_DTCM_RAM_end__     = 0x20005FFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__ = 0x0400;
+define symbol __ICFEDIT_size_heap__   = 0x0000;
+/* Set to 1 when G32R502_DTCM_BOOT_STATUS_ENABLE is defined.
+ * Reserves last 0x20 bytes of DTCM (0x20005FE0..0x20005FFF) for Boot status snapshot. */
+define symbol __ICFEDIT_boot_status_snapshot_enable__ = 0;
+/*0:DTCM only, 1:ITCM only, 2:DTCM first then ITCM spill*/
+define symbol __ICFEDIT_rwzi_bank__ = 0;
+/**** End of ICF editor section. ###ICF###*/
+
+/* DTCM budget / stack toward physical top */
+define symbol __BOOT_STATUS_SNAPSHOT_size__ = 0x20;
+define symbol __DTCM_stack_end__ = __ICFEDIT_region_DTCM_RAM_end__ - (__ICFEDIT_boot_status_snapshot_enable__ * __BOOT_STATUS_SNAPSHOT_size__);
+define symbol __DTCM_stack_start__ = __DTCM_stack_end__ - __ICFEDIT_size_cstack__ + 1;
+define symbol __DTCM_data_end__ = __DTCM_stack_start__ - 1;
+
+define memory mem with size = 4G;
+define region CBUS_FLASH_region  = mem:[from __ICFEDIT_region_CBUS_FLASH_start__ to __ICFEDIT_region_CBUS_FLASH_end__];
+
+/* REGION=0: RAM vector in DTCM; DTCM_DATA starts after intvec */
+if (__vector_region__ == 0)
+{
+define region ITCM_RAM_region = mem:[from __ICFEDIT_region_ITCM_RAM_start__ to __ICFEDIT_region_ITCM_RAM_end__];
+define region DTCM_DATA_region = mem:[from (__ICFEDIT_region_DTCM_RAM_start__ + __ICFEDIT_intvec_size__) to __DTCM_data_end__];
+define region RAM_VEC_region = mem:[from __ICFEDIT_region_DTCM_RAM_start__ to (__ICFEDIT_region_DTCM_RAM_start__ + __ICFEDIT_intvec_size__ - 1)];
+}
+/* REGION=1: RAM vector in ITCM */
+else if (__vector_region__ == 1)
+{
+define region ITCM_RAM_region = mem:[from (__ICFEDIT_region_ITCM_RAM_start__ + __ICFEDIT_intvec_size__) to __ICFEDIT_region_ITCM_RAM_end__];
+define region DTCM_DATA_region = mem:[from __ICFEDIT_region_DTCM_RAM_start__ to __DTCM_data_end__];
+define region RAM_VEC_region = mem:[from __ICFEDIT_region_ITCM_RAM_start__ to (__ICFEDIT_region_ITCM_RAM_start__ + __ICFEDIT_intvec_size__ - 1)];
+}
+/* REGION=else: no RAM vector window */
+else
+{
+define region ITCM_RAM_region = mem:[from __ICFEDIT_region_ITCM_RAM_start__ to __ICFEDIT_region_ITCM_RAM_end__];
+define region DTCM_DATA_region = mem:[from __ICFEDIT_region_DTCM_RAM_start__ to __DTCM_data_end__];
+}
+
+define region DTCM_STACK_region  = mem:[from __DTCM_stack_start__ to __DTCM_stack_end__];
+
+define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
+define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
+
+if (__vector_region__ <= 1)
+{
+    do not initialize  { section .noinit, section .bss.ram.intvec };
+}
+else
+{
+    do not initialize  { section .noinit };
+}
+
+initialize by copy { readwrite, section dtcm.data };
+initialize manually { section itcm.instruction, section itcm.ramfunc };
+
+if (isdefinedsymbol(__USE_DLIB_PERTHREAD))
+{
+  initialize by copy with packing = none { section __DLIB_PERTHREAD };
+}
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+place in CBUS_FLASH_region  { readonly };
+place in ITCM_RAM_region    { section itcm.instruction, section itcm.ramfunc };
+if (__ICFEDIT_rwzi_bank__ == 0)
+{
+  place in DTCM_DATA_region   { section dtcm.data, section dtcm.bss, readwrite, block HEAP };
+}
+else if (__ICFEDIT_rwzi_bank__ == 1)
+{
+  place in DTCM_DATA_region   { section dtcm.data, section dtcm.bss };
+  place in ITCM_RAM_region    { readwrite, block HEAP };
+}
+else
+{
+  define region RWZI_spill_region = DTCM_DATA_region | ITCM_RAM_region;
+  place in DTCM_DATA_region   { section dtcm.data, section dtcm.bss };
+  place in RWZI_spill_region  { readwrite, block HEAP };
+}
+place in DTCM_STACK_region  { block CSTACK };
+
+if (__vector_region__ <= 1)
+{
+    place in RAM_VEC_region { section .bss.ram.intvec };
+}

@@ -110,7 +110,7 @@
 //*************************************************************************************************
 #define NMI_SHDFLG_CLOCKFAIL    0x2U      // Shadow CLOCKFAIL Flag
 #define NMI_SHDFLG_FLUNCERR     0x8U      // Shadow FLUNCERR Flag
-#define NMI_SHDFLG_CLBNMI       0x100U    // Shadow FLBNMI flag
+#define NMI_SHDFLG_FLBNMI       0x100U    // Shadow FLBNMI flag
 #define NMI_SHDFLG_SWERR        0x2000U   // SW Error Force NMI Flag
 
 

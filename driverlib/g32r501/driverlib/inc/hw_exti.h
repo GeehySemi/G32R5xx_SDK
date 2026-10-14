@@ -39,9 +39,11 @@
 #define EXTI_O_GPIOSEL           0xCU    // GPIO Trigger signal select register
 #define EXTI_O_IMASK0            0x10U   // CPU0 Interrupt mask register
 #define EXTI_O_EMASK0            0x14U   // CPU0 Event mask register
+// IPEND0: write 1 to clear pending (W1C)
 #define EXTI_O_IPEND0            0x18U   // CPU0 Interrupt pending register
 #define EXTI_O_IMASK1            0x20U   // CPU1 Interrupt mask register
 #define EXTI_O_EMASK1            0x24U   // CPU1 Event mask register
+// IPEND1: write 1 to clear pending (W1C)
 #define EXTI_O_IPEND1            0x28U   // CPU1 Interrupt pending register
 #define EXTI_O_INT4CNT           0x30U   // Interrupt Line 4 Counter register
 #define EXTI_O_INT5CNT           0x34U   // Interrupt Line 5 Counter register

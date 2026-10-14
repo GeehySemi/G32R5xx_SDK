@@ -76,9 +76,9 @@
 //
 // Function Prototypes
 //
-void INT_TIMER0_IRQHandler(void);
-void INT_TIMER1_IRQHandler(void);
-void INT_TIMER2_IRQHandler(void);
+void INT_TMR0_IRQHandler(void);
+void INT_TMR1_IRQHandler(void);
+void INT_TMR2_IRQHandler(void);
 
 //
 // Main
@@ -94,7 +94,7 @@ void example_main(void)
     // Initialize GPIO
     //
     InitGpio();
-    GPIO_SetupPinMux(31U, GPIO_MUX_CPU1, 0);
+    GPIO_SetupPinMux(31U, GPIO_MUX_CPU0, 0);
     GPIO_SetupPinOptions(31U, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     //
@@ -120,13 +120,13 @@ void example_main(void)
     // Service Routines (ISR)
     //
 
-    Interrupt_register(INT_TIMER0, INT_TIMER0_IRQHandler);
-    Interrupt_register(INT_TIMER1, INT_TIMER1_IRQHandler);
-    Interrupt_register(INT_TIMER2, INT_TIMER2_IRQHandler);
+    Interrupt_register(INT_TMR0, INT_TMR0_IRQHandler);
+    Interrupt_register(INT_TMR1, INT_TMR1_IRQHandler);
+    Interrupt_register(INT_TMR2, INT_TMR2_IRQHandler);
 
-    Interrupt_enable(INT_TIMER0);
-    Interrupt_enable(INT_TIMER1);
-    Interrupt_enable(INT_TIMER2);
+    Interrupt_enable(INT_TMR0);
+    Interrupt_enable(INT_TMR1);
+    Interrupt_enable(INT_TMR2);
 
     //
     // Initialize the Device Peripheral. For this example, only initialize the
@@ -142,11 +142,11 @@ void example_main(void)
     ConfigTimer(&Timer1, 100, 1000000);
     ConfigTimer(&Timer2, 100, 1000000);
 
-    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_7_6_SUB_5_0);
+    Interrupt_setPriorityGroup(INTERRUPT_PRIGROUP_PREEMPT_3_2_SUB_1_0);
 
-    Interrupt_setPriority(INT_TIMER0,2,0);
-    Interrupt_setPriority(INT_TIMER1,1,0);
-    Interrupt_setPriority(INT_TIMER2,0,0);
+    Interrupt_setPriority(INT_TMR0,2,0);
+    Interrupt_setPriority(INT_TMR1,1,0);
+    Interrupt_setPriority(INT_TMR2,0,0);
 
     //
     // To ensure precise timing, use write-only instructions to write to the
@@ -164,9 +164,9 @@ void example_main(void)
     // to CPU-Timer 2
     //
 
-    Interrupt_enable(INT_TIMER0);
-    Interrupt_enable(INT_TIMER1);
-    Interrupt_enable(INT_TIMER2);
+    Interrupt_enable(INT_TMR0);
+    Interrupt_enable(INT_TMR1);
+    Interrupt_enable(INT_TMR2);
 
 
     //
@@ -187,7 +187,7 @@ void example_main(void)
 //
 // cpuTimer0ISR - CPU Timer0 ISR with interrupt counter
 //
-void INT_TIMER0_IRQHandler(void)
+void INT_TMR0_IRQHandler(void)
 {
     Timer0.InterruptCount++;
 }
@@ -195,7 +195,7 @@ void INT_TIMER0_IRQHandler(void)
 //
 // cpuTimer1ISR - CPU Timer1 ISR with interrupt counter
 //
-void INT_TIMER1_IRQHandler(void)
+void INT_TMR1_IRQHandler(void)
 {
     //
     // The CPU acknowledges the interrupt
@@ -206,7 +206,7 @@ void INT_TIMER1_IRQHandler(void)
 //
 // cpuTimer2ISR CPU Timer2 ISR with interrupt counter
 //
-void INT_TIMER2_IRQHandler(void)
+void INT_TMR2_IRQHandler(void)
 {
     //
     // The CPU acknowledges the interrupt

@@ -73,7 +73,7 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the CCTL0 register
+// The following are defines for the bit fields in the ECCTL0 register
 //
 //*************************************************************************************************
 #define CAP_ECCTL0_INPUTSEL_S   0U
@@ -81,7 +81,7 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the CCTL1 register
+// The following are defines for the bit fields in the ECCTL1 register
 //
 //*************************************************************************************************
 #define CAP_ECCTL1_CAP1POL       0x1U      // Capture Event 1 Polarity select
@@ -100,7 +100,7 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the CCTL2 register
+// The following are defines for the bit fields in the ECCTL2 register
 //
 //*************************************************************************************************
 #define CAP_ECCTL2_CONT_ONESHT      0x1U      // Continuous or one-shot
@@ -123,7 +123,7 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the CEINT register
+// The following are defines for the bit fields in the ECEINT register
 //
 //*************************************************************************************************
 #define CAP_ECEINT_CEVT1          0x2U    // Capture Event 1 Interrupt Enable
@@ -136,7 +136,7 @@
 
 //*************************************************************************************************
 //
-// The following are defines for the bit fields in the CFLG register
+// The following are defines for the bit fields in the ECFLG register
 //
 //*************************************************************************************************
 #define CAP_ECFLG_INT     0x1U    // Global Flag

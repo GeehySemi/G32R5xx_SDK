@@ -558,7 +558,7 @@ struct CAN_REGS {
     union   CAN_MVALFLG_REG                  CAN_MVALFLG;          // Message Valid Flag Register
     bp_32                                    CAN_MVAL_21;          // Message Valid Register
     uint32_t                                 rsvd8[4];             // Reserved
-    bp_32                                    CAN_IP_MUX21;         // Interrupt mailbox Register
+    bp_32                                    CAN_INTMAIL;         // Interrupt mailbox Register
     uint32_t                                 rsvd9[9];             // Reserved
     union   CAN_IF1COM_REG                   CAN_IF1COM;           // IF1 Command Register
     union   CAN_IF1MASK_REG                  CAN_IF1MASK;          // IF1 Mask Register

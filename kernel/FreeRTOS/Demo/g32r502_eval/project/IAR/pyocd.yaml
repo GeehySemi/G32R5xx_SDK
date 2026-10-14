@@ -1,0 +1,2 @@
+target_override: g32r502xx
+user_script: pyocd_user.py

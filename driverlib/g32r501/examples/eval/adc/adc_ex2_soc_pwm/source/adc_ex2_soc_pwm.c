@@ -121,8 +121,19 @@ void example_main(void)
     //
     Board_init();
 
+    //
+    // Disable sync(Freeze clock to PWM as well)
+    //
+    SysCtl_disablePeripheral(SYSCTL_PERIPH_CLK_TBCLKSYNC);
+
     // Set up the PWM
     initPWM();
+
+    //
+    // Start PWM:
+    // Enable sync and clock to PWM
+    //
+    SysCtl_enablePeripheral(SYSCTL_PERIPH_CLK_TBCLKSYNC);
 
     //
     // Initialize results buffer

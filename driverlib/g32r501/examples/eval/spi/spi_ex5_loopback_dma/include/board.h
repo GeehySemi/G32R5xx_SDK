@@ -120,9 +120,9 @@ extern void INT_DMA_CH5_IRQHandler(void);
 
 #define mySPI0_BASE SPIA_BASE
 #define mySPI0_BITRATE 500000
-#define mySPI0_RX_DMA_TRIGGER DMA_TRIGGER_SPIARX
+#define mySPI0_RX_DMA_TRIGGER DMA_TRIGGER_SPIA_RX
 #define mySPI0_RX_DMA_ADDRESS ((uint16_t *)(SPIA_BASE + SPI_O_RXB))
-#define mySPI0_TX_DMA_TRIGGER DMA_TRIGGER_SPIATX
+#define mySPI0_TX_DMA_TRIGGER DMA_TRIGGER_SPIA_TX
 #define mySPI0_TX_DMA_ADDRESS ((uint16_t *)(SPIA_BASE + SPI_O_TXB))
 
 //*****************************************************************************

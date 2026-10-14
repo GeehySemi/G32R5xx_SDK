@@ -30,12 +30,14 @@
 //
 // External references
 //
-extern const PINT __VECTOR_TABLE[512];
+extern const PINT __VECTOR_TABLE[NVIC_RAM_VECTOR_SIZE];
 
 //
-// Interrupt vector table
+// Interrupt vector table in dedicated RAM section (.bss.ram.intvec / ram.intvec)
 //
-static PINT Interrupt_vectorTable[512] __ALIGNED(2048);
+SECTION_RAM_VEC
+static PINT Interrupt_vectorTable[NVIC_RAM_VECTOR_SIZE]
+    __ALIGNED(NVIC_RAM_VECTOR_ALIGN);
 
 //*****************************************************************************
 //
@@ -45,7 +47,7 @@ static PINT Interrupt_vectorTable[512] __ALIGNED(2048);
 void
 Interrupt_initModule(void)
 {
-    int16_t i;
+    uint32_t i;
 
     //
     // Globally disable interrupts
@@ -55,10 +57,10 @@ Interrupt_initModule(void)
     //
     // Disable and clear all NVIC interrupts
     //
-    for(i = 0; i < 496; i++)
+    for(i = 0U; i < 8U; i++)
     {
-        NVIC_DisableIRQ((IRQn_Type)i);
-        NVIC_ClearPendingIRQ((IRQn_Type)i);
+        NVIC->ICER[i] = 0xFFFFFFFFU;
+        NVIC->ICPR[i] = 0xFFFFFFFFU;
     }
 }
 
@@ -83,7 +85,7 @@ Interrupt_initVectorTable(void)
     //
     // Skip the first 0-15 system exceptions
     //
-    for(i = 16; i < 512; i++)
+    for(i = 16; i < (int16_t)NVIC_RAM_VECTOR_SIZE; i++)
     {
         Interrupt_vectorTable[i] = Interrupt_defaultHandler;
     }
@@ -91,7 +93,11 @@ Interrupt_initVectorTable(void)
     //
     // Configure the vector table location
     //
+#if defined(LINKER_VECTOR_REGION_NONE)
+    SCB->VTOR = (uint32_t)&__VECTOR_TABLE;
+#else
     SCB->VTOR = (uint32_t)&Interrupt_vectorTable;
+#endif
 
     __DSB();
 }

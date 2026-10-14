@@ -358,11 +358,11 @@ void PWM_init()
     PWM_setDeadBandDelayMode(myPWM3_BASE, PWM_DB_RED, true);
     PWM_setRisingEdgeDelayCountShadowLoadMode(myPWM3_BASE, PWM_RED_LOAD_ON_CNTR_ZERO);
     PWM_disableRisingEdgeDelayCountShadowLoadMode(myPWM3_BASE);
-    PWM_setRisingEdgeDelayCount(myPWM3_BASE, 20);
+    PWM_setRisingEdgeDelayCount(myPWM3_BASE, 40);
     PWM_setDeadBandDelayMode(myPWM3_BASE, PWM_DB_FED, true);
     PWM_setFallingEdgeDelayCountShadowLoadMode(myPWM3_BASE, PWM_FED_LOAD_ON_CNTR_ZERO);
     PWM_disableFallingEdgeDelayCountShadowLoadMode(myPWM3_BASE);
-    PWM_setFallingEdgeDelayCount(myPWM3_BASE, 20);
+    PWM_setFallingEdgeDelayCount(myPWM3_BASE, 40);
     PWM_setTripZoneAction(myPWM3_BASE, PWM_TZ_ACTION_EVENT_TZA, PWM_TZ_ACTION_LOW);
     PWM_setTripZoneAction(myPWM3_BASE, PWM_TZ_ACTION_EVENT_TZB, PWM_TZ_ACTION_LOW);
     PWM_enableTripZoneSignals(myPWM3_BASE, PWM_TZ_SIGNAL_OSHT1);

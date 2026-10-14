@@ -1483,16 +1483,16 @@ struct GPIO_CTRL_REGS {
     Uint16                                   rsvd4[12];                    // Reserved
     union   GPALOCK_REG                      GPALOCK;                      // GPIO A Lock Register (GPIO0 to GPIO31)
     union   GPACR_REG                        GPACR;                        // GPIO A Lock Commit Register (GPIO0 to GPIO31)
-    union   GPBCTRL_REG                      GPBCTRL;                      // GPIO B Qualification Sampling Period (GPIO32 to GPIO63)
+    union   GPBCTRL_REG                      GPBCTRL;                      // GPIO B Qualification Sampling Period (GPIO32 to GPIO59)
     union   GPBQSEL1_REG                     GPBQSEL1;                     // GPIO B Qualification Type (GPIO32 to GPIO47)
     union   GPBQSEL2_REG                     GPBQSEL2;                     // GPIO B Qualification Type (GPIO48 to GPIO63)
     union   GPBMUX1_REG                      GPBMUX1;                      // GPIO B Peripheral Mux (GPIO32 to GPIO47)
     union   GPBMUX2_REG                      GPBMUX2;                      // GPIO B Peripheral Mux (GPIO48 to GPIO63)
-    union   GPBDIR_REG                       GPBDIR;                       // GPIO B Direction (GPIO32 to GPIO63)
-    union   GPBPUD_REG                       GPBPUD;                       // GPIO B Pull-Up Disable (GPIO32 to GPIO63)
+    union   GPBDIR_REG                       GPBDIR;                       // GPIO B Direction (GPIO32 to GPIO59)
+    union   GPBPUD_REG                       GPBPUD;                       // GPIO B Pull-Up Disable (GPIO32 to GPIO59)
     Uint16                                   rsvd5[2];                     // Reserved
-    union   GPBINV_REG                       GPBINV;                       // GPIO B Input Inversion (GPIO32 to GPIO63)
-    union   GPBODR_REG                       GPBODR;                       // GPIO B Open Drain Output Mode (GPIO32 to GPIO63)
+    union   GPBINV_REG                       GPBINV;                       // GPIO B Input Inversion (GPIO32 to GPIO59)
+    union   GPBODR_REG                       GPBODR;                       // GPIO B Open Drain Output Mode (GPIO32 to GPIO59)
     Uint16                                   rsvd6[2];
     union   GPBDSEL1_REG                     GPBDSEL1;                     // Driver capability select for GPIO B (GPIO32 to GPIO47)
     union   GPBDSEL2_REG                     GPBDSEL2;                     // Driver capability select for GPIO B (GPIO48 to GPIO63)
@@ -1506,8 +1506,8 @@ struct GPIO_CTRL_REGS {
     union   GPBCSEL3_REG                     GPBCSEL3;                     // GPIO B Master Core Select (GPIO48 to GPIO55)
     union   GPBCSEL4_REG                     GPBCSEL4;                     // GPIO B Master Core Select (GPIO56 to GPIO63)
     Uint16                                   rsvd9[12];                    // Reserved
-    union   GPBLOCK_REG                      GPBLOCK;                      // GPIO B Lock Register (GPIO32 to GPIO63)
-    union   GPBCR_REG                        GPBCR;                        // GPIO B Lock Commit Register (GPIO32 to GPIO63)
+    union   GPBLOCK_REG                      GPBLOCK;                      // GPIO B Lock Register (GPIO32 to GPIO59)
+    union   GPBCR_REG                        GPBCR;                        // GPIO B Lock Commit Register (GPIO32 to GPIO59)
     Uint16                                   rsvd10[320];                   // Reserved
     union   GPHCTRL_REG                      GPHCTRL;                      // GPIO H Qualification Sampling Period (GPIO224 to GPIO255)
     union   GPHQSEL1_REG                     GPHQSEL1;                     // GPIO H Qualification Type (GPIO224 to GPIO239)
@@ -1603,7 +1603,7 @@ union GPASET_REG {
     struct  GPASET_BITS  bit;
 };
 
-struct GPACLEAR_BITS {                  // bits description
+struct GPACLR_BITS {                  // bits description
     Uint32 GPIO0:1;                     // 0 Clear the GPIO0 output data latch
     Uint32 GPIO1:1;                     // 1 Clear the GPIO1 output data latch
     Uint32 GPIO2:1;                     // 2 Clear the GPIO2 output data latch
@@ -1638,9 +1638,9 @@ struct GPACLEAR_BITS {                  // bits description
     Uint32 GPIO31:1;                    // 31 Clear the GPIO31 output data latch
 };
 
-union GPACLEAR_REG {
+union GPACLR_REG {
     Uint32  all;
-    struct  GPACLEAR_BITS  bit;
+    struct  GPACLR_BITS  bit;
 };
 
 struct GPATOGGLE_BITS {                 // bits description
@@ -1763,7 +1763,7 @@ union GPBSET_REG {
     struct  GPBSET_BITS  bit;
 };
 
-struct GPBCLEAR_BITS {                 // bits description
+struct GPBCLR_BITS {                 // bits description
     Uint32 GPIO32:1;                    // 0 Clear the GPIO32 output data latch
     Uint32 GPIO33:1;                    // 1 Clear the GPIO33 output data latch
     Uint32 GPIO34:1;                    // 2 Clear the GPIO34 output data latch
@@ -1798,9 +1798,9 @@ struct GPBCLEAR_BITS {                 // bits description
     Uint32 rsvd6:1;                    // 31 Reserved
 };
 
-union GPBCLEAR_REG {
+union GPBCLR_REG {
     Uint32  all;
-    struct  GPBCLEAR_BITS  bit;
+    struct  GPBCLR_BITS  bit;
 };
 
 struct GPBTOGGLE_BITS {                  // bits description
@@ -1885,15 +1885,15 @@ union GPHDAT_REG {
 
 struct GPIO_DATA_REGS {
     union   GPADAT_REG                    GPADAT;                       // GPIO A Data Register (GPIO0 to GPIO31)
-    union   GPASET_REG                    GPASET;                        // GPIO A Output Set (GPIO0 to GPIO31)
-    union   GPACLEAR_REG                  GPACLEAR;                        // GPIO A Output Clear (GPIO0 to GPIO31)
-    union   GPATOGGLE_REG                 GPATOGGLE;                        // GPIO A Output Toggle (GPIO0 to GPIO31)
-    union   GPBDAT_REG                    GPBDAT;                       // GPIO B Data Register (GPIO32 to GPIO64)
-    union   GPBSET_REG                    GPBSET;                        // GPIO B Output Set (GPIO32 to GPIO64)
-    union   GPBCLEAR_REG                  GPBCLEAR;                        // GPIO B Output Clear (GPIO32 to GPIO64)
-    union   GPBTOGGLE_REG                 GPBTOGGLE;                        // GPIO B Output Toggle (GPIO32 to GPIO64)
-    Uint16                                rsvd1[40];                       // Reserved
-    union   GPHDAT_REG                    GPHDAT;                       // GPIO H Data Register (GPIO0 to GPIO255)
+    union   GPASET_REG                    GPASET;                       // GPIO A Output Set (GPIO0 to GPIO31)
+    union   GPACLR_REG                    GPACLR;                       // GPIO A Output Clear (GPIO0 to GPIO31)
+    union   GPATOGGLE_REG                 GPATOGGLE;                    // GPIO A Output Toggle (GPIO0 to GPIO31)
+    union   GPBDAT_REG                    GPBDAT;                       // GPIO B Data Register (GPIO32 to GPIO59)
+    union   GPBSET_REG                    GPBSET;                       // GPIO B Output Set (GPIO32 to GPIO59)
+    union   GPBCLR_REG                    GPBCLR;                       // GPIO B Output Clear (GPIO32 to GPIO59)
+    union   GPBTOGGLE_REG                 GPBTOGGLE;                    // GPIO B Output Toggle (GPIO32 to GPIO59)
+    Uint16                                rsvd1[40];                    // Reserved
+    union   GPHDAT_REG                    GPHDAT;                       // GPIO H Data Register (GPIO224 to GPIO254)
 };
 
 //---------------------------------------------------------------------------

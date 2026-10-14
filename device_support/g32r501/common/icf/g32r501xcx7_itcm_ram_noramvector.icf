@@ -1,0 +1,88 @@
+/*
+ * FILE:    g32r501xcx7_itcm_ram_noramvector.icf
+ * TITLE:   IAR linker for G32R501 xc (ITCM code, no RAM vector)
+ * VERSION: 1.0.1
+ * DATE:    2026-08-10
+ * NOTE:    Project must define LINKER_VECTOR_REGION_NONE.
+ *          IR noramvector VTOR stays at ITCM startup table (0x00000000), not Flash.
+ */
+
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\linker\Geehy\IcfEditor\g32r501.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x00000000;
+define symbol __ICFEDIT_intvec_size__  = 0x400;
+/* Fixed: no RAM vector table (see common/icf/readme.txt). */
+define symbol __vector_region__ = 2;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_CBUS_FLASH_start__    = 0x08000000;
+define symbol __ICFEDIT_region_CBUS_FLASH_end__      = 0x0803FFFF;
+define symbol __ICFEDIT_region_CPU0_ITCM_RAM_start__ = 0x00000000;
+define symbol __ICFEDIT_region_CPU0_ITCM_RAM_end__   = 0x0000FFFF;
+define symbol __ICFEDIT_region_CPU0_DTCM_RAM_start__ = 0x20000000;
+define symbol __ICFEDIT_region_CPU0_DTCM_RAM_end__   = 0x20003FFF;
+define symbol __ICFEDIT_region_SRAM1_start__         = 0x20100000;
+define symbol __ICFEDIT_region_SRAM1_end__           = 0x20101FFF;
+define symbol __ICFEDIT_region_SRAM2_start__         = 0x20200000;
+define symbol __ICFEDIT_region_SRAM2_end__           = 0x20201FFF;
+define symbol __ICFEDIT_region_SRAM3_start__         = 0x20300000;
+define symbol __ICFEDIT_region_SRAM3_end__           = 0x20307FFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__ = 0x1000;
+define symbol __ICFEDIT_size_heap__   = 0x1000;
+define symbol __ICFEDIT_boot_status_snapshot_enable__ = 0;
+/*0:DTCM only (required: code executes from ITCM; generic RW must not use ITCM)*/
+/* bit0 DTCM, bit1 ITCM, bit2 SRAM1, bit3 SRAM2, bit4 SRAM3 */
+/* bit0 DTCM, bit1 ITCM, bit2 SRAM1, bit3 SRAM2, bit4 SRAM3 */
+define symbol __ICFEDIT_rwzi_bank__ = 0x0000001D;
+/**** End of ICF editor section. ###ICF###*/
+
+/* DTCM budget / stack toward physical top */
+define symbol __BOOT_STATUS_SNAPSHOT_size__ = 0x20;
+define symbol __DTCM_stack_end__ = __ICFEDIT_region_CPU0_DTCM_RAM_end__ - (__ICFEDIT_boot_status_snapshot_enable__ * __BOOT_STATUS_SNAPSHOT_size__);
+define symbol __DTCM_stack_start__ = __DTCM_stack_end__ - __ICFEDIT_size_cstack__ + 1;
+define symbol __DTCM_data_end__ = __DTCM_stack_start__ - 1;
+
+define memory mem with size = 4G;
+define region CBUS_FLASH_region = mem:[from __ICFEDIT_region_CBUS_FLASH_start__ to __ICFEDIT_region_CBUS_FLASH_end__];
+define region CPU0_ITCM_RAM_region = mem:[from __ICFEDIT_region_CPU0_ITCM_RAM_start__ to __ICFEDIT_region_CPU0_ITCM_RAM_end__];
+define region DTCM_DATA_region = mem:[from __ICFEDIT_region_CPU0_DTCM_RAM_start__ to __DTCM_data_end__];
+define region DTCM_STACK_region  = mem:[from __DTCM_stack_start__ to __DTCM_stack_end__];
+define region SRAM1_region      = mem:[from __ICFEDIT_region_SRAM1_start__ to __ICFEDIT_region_SRAM1_end__];
+define region SRAM2_region      = mem:[from __ICFEDIT_region_SRAM2_start__ to __ICFEDIT_region_SRAM2_end__];
+define region SRAM3_region      = mem:[from __ICFEDIT_region_SRAM3_start__ to __ICFEDIT_region_SRAM3_end__];
+
+define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
+define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
+
+do not initialize  { section .noinit };
+
+initialize by copy { readwrite, section dtcm.data, section sram1.share_data,
+    section sram2.share_data, section sram3.share_data };
+initialize manually { section itcm.instruction, section itcm.ramfunc };
+
+if (isdefinedsymbol(__USE_DLIB_PERTHREAD))
+{
+  initialize by copy with packing = none { section __DLIB_PERTHREAD };
+}
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+place in CPU0_ITCM_RAM_region    { readonly };
+place in CPU0_ITCM_RAM_region    { section itcm.instruction, section itcm.ramfunc };
+if ((__ICFEDIT_rwzi_bank__ & 0x02) != 0)
+{
+  /* Force link failure: generic RW in ITCM is forbidden when code runs from ITCM. */
+  define exported symbol __G32R501_ITCM_RWZI_FORBIDDEN__ = (. + 1);
+  place at address mem:__ICFEDIT_intvec_start__ { readwrite };
+}
+
+place in DTCM_DATA_region   { section dtcm.data, section dtcm.bss };
+if ((__ICFEDIT_rwzi_bank__ & 0x02) != 0) { error "clear ITCM bit when code executes from ITCM"; }
+if ((__ICFEDIT_rwzi_bank__ & 0x1F) == 0) { error "__ICFEDIT_rwzi_bank__ must select at least one bank"; }
+define region RWZI_pool_region = DTCM_DATA_region | SRAM1_region | SRAM2_region | SRAM3_region;
+place in RWZI_pool_region  { readwrite, block HEAP };
+place in DTCM_STACK_region  { block CSTACK };
+place in SRAM1_region  { section sram1.share_data };
+place in SRAM2_region  { section sram2.share_data };
+place in SRAM3_region  { section sram3.share_data };

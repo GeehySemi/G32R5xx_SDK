@@ -129,11 +129,10 @@ void example_main(void)
     // For this example, only init the pins for the UART-A port.
     // GPIO_SetupPinMux() - Sets the GPxMUX1/2 and GPyMUX1/2 register bits
     // GPIO_SetupPinOptions() - Sets the direction and configuration of GPIOs
-    // These functions are found in the F28X7x_Gpio.c file.
     //
-    GPIO_SetupPinMux(28, GPIO_MUX_CPU1, 1);
+    GPIO_SetupPinMux(28, GPIO_MUX_CPU0, 1);
     GPIO_SetupPinOptions(28, GPIO_INPUT, GPIO_PUSHPULL);
-    GPIO_SetupPinMux(29, GPIO_MUX_CPU1, 1);
+    GPIO_SetupPinMux(29, GPIO_MUX_CPU0, 1);
     GPIO_SetupPinOptions(29, GPIO_OUTPUT, GPIO_ASYNC);
 
     //
